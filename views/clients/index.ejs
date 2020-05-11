@@ -1,0 +1,40 @@
+<h2>All clients</h2>
+
+<form method="GET" id="myform">
+    <label>Name</label>
+    <input type="text" name="name" value="<%=searchOptions.name  %> ">
+</form>
+<br>
+<table>
+    <thead>
+        <tr>
+            <th >Imie</th>
+            <th >Numer telefonu</th>
+        </tr>
+    </thead>
+    <tbody>
+    <% clients.forEach(client => {%> 
+    <tr>
+        <td><%=client.name%> <%=client.lastName%></td>
+        <td><%=client.phoneNumber%></td>
+        <td><%=client.drySkin%></td>
+        <td><%=client.wrinkless%></td>
+        <td><%=client.lackfirmnes%></td>
+        <td><%=client.nonuniformColor%></td>
+        <td><%=client.tiredness%></td>
+        
+        
+
+        
+    </tr>
+    
+    <% }); %> 
+    </tbody>
+</table>
+
+
+
+<a href="/clients/new">Dodaj klienta</a>
+<script>
+     
+</script>

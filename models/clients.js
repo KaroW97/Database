@@ -1,0 +1,129 @@
+const mongoose = require('mongoose');
+
+
+const clientSchema = new mongoose.Schema({
+    visitDate:{
+        type:Date,
+        required:false
+    },
+    nextVisitDate:{
+        type:Date,
+        required:false
+    },
+    name:{
+        type:String,
+        required:true
+    },
+    lastName:{
+        type:String,
+        required:true
+    },
+    phoneNumber:{
+        type:String,
+        required:true
+    },
+    dateOfBirth:{
+        type:Date,
+        required:false
+    },
+    //skinDiagnose:{ //jak cos to po w values/name mozna sporbowac skinDiagnose.dryskin
+        
+     
+        drySkin:{
+            type:Boolean,
+            required:false
+        },
+        wrinkless:{
+            type:Boolean,
+            required:false
+        },
+        lackfirmnes:{
+            type:Boolean,
+            required:false
+        },
+        nonuniformColor:{
+            type:Boolean,
+            required:false
+        },
+        tiredness:{
+            type:Boolean,
+            required:false
+        },
+        acne:{
+            type:Boolean,
+            required:false
+        },
+        smokerSkin:{
+            type:Boolean,
+            required:false
+        },
+        fatSkin:{
+            type:Boolean,
+            required:false
+        },
+        discoloration:{
+            type:Boolean,
+            required:false
+        },
+        blackheads:{
+            type:Boolean,
+            required:false
+        },
+        darkCirclesEyes:{
+            type:Boolean,
+            required:false
+        },
+        dilatedCapillaries:{
+            type:Boolean,
+            required:false
+        },
+        papularPustularAcne:{
+            type:Boolean,
+            required:false
+        },
+        externallyDrySkin:{
+            type:Boolean,
+            required:false
+        },
+    //},
+    other:{
+        type:String,
+        required:false
+    },
+
+    //Wywiad
+    washingFace:{
+        type:String,
+        required:false
+    },
+    faceTension:{
+        type:String,
+        required:false
+    },
+    currentFaceCreams:{
+        type:String,
+        required:false
+    },
+
+    //Zakupy
+    shopping:{
+        type:String,
+        required:false
+    },
+    //Diagnoza
+    diagnose1:{
+        type:String,
+        required:false
+    },
+    teraphyPlan:{
+        type:String,
+        required:false
+    },
+    recommendedCare:{
+        type:String,
+        required:false
+    }
+        
+})
+
+module.exports = mongoose.model('Client',clientSchema)
