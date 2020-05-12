@@ -8,8 +8,12 @@ const bodyParser = require('body-parser')
 
 const IndexRouter = require('./routes/index');
 const ClientRouter = require('./routes/clients')
+const TreatmentRotuer = require('./routes/treatment')
+
 const CalendarRouter = require('./routes/calendar')
 const SettingsRotuer = require('./routes/settings')
+
+
 
 app.set('view engine', 'ejs') 
 app.set('views',__dirname+'/views')
@@ -31,7 +35,8 @@ db.once('open', ()=>console.log('Conected to mongoose')) //only for the firsst t
 
 
 app.use('/',IndexRouter); //login register
-app.use('/clients',ClientRouter) //Clients
+app.use(['/clients','/clients/show'],ClientRouter) //Clients
+app.use('/treatment',TreatmentRotuer)
 app.use('/calendar',CalendarRouter)//Calendar page
 app.use('/settings',SettingsRotuer) //Settings router
 

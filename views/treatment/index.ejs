@@ -1,0 +1,25 @@
+<h2>All Treatments</h2>
+
+<form method="GET">
+    <label id="treatmentName"></label>
+    <input id="treatmentName"name="treatmentName" placeholder="Nazwa zabiegu" value="<%=searchOptions.name  %>" autofocus>
+</form>
+<a href="/treatment/new">Add Treatment</a>
+<table>
+    <thead>
+        <tr>
+            <th >Nazwa</th>
+            <th >Cena</th>
+        </tr>
+    </thead>
+    <tbody>   
+        <% treatment.forEach(treatments => {%>
+            <tr>
+                <td><%=treatments.treatmentName%></td>
+                <td><%=treatments.treatmentPrice%></td>
+            </tr>
+        <% });%>
+     
+    </tbody>
+</table>
+

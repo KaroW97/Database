@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Client = require('../models/clients')
+const Client = require('../models/clients');
+const Treatment = require('../models/treatment')
+const ClientVisits = require('../models/clientsVisits')
+
 
 //All Clients Route
 router.get('/', async(req,res)=>{
@@ -14,35 +17,31 @@ router.get('/', async(req,res)=>{
             clients:clients,
             searchOptions:req.query
         });
-        console.log(req.body)
+        //console.log(req.body)
     }catch{
         res.redirect('/calendar')
     }
    
 })
+
 //New Client Route Displaing form
-router.get('/new',(req,res)=>{
-    res.render('clients/new',{ clients: new Client() })
+var skinDiagnoseNames =["Sucha skóra","Zmarszczki i drobne linie","Brak jędrności"];
+router.get('/new',async (req,res)=>{
+   try{
+    res.render('clients/new',{ 
+        clients: new Client(),
+        skinDiagnoseNames:skinDiagnoseNames,
+       
+         })
+   }catch{
+       res.redirect('/clients')
+   }
+   
 })
 
-
 //Create Client Route
+
 router.post('/', async(req,res)=>{
-    req.body.drySkin = Boolean(req.body.drySkin)  //dziala jesli value jest ustawione na false
-    req.body.wrinkless = Boolean(req.body.wrinkless)
-    req.body.lackfirmnes = Boolean(req.body.lackfirmnes)
-    req.body.nonuniformColor = Boolean(req.body.nonuniformColor)
-    req.body.tiredness = Boolean(req.body.tiredness)
-    req.body.acne = Boolean(req.body.acne)
-    req.body.smokerSkin = Boolean(req.body.smokerSkin)
-    req.body.fatSkin = Boolean(req.body.fatSkin)
-    req.body.discoloration = Boolean(req.body.discoloration)
-    req.body.blackheads = Boolean(req.body.blackheads)
-    req.body.darkCirclesEyes = Boolean(req.body.darkCirclesEyes)
-    req.body.dilatedCapillaries = Boolean(req.body.dilatedCapillaries)
-    req.body.papularPustularAcne = Boolean(req.body.papularPustularAcne)
-    req.body.externallyDrySkin = Boolean(req.body.externallyDrySkin)
-   
 
     const clients = new Client({
         visitDate:req.body.visitDate,
@@ -51,24 +50,29 @@ router.post('/', async(req,res)=>{
         lastName:req.body.lastName,
         phoneNumber:req.body.phoneNumber,
         dateOfBirth:req.body.dateOfBirth,
-
+        skinDiagnoseNames:skinDiagnoseNames,
+        skinDiagnose:req.body.skinDiagnose,
         //Diagnoza skory
-        drySkin:req.body.drySkin,
-        wrinkless:req.body.wrinkless,
-        lackfirmnes:req.body.lackfirmnes,
-        nonuniformColor:req.body.nonuniformColor,
-        tiredness:req.body.tiredness,
-        acne:req.body.acne,
-        smokerSkin:req.body.smokerSkin,
-        fatSkin:req.body.fatSkin,
-
-        discoloration:req.body.discoloration,
-        blackheads:req.body.blackheads,
-        darkCirclesEyes:req.body.darkCirclesEyes,
-        dilatedCapillaries:req.body.dilatedCapillaries,
-        papularPustularAcne:req.body.papularPustularAcne,
-        externallyDrySkin:req.body.externallyDrySkin,
+      
+        skinDiagnoseAll:{
+            drySkin:req.body.drySkin,
+            wrinkless:req.body.wrinkless,
+            lackfirmnes:req.body.lackfirmnes,
+            nonuniformColor:req.body.nonuniformColor,
+            tiredness:req.body.tiredness,
+            acne:req.body.acne,
+            smokerSkin:req.body.smokerSkin,
+            fatSkin:req.body.fatSkin,
+            discoloration:req.body.discoloration,
+            blackheads:req.body.blackheads,
+            darkCirclesEyes:req.body.darkCirclesEyes,
+            dilatedCapillaries:req.body.dilatedCapillaries,
+            papularPustularAcne:req.body.papularPustularAcne,
+            externallyDrySkin:req.body.externallyDrySkin,
+            other:req.body.other,
+        },
         other:req.body.other,
+
         //Wywiad
         washingFace:req.body.washingFace,
         faceTension:req.body.faceTension,
@@ -81,9 +85,9 @@ router.post('/', async(req,res)=>{
         diagnose1:req.body.diagnose1,
         teraphyPlan:req.body.teraphyPlan,
         recommendedCare:req.body.recommendedCare,
-
     })
-
+    console.log(clients.skinDiagnoseAll)
+    
     try{
         const newClient = await clients.save();
         //res.redirect(`clients/${newClient.id}`)
@@ -91,13 +95,50 @@ router.post('/', async(req,res)=>{
     }catch{
         res.render('clients/new',{
             clients:clients,
-            errorMessage:'Error creating Client'
+            errorMessage:'Error creating Client',
+            skinDiagnoseNames:skinDiagnoseNames
+            
         });
     }
-    
-   
-   
 })
 
+
+//Show Client
+router.get('/show',async (req,res)=>{
+
+    try{
+        const treatments = await Treatment.find({});
+        const newVisit = new ClientVisits();
+        res.render('clients/show',{
+            treatments:treatments,
+            comment:newVisit
+        });
+    }catch{
+        res.redirect('/clients')
+    }
+})
+
+//Add new Visit
+router.post('/show', async(req,res)=>{
+    const treatments = await Treatment.find({});
+    
+    const newVisit = new ClientVisits({
+        //client:req.body.client
+        clientVisitDate:req.body.clientVisitDate,
+        comment:req.body.comment,
+        treatment:req.body.treatment
+    })
+   
+    try{
+        const visit = await newVisit.save();
+        res.redirect( `/clients`)
+    }catch{
+        res.render('clients/show',{
+            comment:newVisit,
+            treatments:treatments,
+            errorMessage:'Error creating Client',
+        })
+    }
+})
 
 module.exports = router;

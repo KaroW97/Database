@@ -4,6 +4,7 @@
     <label>Name</label>
     <input type="text" name="name" value="<%=searchOptions.name  %> ">
 </form>
+<a href="/clients/new">Dodaj klienta</a>
 <br>
 <table>
     <thead>
@@ -17,24 +18,7 @@
     <tr>
         <td><%=client.name%> <%=client.lastName%></td>
         <td><%=client.phoneNumber%></td>
-        <td><%=client.drySkin%></td>
-        <td><%=client.wrinkless%></td>
-        <td><%=client.lackfirmnes%></td>
-        <td><%=client.nonuniformColor%></td>
-        <td><%=client.tiredness%></td>
-        
-        
-
-        
     </tr>
-    
     <% }); %> 
     </tbody>
 </table>
-
-
-
-<a href="/clients/new">Dodaj klienta</a>
-<script>
-     
-</script>

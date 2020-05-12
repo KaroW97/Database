@@ -1,0 +1,25 @@
+
+
+
+<form action='/clients/show' method="POST">
+    <!--Section for adding coments-->
+    <div>
+        <input type="date" name="clientVisitDate" 
+        value= "<%=comment.clientVisitDate == null ? '': comment.clientVisitDate.toISOString().split('T')[0] %>">
+    </div>
+    <div>
+        <select name="treatment">
+        <% treatments.forEach(treatment => { %>
+            <% if(treatment.id === comment.treatment){ %>
+                <option selected label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>
+            <% }else{ %>
+                <option  label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>
+            <% } %>
+        <%}); %>
+        </select>
+    </div>
+    <div>
+        <textarea name="comment" value=<%=comment.treatment  %> ></textarea>
+    </div>
+    <button type="submit">Dodaj</button>
+</form>

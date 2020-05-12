@@ -19,73 +19,40 @@ const clientSchema = new mongoose.Schema({
         required:true
     },
     phoneNumber:{
-        type:String,
-        required:true
+        type:Number,
+        required:true,
+      
     },
     dateOfBirth:{
         type:Date,
         required:false
     },
-    //skinDiagnose:{ //jak cos to po w values/name mozna sporbowac skinDiagnose.dryskin
-        
-     
-        drySkin:{
-            type:Boolean,
-            required:false
-        },
-        wrinkless:{
-            type:Boolean,
-            required:false
-        },
-        lackfirmnes:{
-            type:Boolean,
-            required:false
-        },
-        nonuniformColor:{
-            type:Boolean,
-            required:false
-        },
-        tiredness:{
-            type:Boolean,
-            required:false
-        },
-        acne:{
-            type:Boolean,
-            required:false
-        },
-        smokerSkin:{
-            type:Boolean,
-            required:false
-        },
-        fatSkin:{
-            type:Boolean,
-            required:false
-        },
-        discoloration:{
-            type:Boolean,
-            required:false
-        },
-        blackheads:{
-            type:Boolean,
-            required:false
-        },
-        darkCirclesEyes:{
-            type:Boolean,
-            required:false
-        },
-        dilatedCapillaries:{
-            type:Boolean,
-            required:false
-        },
-        papularPustularAcne:{
-            type:Boolean,
-            required:false
-        },
-        externallyDrySkin:{
-            type:Boolean,
-            required:false
-        },
-    //},
+    skinDiagnose:{ //jak cos to po w values/name mozna sporbowac skinDiagnose.dryskin
+        type:Array,
+        of:Boolean
+    },
+    skinDiagnoseNames:{ //jak cos to po w values/name mozna sporbowac skinDiagnose.dryskin
+        type:Array,
+        of:String
+    },
+    skinDiagnoseAll:{
+        drySkin:Boolean,
+        wrinkless:Boolean,
+        lackfirmnes:Boolean,
+        nonuniformColor:Boolean,
+        tiredness:Boolean,
+        acne:Boolean,
+        smokerSkin:Boolean,
+        fatSkin:Boolean,
+        discoloration:Boolean,
+        blackheads:Boolean,
+        darkCirclesEyes:Boolean,
+        dilatedCapillaries:Boolean,
+        papularPustularAcne:Boolean,
+        externallyDrySkin:Boolean,
+        other:String
+    },
+   
     other:{
         type:String,
         required:false
@@ -122,8 +89,22 @@ const clientSchema = new mongoose.Schema({
     recommendedCare:{
         type:String,
         required:false
-    }
+    },
+
+    //Add new diagnose
+    comments:[{
+        forId:String, //to mozna sporobwac dodac treatment
+        comment:String
+    }],
+    treatment:{
+        type:mongoose.Schema.Types.ObjectId, //id of another object in our colection
+        required:false,
+        ref:'Treatment' //do czego sie odnosi
+    },
         
 })
 
+
+
 module.exports = mongoose.model('Client',clientSchema)
+
