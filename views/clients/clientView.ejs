@@ -1,0 +1,52 @@
+<p><%=clientInfo.dateOfBirth%></p>
+<p><%=clientInfo.name%> <%=clientInfo.lastName%></p>
+<p><%=clientInfo.phoneNumber%></p>
+<%Object.keys(clientInfo.skinDiagnoseAll).forEach(element=>{%>
+    <% if(clientInfo.skinDiagnoseAll[element] == true && element !='$init'){ %> 
+        <ul>
+            <li> <%=element %></li>
+        </ul>
+    <% } %> 
+<%})%>
+<br>
+<button onclick="window.location='/clients/clientView/<%=curentClient%>/edit'">Edit</button>
+<br>
+
+<% for(var i=0;i<newVisit.length;i++){ %> 
+    <%if(newVisit[i].client == curentClient){%>
+        <%treatments.forEach(treatmentt=>{%>
+            <%if(newVisit[i].treatment == treatmentt.id && newVisit[i].comment !='default'){%>
+                <p > <%= treatmentt.treatmentName %> <%= treatmentt.treatmentPrice %> Data wizyty: <%=newVisit[i].clientVisitDate ==null ? '':newVisit[i].clientVisitDate.toISOString().split('T')[0] %>  <%=newVisit[i].comment %></p>
+            <% } %> 
+        <% }) %>
+    <%}%>
+<%} %> 
+
+
+<br>
+<br>
+
+
+
+<form action='/clients/clientView/<%=curentClient%>' method="POST">
+    <!--Section for adding coments-->
+    <div>
+        <input type="date" name="clientVisitDate" 
+        value= "<%=newVisit.clientVisitDate == null ? '': newVisit.clientVisitDate.toISOString().split('T')[0] %>">
+    </div>
+    <div>
+        <select name="treatment">
+        <% treatments.forEach(treatment => { %>
+            <% if(treatment.id === newVisit.treatment){ %>
+                <option selected label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>
+            <% }else{ %>
+                <option  label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>
+            <% } %>
+        <%}); %>
+        </select>
+    </div>
+    <div>
+        <textarea name="comment" value=<%=newVisit.treatment  %> ></textarea>
+    </div>
+    <button type="submit">Dodaj</button>
+</form>

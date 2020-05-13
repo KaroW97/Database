@@ -12,12 +12,15 @@ router.get('/', async(req,res)=>{
         searchOptions.name = new RegExp(req.query.name, 'i')
     }
     try{
+        const newVisit = await ClientVisits.find({})
+        const treatments = await Treatment.find({});
         const clients = await Client.find(searchOptions); //we have no conditions 
         res.render('clients/index',{
             clients:clients,
+            treatments:treatments,
+            newVisit:newVisit,
             searchOptions:req.query
         });
-        //console.log(req.body)
     }catch{
         res.redirect('/calendar')
     }
@@ -25,14 +28,9 @@ router.get('/', async(req,res)=>{
 })
 
 //New Client Route Displaing form
-var skinDiagnoseNames =["Sucha skóra","Zmarszczki i drobne linie","Brak jędrności"];
 router.get('/new',async (req,res)=>{
    try{
-    res.render('clients/new',{ 
-        clients: new Client(),
-        skinDiagnoseNames:skinDiagnoseNames,
-       
-         })
+    res.render('clients/new',{ clients: new Client(),})
    }catch{
        res.redirect('/clients')
    }
@@ -40,20 +38,16 @@ router.get('/new',async (req,res)=>{
 })
 
 //Create Client Route
-
 router.post('/', async(req,res)=>{
 
     const clients = new Client({
-        visitDate:req.body.visitDate,
-        nextVisitDate:req.body.nextVisitDate,
+        visitDate:Date(req.body.visitDate),
+        nextVisitDate:Date(req.body.nextVisitDate),
         name:req.body.name,
         lastName:req.body.lastName,
         phoneNumber:req.body.phoneNumber,
-        dateOfBirth:req.body.dateOfBirth,
-        skinDiagnoseNames:skinDiagnoseNames,
-        skinDiagnose:req.body.skinDiagnose,
+        dateOfBirth:Date(req.body.dateOfBirth),
         //Diagnoza skory
-      
         skinDiagnoseAll:{
             drySkin:req.body.drySkin,
             wrinkless:req.body.wrinkless,
@@ -86,59 +80,89 @@ router.post('/', async(req,res)=>{
         teraphyPlan:req.body.teraphyPlan,
         recommendedCare:req.body.recommendedCare,
     })
-    console.log(clients.skinDiagnoseAll)
+    console.log(clients)
     
     try{
         const newClient = await clients.save();
         //res.redirect(`clients/${newClient.id}`)
         res.redirect( `clients`)
-    }catch{
+    }catch(err){
+        console.log(err)
         res.render('clients/new',{
             clients:clients,
-            errorMessage:'Error creating Client',
-            skinDiagnoseNames:skinDiagnoseNames
-            
+            errorMessage:'Error creating Client', 
         });
     }
 })
 
 
-//Show Client
-router.get('/show',async (req,res)=>{
-
+//Show Client toturial
+router.get('/clientView/:id',async(req,res)=>{
     try{
+     
+        const visit = await ClientVisits.find({})
+        if(visit.comment =='default')
+            visit.collection.remove();
+        
         const treatments = await Treatment.find({});
-        const newVisit = new ClientVisits();
-        res.render('clients/show',{
+        const clientt  = await Client.findById(req.params.id)
+        res.render('clients/clientView',{
             treatments:treatments,
-            comment:newVisit
-        });
-    }catch{
+            newVisit:visit,
+            curentClient:req.params.id,
+            newVisit:visit,
+            clientInfo:clientt  
+        })
+    }catch(err){
+        console.log(err)
         res.redirect('/clients')
     }
 })
 
 //Add new Visit
-router.post('/show', async(req,res)=>{
+router.post('/clientView/:id', async(req,res)=>{
     const treatments = await Treatment.find({});
-    
-    const newVisit = new ClientVisits({
-        //client:req.body.client
-        clientVisitDate:req.body.clientVisitDate,
-        comment:req.body.comment,
-        treatment:req.body.treatment
+    const clientt  = await Client.findById(req.params.id)
+    const visit = new ClientVisits({
+        client:req.params.id,
+        clientVisitDate:Date( req.body.clientVisitDate) ,
+        comment: req.body.comment ||'default' ,
+        treatment: req.body.treatment,
     })
-   
+
+    
     try{
-        const visit = await newVisit.save();
-        res.redirect( `/clients`)
-    }catch{
-        res.render('clients/show',{
-            comment:newVisit,
+    
+     
+        const newVisit = await visit.save();
+        res.redirect( `/clients/clientView/${req.params.id}`)
+    }catch(err){
+        console.log(err)
+        res.render(`clients/clientView`,{
+            errorMessage:'Error creating Visit',
+            newVisit:visit,
             treatments:treatments,
-            errorMessage:'Error creating Client',
+           
+            curentClient:req.params.id,
+            clientInfo:clientt
         })
     }
 })
-
+router.get('/clientView/:id/edit', async(req,res)=>{
+    try{
+        const clietnEdit = await Client.findById(req.params.id)
+        res.render('clients/edit',{
+            clients:clietnEdit
+        })
+    }catch{
+        res.redirect(`/clients/${clietnEdit._id}`)
+    }
+   
+})
+router.put('/clientView/:id',(req,res)=>{
+    res.send('Update Client' + req.params.id)
+})
+router.delete('/clientView/:id/delete',(req,res)=>{
+    res.send('Delete Client' + req.params.id)
+})
 module.exports = router;

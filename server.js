@@ -5,6 +5,7 @@ const express = require('express')
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 
 const IndexRouter = require('./routes/index');
 const ClientRouter = require('./routes/clients')
@@ -19,6 +20,7 @@ app.set('view engine', 'ejs')
 app.set('views',__dirname+'/views')
 app.set('layout', 'layouts/layout')
 app.use(expressLayouts)
+app.use(methodOverride('_method'))
 app.use(express.static('public')) //images
 app.use(bodyParser.urlencoded({limit:'10mb',extended:false}))
 
@@ -35,7 +37,7 @@ db.once('open', ()=>console.log('Conected to mongoose')) //only for the firsst t
 
 
 app.use('/',IndexRouter); //login register
-app.use(['/clients','/clients/show'],ClientRouter) //Clients
+app.use(['/clients','/clients/show','/clients/clientView/:id'],ClientRouter) //Clients
 app.use('/treatment',TreatmentRotuer)
 app.use('/calendar',CalendarRouter)//Calendar page
 app.use('/settings',SettingsRotuer) //Settings router

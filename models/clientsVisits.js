@@ -6,7 +6,6 @@ const clientVisits = mongoose.Schema({
         required:false,
         ref:'Client',
         //forId:String, //to mozna sporobwac dodac treatment
-    
     },
     clientVisitDate:{
         type:Date,
@@ -17,8 +16,6 @@ const clientVisits = mongoose.Schema({
         required:false,
     },
         
-   
-
     treatment:{
         type:mongoose.Schema.Types.ObjectId, //id of another object in our colection
         required:false,

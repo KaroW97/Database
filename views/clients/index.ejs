@@ -15,10 +15,13 @@
     </thead>
     <tbody>
     <% clients.forEach(client => {%> 
-    <tr>
+    <tr onclick="window.location='/clients/clientView/<%=client.id%>'">
         <td><%=client.name%> <%=client.lastName%></td>
         <td><%=client.phoneNumber%></td>
     </tr>
     <% }); %> 
     </tbody>
 </table>
+
+
+

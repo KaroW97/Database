@@ -27,14 +27,7 @@ const clientSchema = new mongoose.Schema({
         type:Date,
         required:false
     },
-    skinDiagnose:{ //jak cos to po w values/name mozna sporbowac skinDiagnose.dryskin
-        type:Array,
-        of:Boolean
-    },
-    skinDiagnoseNames:{ //jak cos to po w values/name mozna sporbowac skinDiagnose.dryskin
-        type:Array,
-        of:String
-    },
+ 
     skinDiagnoseAll:{
         drySkin:Boolean,
         wrinkless:Boolean,
@@ -92,7 +85,7 @@ const clientSchema = new mongoose.Schema({
     },
 
     //Add new diagnose
-    comments:[{
+   /* comments:[{
         forId:String, //to mozna sporobwac dodac treatment
         comment:String
     }],
@@ -101,7 +94,7 @@ const clientSchema = new mongoose.Schema({
         required:false,
         ref:'Treatment' //do czego sie odnosi
     },
-        
+        */
 })
 
 
