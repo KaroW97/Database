@@ -22,8 +22,6 @@ router.get('/',async(req,res)=>{
 router.get('/new',(req,res)=>{
     res.render('treatment/new', {treatment:new Treatment()})
 })
-
-
 //
 router.post('/', async(req,res)=>{
     const treatment = new Treatment({
@@ -43,4 +41,47 @@ router.post('/', async(req,res)=>{
    
 })
 
+//Delete Treatment
+router.delete('/:id', async(req,res)=>{
+    let treatment;
+    try{
+        treatment = await Treatment.findById(req.params.id);
+        await treatment.remove();
+        res.redirect('/treatment');
+      
+    }catch{
+        res.redirect('/treatment')
+    }
+    
+})
+//Edit Treatment
+router.get('/:id/edit' , async(req,res)=>{
+    try{
+        const treatment = await Treatment.findById(req.params.id);
+        res.render('treatment/edit',{
+            treatment:treatment,
+        });
+    }catch{
+        res.redirect('/treatment')
+    }
+})
+
+router.put('/:id', async(req,res)=>{
+    let treatment;
+    try{
+        treatment = await Treatment.findById(req.params.id)
+        treatment.treatmentName = req.body.treatmentName
+        treatment.treatmentPrice= req.body.treatmentPrice
+        await treatment.save();
+        res.redirect('/treatment')
+    }catch(err){
+        console.log(err)
+        res.redirect('/treatment/edit',{
+            treatment:treatment,
+            errorMessage:'Error updating Client', 
+        })
+    }
+  
+
+})
 module.exports = router

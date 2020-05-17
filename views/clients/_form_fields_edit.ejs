@@ -1,10 +1,10 @@
 <div>
-    <input type="text" name="name" placeholder="imie" value="<%=clients.name%>" >
-    <input type="text"  name="lastName" placeholder="nazwisko" value="<%=clients.lastName%>" >
+    <input type="text" name="name" placeholder="imie" value="<%=clients.name%>" required >
+    <input type="text"  name="lastName" placeholder="nazwisko" value="<%=clients.lastName%>"required >
   
 </div>
 <div>
-    <input type="tel" minlength="9" name="phoneNumber" placeholder="telefon"  value="<%=clients.phoneNumber%>">
+    <input type="tel" minlength="9" name="phoneNumber" placeholder="telefon"  value="<%=clients.phoneNumber%>" required>
     <input type="date" name="dateOfBirth" value="<%=clients.dateOfBirth == null ? '' : clients.dateOfBirth.toISOString().split('T')[0]%>"   >
     
 </div>

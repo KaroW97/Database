@@ -130,18 +130,15 @@ const clientSchema = new mongoose.Schema({
 
 clientSchema.pre('remove',function(next){
     ClientVisits.find({client:this.id}, (err,visits)=>{
-       
         if(err){
             next(err)
         }
-        if(visits.length > 0){
+        if(visits.length >=0){
             for(var i=0;i<visits.length;i++){
                 visits[i].remove()
             }
-            console.log(visits)
             next();
         }else{
-            console.log('error')
             next(new Error("We couldn't remove visits for this client please try again"))
         }
     })

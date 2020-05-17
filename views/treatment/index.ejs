@@ -10,13 +10,15 @@
         <tr>
             <th >Nazwa</th>
             <th >Cena</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>   
-        <% treatment.forEach(treatments => {%>
-            <tr>
-                <td><%=treatments.treatmentName%></td>
-                <td><%=treatments.treatmentPrice%></td>
+        <% treatment.forEach(treatment => {%>
+            <tr onclick="window.location='/treatment/<%=treatment.id%>/edit'">
+                <td><%=treatment.treatmentName%></td>
+                <td><%=treatment.treatmentPrice%></td>
+                <td><%- include(`../partials/deleteForm.ejs`, {url: `treatment/${treatment.id}`})%></td>
             </tr>
         <% });%>
      

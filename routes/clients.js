@@ -125,8 +125,7 @@ router.post('/', async(req,res)=>{
         const newClient = await clients.save();
         res.redirect(`clients/clientView/${newClient.id}`)
        
-    }catch(err){
-        console.log(err)
+    }catch{
         res.render('clients/new',{
             clients:clients,
             errorMessage:'Error creating Client', 
@@ -267,10 +266,9 @@ router.put('/clientView/:id',async (req,res)=>{
 
 
         await clients.save();
-        console.log(clients)
         res.redirect(`/clients/clientView/${clients.id}`)
         //res.redirect( `clients`)
-    }catch(err){
+    }catch{
         if(clients == null){
             res.redirect('/')
         }else{
@@ -285,24 +283,11 @@ router.put('/clientView/:id',async (req,res)=>{
 //Delete Client
 router.delete('/:id',async (req,res)=>{
     let clients;
-    let clientVisits;
     try{
-       
-        //clientVisits = await ClientVisits.find()//{client:req.params.id}
         clients =  await Client.findById(req.params.id);
-       /* for(var i = 0;i<clientVisits.length ; i++){
-            await clientVisits[i].remove();
-        }*/
-        //console.log(clientVisits )  
-        //if(clientVisits.length == 0)
-            await clients.remove(); 
-       
-       // console.log(clientVisits )
-        //console.log(clientVisits.client)
-         //clientVisits;
-        //
+        await clients.remove(); 
         res.redirect(`/clients`)
-    }catch(err){
+    }catch{
         if(clients == null){
             res.redirect('/')
         }else{

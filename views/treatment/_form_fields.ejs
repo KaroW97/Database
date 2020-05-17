@@ -1,8 +1,7 @@
-<form action="/treatment" method="POST">
+
     <label id="treatmentName"></label>
-    <input type="text" id="treatmentName" placeholder="Nazwa zabiegu" value="<%=treatment.treatmentName%>" name="treatmentName">
+    <input type="text" id="treatmentName" placeholder="Nazwa zabiegu" value="<%=treatment.treatmentName%>" name="treatmentName" required>
 
     <label id="treatmentPrice"></label>
-    <input type="number" id="treatmentPrice" placeholder="Cena zabiegu" value="<%=treatment.treatmentPrice%>" name="treatmentPrice">
-    <button type="submit">Dodaj</button>
-</form>
+    <input type="number" id="treatmentPrice" placeholder="Cena zabiegu" value="<%=treatment.treatmentPrice%>" name="treatmentPrice" required>
+
