@@ -262,16 +262,14 @@ router.put('/clientView/:id',async (req,res)=>{
         clients.name=req.body.name,
         clients.lastName=req.body.lastName,
         clients.phoneNumber=req.body.phoneNumber,
-        clients.dateOfBirth=new Date(req.body.dateOfBirth),
-
-
+        clients.dateOfBirth= Date.parse(req.body.dateOfBirth)||'',
         await clients.save();
         res.redirect(`/clients/clientView/${clients.id}`)
-        //res.redirect( `clients`)
-    }catch{
+    }catch(err){
         if(clients == null){
             res.redirect('/')
         }else{
+            console.log(err);
             res.render('clients/edit',{
                 clients:clients,
                 errorMessage:'Error updating Client', 

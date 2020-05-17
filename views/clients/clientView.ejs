@@ -1,13 +1,19 @@
 <button onclick="window.location='/clients/clientView/<%=curentClient%>/edit'">Edit</button>
-<p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
-
-<p>Natępna wizyta :<%=clientInfo.nextVisitDate == null ? '' :clientInfo.nextVisitDate.toISOString().split('T')[0] %></p>
-<p>Urodziny: <%=clientInfo.dateOfBirth == null ? '' :clientInfo.dateOfBirth.toISOString().split('T')[0] %></p>
-<p><%=clientInfo.name%> <%=clientInfo.lastName%></p>
+<% if(clientInfo.visitDate != null) {%> 
+    <p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
+<% } %> 
+<% if(clientInfo.nextVisitDate != null) {%> 
+    <p>Natępna wizyta :<%=clientInfo.nextVisitDate == null ? '' :clientInfo.nextVisitDate.toISOString().split('T')[0] %></p>
+<% } %> 
+<% if(clientInfo.dateOfBirth != null) {%> 
+    <p>Urodziny: <%=clientInfo.dateOfBirth == null ? '' :clientInfo.dateOfBirth.toISOString().split('T')[0] %></p>
+<% } %> 
+<p>Imie  <%=clientInfo.name%> Nazwisko  <%=clientInfo.lastName%></p>
 <p><%=clientInfo.phoneNumber%></p>
 
+<% if(clientInfo.skinDiagnoseAll != null){ %> 
 <p>Alldiagnose2</p>
-
+<% } %> 
 <%Object.keys(clientInfo.skinDiagnoseAll).forEach(element=>{%>
     <% if(clientInfo.skinDiagnoseAll[element].value == true && element !='$init'){ %> 
         <ul>
