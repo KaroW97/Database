@@ -1,32 +1,43 @@
-<p><%=clientInfo.dateOfBirth%></p>
+<button onclick="window.location='/clients/clientView/<%=curentClient%>/edit'">Edit</button>
+<p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
+
+<p>Natępna wizyta :<%=clientInfo.nextVisitDate == null ? '' :clientInfo.nextVisitDate.toISOString().split('T')[0] %></p>
+<p>Urodziny: <%=clientInfo.dateOfBirth == null ? '' :clientInfo.dateOfBirth.toISOString().split('T')[0] %></p>
 <p><%=clientInfo.name%> <%=clientInfo.lastName%></p>
 <p><%=clientInfo.phoneNumber%></p>
+
+<p>Alldiagnose2</p>
+
 <%Object.keys(clientInfo.skinDiagnoseAll).forEach(element=>{%>
-    <% if(clientInfo.skinDiagnoseAll[element] == true && element !='$init'){ %> 
+    <% if(clientInfo.skinDiagnoseAll[element].value == true && element !='$init'){ %> 
         <ul>
-            <li> <%=element %></li>
+            <li> <%=clientInfo.skinDiagnoseAll[element].name %></li>
         </ul>
     <% } %> 
 <%})%>
-<br>
-<button onclick="window.location='/clients/clientView/<%=curentClient%>/edit'">Edit</button>
-<br>
+<p>Czym myta twarz:  <%=clientInfo.washingFace  %> </p>
+<p>Czy występuje napięcie twarzy:  <%=clientInfo.faceTension  %> </p>
+<p>Obecnie używane kremy:  <%=clientInfo.currentFaceCreams  %> </p>
+<p>Zakupy:  <%=clientInfo.shopping  %> </p>
+<p>Wstępna diagnoza:  <%=clientInfo.diagnose1  %> </p>
+<p>Plan zabiegów:  <%=clientInfo.teraphyPlan  %> </p>
+<p>Zalecana pilęgnacja:  <%=clientInfo.recommendedCare  %> </p>
 
-<% for(var i=0;i<newVisit.length;i++){ %> 
-    <%if(newVisit[i].client == curentClient){%>
+
+<br>
+<% for(var i=0;i<addedVisist.length;i++){ %> 
+    <%if(addedVisist[i].client == curentClient){%>
         <%treatments.forEach(treatmentt=>{%>
-            <%if(newVisit[i].treatment == treatmentt.id && newVisit[i].comment !='default'){%>
-                <p > <%= treatmentt.treatmentName %> <%= treatmentt.treatmentPrice %> Data wizyty: <%=newVisit[i].clientVisitDate ==null ? '':newVisit[i].clientVisitDate.toISOString().split('T')[0] %>  <%=newVisit[i].comment %></p>
+            <%if(addedVisist[i].treatment == treatmentt.id && addedVisist[i].comment !='default'){%>
+                <p > <%= treatmentt.treatmentName %> <%= treatmentt.treatmentPrice %> Data wizyty: <%=addedVisist[i].clientVisitDate ==null ? '':addedVisist[i].clientVisitDate.toISOString().split('T')[0] %>  <%=addedVisist[i].comment %>      <%- include(`../partials/deleteForm.ejs`, {url: `/clients/clientView/${addedVisist[i].id}`})%> </p>
+            
             <% } %> 
         <% }) %>
     <%}%>
 <%} %> 
 
-
 <br>
 <br>
-
-
 
 <form action='/clients/clientView/<%=curentClient%>' method="POST">
     <!--Section for adding coments-->

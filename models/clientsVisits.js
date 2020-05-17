@@ -3,22 +3,22 @@ const mongoose = require('mongoose');
 const clientVisits = mongoose.Schema({
     client:{
         type:mongoose.Schema.Types.ObjectId,
-        required:false,
+        required:true,
         ref:'Client',
         //forId:String, //to mozna sporobwac dodac treatment
     },
     clientVisitDate:{
         type:Date,
-        required:false
+        required:true
     },
     comment:{
         type:String,
-        required:false,
+        required:true,
     },
         
     treatment:{
         type:mongoose.Schema.Types.ObjectId, //id of another object in our colection
-        required:false,
+        required:true,
         ref:'Treatment' //do czego sie odnosi
     },
    

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const ClientVisits = require('./clientsVisits')
 
 const clientSchema = new mongoose.Schema({
     visitDate:{
@@ -28,28 +28,71 @@ const clientSchema = new mongoose.Schema({
         required:false
     },
  
+   
     skinDiagnoseAll:{
-        drySkin:Boolean,
-        wrinkless:Boolean,
-        lackfirmnes:Boolean,
-        nonuniformColor:Boolean,
-        tiredness:Boolean,
-        acne:Boolean,
-        smokerSkin:Boolean,
-        fatSkin:Boolean,
-        discoloration:Boolean,
-        blackheads:Boolean,
-        darkCirclesEyes:Boolean,
-        dilatedCapillaries:Boolean,
-        papularPustularAcne:Boolean,
-        externallyDrySkin:Boolean,
+        drySkin:{
+            name:String,
+            value:Boolean
+        },
+        wrinkless:{
+            name:String,
+            value:Boolean
+        },
+        lackfirmnes:{
+            name:String,
+            value:Boolean
+        },
+        nonuniformColor:{
+            name:String,
+            value:Boolean
+        },
+        tiredness:{
+            name:String,
+            value:Boolean
+        },
+        acne:{
+            name:String,
+            value:Boolean
+        },
+        smokerSkin:{
+            name:String,
+            value:Boolean
+        },
+        fatSkin:{
+            name:String,
+            value:Boolean
+        },
+        discoloration:{
+            name:String,
+            value:Boolean
+        },
+        blackheads:{
+            name:String,
+            value:Boolean
+        },
+        darkCirclesEyes:{
+            name:String,
+            value:Boolean
+        },
+        dilatedCapillaries:{
+            name:String,
+            value:Boolean
+        },
+        papularPustularAcne:{
+            name:String,
+            value:Boolean
+        },
+        externallyDrySkin:{  
+            name:String,
+            value:Boolean
+        },
         other:String
     },
    
-    other:{
+   /* other:{
         type:String,
         required:false
-    },
+    },*/
 
     //Wywiad
     washingFace:{
@@ -83,18 +126,25 @@ const clientSchema = new mongoose.Schema({
         type:String,
         required:false
     },
+})
 
-    //Add new diagnose
-   /* comments:[{
-        forId:String, //to mozna sporobwac dodac treatment
-        comment:String
-    }],
-    treatment:{
-        type:mongoose.Schema.Types.ObjectId, //id of another object in our colection
-        required:false,
-        ref:'Treatment' //do czego sie odnosi
-    },
-        */
+clientSchema.pre('remove',function(next){
+    ClientVisits.find({client:this.id}, (err,visits)=>{
+       
+        if(err){
+            next(err)
+        }
+        if(visits.length > 0){
+            for(var i=0;i<visits.length;i++){
+                visits[i].remove()
+            }
+            console.log(visits)
+            next();
+        }else{
+            console.log('error')
+            next(new Error("We couldn't remove visits for this client please try again"))
+        }
+    })
 })
 
 

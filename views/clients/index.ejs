@@ -9,8 +9,9 @@
 <table>
     <thead>
         <tr>
-            <th >Imie</th>
-            <th >Numer telefonu</th>
+            <th>Imie</th>
+            <th>Numer telefonu</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -18,6 +19,8 @@
     <tr onclick="window.location='/clients/clientView/<%=client.id%>'">
         <td><%=client.name%> <%=client.lastName%></td>
         <td><%=client.phoneNumber%></td>
+        <td> <%- include(`../partials/deleteForm.ejs`, {url: `clients/${client.id}`})%> 
+         </td>
     </tr>
     <% }); %> 
     </tbody>
