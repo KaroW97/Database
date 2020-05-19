@@ -1,42 +1,64 @@
-<button onclick="window.location='/clients/clientView/<%=curentClient%>/edit'">Edit</button>
-<% if(clientInfo.visitDate != null) {%> 
-    <p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
-<% } %> 
-<% if(clientInfo.nextVisitDate != null) {%> 
-    <p>Natępna wizyta :<%=clientInfo.nextVisitDate == null ? '' :clientInfo.nextVisitDate.toISOString().split('T')[0] %></p>
-<% } %> 
-<% if(clientInfo.dateOfBirth != null) {%> 
-    <p>Urodziny: <%=clientInfo.dateOfBirth == null ? '' :clientInfo.dateOfBirth.toISOString().split('T')[0] %></p>
-<% } %> 
-<p>Imie  <%=clientInfo.name%> Nazwisko  <%=clientInfo.lastName%></p>
-<p><%=clientInfo.phoneNumber%></p>
-
-<% if(clientInfo.skinDiagnoseAll != null){ %> 
-<p>Alldiagnose2</p>
-<% } %> 
-<%Object.keys(clientInfo.skinDiagnoseAll).forEach(element=>{%>
-    <% if(clientInfo.skinDiagnoseAll[element].value == true && element !='$init'){ %> 
-        <ul>
-            <li> <%=clientInfo.skinDiagnoseAll[element].name %></li>
-        </ul>
+<div onclick="window.location='/clients/clientView/<%=curentClient%>/edit'">
+    <% if(clientInfo.visitDate != null) {%> 
+        <p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
     <% } %> 
-<%})%>
-<p>Czym myta twarz:  <%=clientInfo.washingFace  %> </p>
-<p>Czy występuje napięcie twarzy:  <%=clientInfo.faceTension  %> </p>
-<p>Obecnie używane kremy:  <%=clientInfo.currentFaceCreams  %> </p>
-<p>Zakupy:  <%=clientInfo.shopping  %> </p>
-<p>Wstępna diagnoza:  <%=clientInfo.diagnose1  %> </p>
-<p>Plan zabiegów:  <%=clientInfo.teraphyPlan  %> </p>
-<p>Zalecana pilęgnacja:  <%=clientInfo.recommendedCare  %> </p>
-
-
+    <% if(clientInfo.nextVisitDate != null) {%> 
+        <p>Natępna wizyta :<%=clientInfo.nextVisitDate == null ? '' :clientInfo.nextVisitDate.toISOString().split('T')[0] %></p>
+    <% } %> 
+    <% if(clientInfo.dateOfBirth != null) {%> 
+        <p>Urodziny: <%=clientInfo.dateOfBirth == null ? '' :clientInfo.dateOfBirth.toISOString().split('T')[0] %></p>
+    <% } %> 
+    <p>Imie  <%=clientInfo.name%> Nazwisko  <%=clientInfo.lastName%></p>
+    <p>Numer Telefonu: <%=clientInfo.phoneNumber%></p>
+    <p>Diagnoza</p>
+    <%Object.keys(clientInfo.skinDiagnoseAll).forEach(element=>{%>
+        <% if(clientInfo.skinDiagnoseAll[element].value == true && element !='$init'){ %> 
+            <ul>
+                <li> <%=clientInfo.skinDiagnoseAll[element].name %></li>
+            </ul>
+        <% } %> 
+    <%})%>
+    <% if(clientInfo.washingFace != '') {%> 
+        <p>Czym myta twarz:  <%=clientInfo.washingFace  %> </p>
+    <% } %> 
+    <% if(clientInfo.faceTension != '') {%> 
+        <p>Czy występuje napięcie twarzy:  <%=clientInfo.faceTension  %> </p>
+    <% } %> 
+    <% if(clientInfo.currentFaceCreams != '') {%> 
+        <p>Obecnie używane kremy:  <%=clientInfo.currentFaceCreams  %> </p>
+    <% } %>
+    <% if(clientInfo.shopping != '') {%>  
+        <p>Zakupy:  <%=clientInfo.shopping  %> </p>
+    <% } %>
+    <% if(clientInfo.diagnose1 != '') {%>  
+        <p>Wstępna diagnoza:  <%=clientInfo.diagnose1  %> </p>
+    <% } %>
+    <% if(clientInfo.teraphyPlan != '') {%>  
+        <p>Plan zabiegów:  <%=clientInfo.teraphyPlan  %> </p>
+    <% } %>
+    <% if(clientInfo.recommendedCare != '') {%>  
+        <p>Zalecana pilęgnacja:  <%=clientInfo.recommendedCare  %> </p>
+    <% } %>
+</div>
 <br>
+
+<% for(var i=0;i<addedVisist.length;i++){ %> 
+    <%if(addedVisist[i].client == curentClient){%>
+     <h1>Wizyty  </h1>
+    <% break} %> 
+<%}%>
 <% for(var i=0;i<addedVisist.length;i++){ %> 
     <%if(addedVisist[i].client == curentClient){%>
         <%treatments.forEach(treatmentt=>{%>
             <%if(addedVisist[i].treatment == treatmentt.id && addedVisist[i].comment !='default'){%>
-                <p > <%= treatmentt.treatmentName %> <%= treatmentt.treatmentPrice %> Data wizyty: <%=addedVisist[i].clientVisitDate ==null ? '':addedVisist[i].clientVisitDate.toISOString().split('T')[0] %>  <%=addedVisist[i].comment %>      <%- include(`../partials/deleteForm.ejs`, {url: `/clients/clientView/${addedVisist[i].id}`})%> </p>
-            
+               
+                    <div onclick="window.location='/clients/clientView/<%=addedVisist[i].id%>/editPost'">
+                        <p><%= treatmentt.treatmentName %>  <%= treatmentt.treatmentPrice %></p>
+                        <p> <%=addedVisist[i].clientVisitDate ==null ? '':addedVisist[i].clientVisitDate.toISOString().split('T')[0] %></p>
+                        <p><%=addedVisist[i].comment %> </p>
+                    </div>
+                    <%- include(`../partials/deleteForm.ejs`, {url: `/clients/clientView/${addedVisist[i].id}`})%> 
+                
             <% } %> 
         <% }) %>
     <%}%>
@@ -47,23 +69,6 @@
 
 <form action='/clients/clientView/<%=curentClient%>' method="POST">
     <!--Section for adding coments-->
-    <div>
-        <input type="date" name="clientVisitDate" 
-        value= "<%=newVisit.clientVisitDate == null ? '': newVisit.clientVisitDate.toISOString().split('T')[0] %>">
-    </div>
-    <div>
-        <select name="treatment">
-        <% treatments.forEach(treatment => { %>
-            <% if(treatment.id === newVisit.treatment){ %>
-                <option selected label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>
-            <% }else{ %>
-                <option  label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>
-            <% } %>
-        <%}); %>
-        </select>
-    </div>
-    <div>
-        <textarea name="comment" value=<%=newVisit.treatment  %> ></textarea>
-    </div>
+    <%- include('./_form_fields_editPost.ejs') %> 
     <button type="submit">Dodaj</button>
 </form>

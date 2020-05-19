@@ -12,13 +12,11 @@ router.get('/', async(req,res)=>{
         searchOptions.name = new RegExp(req.query.name, 'i')
     }
     try{
-        const newVisit = await ClientVisits.find({})
         const treatments = await Treatment.find({});
         const clients = await Client.find(searchOptions); //we have no conditions 
         res.render('clients/index',{
             clients:clients,
             treatments:treatments,
-            newVisit:newVisit,
             searchOptions:req.query
         });
     }catch{
@@ -80,7 +78,7 @@ router.post('/', async(req,res)=>{
                 value:req.body.discoloration
             },
             blackheads:{
-                name:"Przebarwienia",
+                name:"Zaskórniki",
                 value: req.body.blackheads,
             },
             darkCirclesEyes:{
@@ -152,13 +150,13 @@ router.get('/clientView/:id',async(req,res)=>{
     }
 })
 
-//Add new Visit
+//Add new Visit/Post
 router.post('/clientView/:id', async(req,res)=>{
  
     const visit = new ClientVisits({
         client:req.params.id,
+        comment: req.body.comment,
         clientVisitDate:new Date( req.body.clientVisitDate) ,
-        comment: req.body.comment,// ||'default' ,
         treatment: req.body.treatment,
     })
     try{
@@ -178,11 +176,61 @@ router.post('/clientView/:id', async(req,res)=>{
         })
     }
 })
-//deleteVisits
+//delete Visits/Post
 router.delete('/clientView/:id', async(req,res)=>{
-    res.send('delete visit' + req.params.id)
+    let visit, clientValue;
+    try{
+        visit = await ClientVisits.findById(req.params.id);
+        clientValue= visit.client
+        await visit.remove();
+        res.redirect( `/clients/clientView/${clientValue}`)
+    }catch(err){
+        res.redirect(`/clients/clientView/${req.params.id}`)
+    }
 })
+//edit Visit/Post
+router.get('/clientView/:id/editPost', async(req,res)=>{
+  
+    try{
+        const addedVisit = await ClientVisits.findById(req.params.id)
+        const treatments = await Treatment.find({});
+        res.render('clients/editPost',{
+            treatments:treatments,
+            curentVisit:req.params.id,
+            clientId:addedVisit.client,
+            newVisit:addedVisit,
+        })
+      
+    }catch(err){
+        res.redirect(`/clients/${clientId}`)
+    }
+    //res.send('update post ' + req.params.id)
+})
+//edit Visit/Post
+router.put('/clientView/:id/editPost', async(req,res)=>{
+    let visit
+    try{
+         visit = await ClientVisits.findById(req.params.id)
+         visit.client=visit.client
+         visit.comment= req.body.comment
+         visit.clientVisitDate= new Date( req.body.clientVisitDate) 
+         visit.treatment= req.body.treatment
 
+         await visit.save();
+         res.redirect(`/clients/clientView/${visit.client}`)
+    }catch(err){
+        console.log(err)
+        const addedVisit = await ClientVisits.findById(req.params.id)
+        const treatments = await Treatment.find({});
+        res.render('clients/editPost',{
+            treatments:treatments,
+            curentVisit:req.params.id,
+            clientId:addedVisit.client,
+            newVisit:addedVisit,
+        })
+    }
+   
+})
 
 //edit
 router.get('/clientView/:id/edit', async(req,res)=>{
@@ -196,6 +244,7 @@ router.get('/clientView/:id/edit', async(req,res)=>{
     }
    
 })
+//Update Client 
 router.put('/clientView/:id',async (req,res)=>{
     let clients;
     try{
@@ -239,7 +288,7 @@ router.put('/clientView/:id',async (req,res)=>{
             value:req.body.discoloration
         }
         clients.skinDiagnoseAll.blackheads ={
-            name:"Przebarwienia",
+            name:"Zaskórniki",
             value: req.body.blackheads,
         }
         clients.skinDiagnoseAll.darkCirclesEyes ={
@@ -250,7 +299,7 @@ router.put('/clientView/:id',async (req,res)=>{
             name:"Rozszerzone naczynka",
             value:req.body.dilatedCapillaries
         }
-        clients.skinDiagnoseAll.dilatedCapillaries ={
+        clients.skinDiagnoseAll.papularPustularAcne ={
             name:"Trądzik grudkowo - kostkowy",
             value:req.body.papularPustularAcne
         }
@@ -263,13 +312,22 @@ router.put('/clientView/:id',async (req,res)=>{
         clients.lastName=req.body.lastName,
         clients.phoneNumber=req.body.phoneNumber,
         clients.dateOfBirth= Date.parse(req.body.dateOfBirth)||'',
+
+        clients.washingFace =req.body.washingFace
+        clients.faceTension =req.body.faceTension
+        clients.currentFaceCreams =req.body.currentFaceCreams
+        clients.shopping =req.body.shopping
+        clients.diagnose1 =req.body.diagnose1
+        clients.teraphyPlan =req.body.teraphyPlan
+        clients.recommendedCare =req.body.recommendedCare
+
+
         await clients.save();
         res.redirect(`/clients/clientView/${clients.id}`)
     }catch(err){
         if(clients == null){
             res.redirect('/')
         }else{
-            console.log(err);
             res.render('clients/edit',{
                 clients:clients,
                 errorMessage:'Error updating Client', 

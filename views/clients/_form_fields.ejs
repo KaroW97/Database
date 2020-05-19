@@ -1,12 +1,3 @@
-<div>
-    <input type="date" name="visitDate"  value="<%=clients.visitDate ==null ? '':clients.visitDate.toISOString().split('T')[0]%>" >
-    
-    <input type="date" name="nextVisitDate"  value="<%=clients.nextVisitDate ==null ? '':clients.nextVisitDate.toISOString().split('T')[0]%>" >
-</div>
-
-<%-include('./_form_fields_edit.ejs')%>
-
-
 
 <h4>Wywiad</h4>
 <textarea placeholder="Czym myta jest twarz?" name="washingFace" value="<%=clients.washingFace%>"></textarea>
@@ -20,4 +11,3 @@
 <textarea placeholder="Diagnoza 1" name="diagnose1" value="<%=clients.diagnose1%>"></textarea>
 <textarea placeholder="Plan zabiegów" name="teraphyPlan" value="<%=clients.teraphyPlan%>"></textarea>
 <textarea placeholder="Zalecana pielęgnacja" name="recommendedCare" value="<%=clients.recommendedCare%>"></textarea>
-

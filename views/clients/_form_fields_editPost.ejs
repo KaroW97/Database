@@ -1,0 +1,19 @@
+<div>
+    <input type="date" name="clientVisitDate" 
+    value= "<%=newVisit.clientVisitDate == null ? '': newVisit.clientVisitDate.toISOString().split('T')[0] %>" >
+</div>
+<div>
+    <select name="treatment">
+    <% treatments.forEach(treatment => { %>
+        <% if(treatment.id === newVisit.treatment){ %>
+            <option selected label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>
+        <% }else{ %>
+            <option  label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>
+        <% } %>
+    <%}); %>
+    </select>
+</div>
+<div>
+
+    <textarea  placeholder="Dodaj diagnoze" name="comment" value="<%=newVisit.comment%>"><%=newVisit.comment%></textarea>
+</div>

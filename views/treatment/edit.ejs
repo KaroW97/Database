@@ -1,5 +1,6 @@
 <h2>New Treatment</h2>
 <form action="/treatment/<%=treatment.id%>?_method=PUT" method="POST">
     <%-include('./_form_fields.ejs')%>
+    <a href="/treatment/">Anuluj</a>
     <button type="submit">Aktualizuj</button>
 </form>

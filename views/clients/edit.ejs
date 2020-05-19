@@ -1,4 +1,7 @@
 <form action="/clients/clientView/<%=clients.id%>?_method=PUT" method="POST" >
     <%-include('./_form_fields_edit.ejs')%>
+    <%- include('./_form_fields.ejs') %> 
+    <br>
+    <a href="/clients/clientView/<%=clients.id%>">Anuluj</a>
     <button type="submit">Aktualizuj</button>
 </form>
