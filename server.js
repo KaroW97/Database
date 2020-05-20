@@ -10,6 +10,7 @@ const methodOverride = require('method-override')
 const IndexRouter = require('./routes/index');
 const ClientRouter = require('./routes/clients')
 const TreatmentRotuer = require('./routes/treatment')
+const ShoppingList = require('./routes/shoppingList')
 
 const CalendarRouter = require('./routes/calendar')
 const SettingsRotuer = require('./routes/settings')
@@ -41,6 +42,7 @@ app.use(['/clients','/clients/show','/clients/clientView/:id'],ClientRouter) //C
 app.use('/treatment',TreatmentRotuer)
 app.use('/calendar',CalendarRouter)//Calendar page
 app.use('/settings',SettingsRotuer) //Settings router
+app.use('/shoppingList',ShoppingList) //ShopingList router
 
 
 

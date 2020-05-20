@@ -1,0 +1,26 @@
+
+<form method="POST" action="/shoppingList/new/<%=list.id%>?_method=PUT">
+    <%- include('./_form_fields_new') %> 
+    <a href="/shoppingList">Anuluj</a>
+    <button type="submit">Dodaj</button>
+</form>
+<div style="display: flex;">
+    <% for(var i =0;i<addedShoping.length ; i++) {%>
+        <div style="padding:10px;">
+            <p>Nazwa</p>  
+        <% for(var j =0;j<addedShoping[i].productName.length ; j++){ %> 
+            <p> <%= addedShoping[i].productName[j] %></p>
+        <%}%>
+    </div>
+    <%} %>  
+
+    <% for(var i =0;i<addedShoping.length ; i++) {%>
+        <div style="padding:10px 15px">
+            <p>Cena</p>  
+        <% for(var j =0;j<addedShoping[i].price.length ; j++){ %> 
+            <% list.totalPrice = addedShoping[i].price[j] %> 
+                <p>cena: <%= addedShoping[i].price[j] %></p> 
+            <%}%>
+        </div>
+    <%} %> 
+</div>

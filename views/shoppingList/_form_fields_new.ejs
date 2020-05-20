@@ -1,0 +1,9 @@
+
+
+<% if(list.transactionDate == null){ %> 
+   <input type="date" name="transactionDate" value="<%=list.transactionDate%>" required>
+<% } %> 
+
+<input type="text" placeholder="nazwa produktu" name="productName" value="" required>
+<input type="number" placeholder="cena"  name="price"  value="<%=list.price  %> " >
+<br>

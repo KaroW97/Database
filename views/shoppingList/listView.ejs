@@ -1,0 +1,27 @@
+<h1><%=shopping.listName%></h1>
+<h4>Data zamówienia: <%=shopping.transactionDate == null ? '' : shopping.transactionDate.toISOString().split('T')[0] %> </h4>
+
+<div style="display:flex;" onclick="window.location='/shoppingList/listView/<%=shopping.id%>/edit'">
+    <div style="padding:10px;">
+        <p>Cena</p>
+        <% shopping.productName.forEach(element => { %>
+            <p><%= element %>     </p>
+        <% }); %> 
+    </div>
+    <div style="padding:10px;">
+        <p>Nazwa</p>
+        <% shopping.price.forEach(element => { %>
+                    <p > <%= element %> </p>       
+        <% }); %> 
+    </div>
+    <div style="padding:50px 10px 0 10px">
+        <% shopping.price.forEach((element, index) => { %>
+            <div style="padding:10px 0;">
+                <%-include(`../partials/deleteForm.ejs`, {url: `/shoppingList/listView/${[shopping.id, index]}`})%>
+            </div>
+    <% }); %> 
+    </div>
+ 
+</div>
+
+<p style="padding:0 10px 10px 10px;">Do zapłaty: <%=shopping.totalPrice%></p>

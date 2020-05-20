@@ -118,7 +118,7 @@ router.post('/', async(req,res)=>{
         teraphyPlan:req.body.teraphyPlan,
         recommendedCare:req.body.recommendedCare,
     })
-    
+   
     try{
         const newClient = await clients.save();
         res.redirect(`clients/clientView/${newClient.id}`)

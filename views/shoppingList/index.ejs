@@ -1,0 +1,24 @@
+<a href="/productCompany/new">Dodaj firme</a>
+<form method="POST" action="/shoppingList">
+    <input type="text" name="listName" placeholder="Dodaj liste" value="<%=shopping.listName%>" required>
+</form>
+<table>
+    <thead>
+        <tr>
+            <td>Nazwa Listy</td>
+            <td>Cena</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <% shopping.forEach(items => {%>
+          
+            <tr onclick="window.location='/shoppingList/listView/<%=items.id%>'">
+                <td><%=items.listName %></td>
+                <td><%=items.totalPrice %></td>
+                <td><%-include(`../partials/deleteForm.ejs`, {url: `shoppingList/${items.id}`})%></td>
+            </tr>
+       <% }); %> 
+    </tbody>
+</table>
