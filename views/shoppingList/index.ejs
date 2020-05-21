@@ -7,7 +7,7 @@
         <tr>
             <td>Nazwa Listy</td>
             <td>Cena</td>
-            <td></td>
+            <td>Data</td>
         </tr>
     </thead>
     <tbody>
@@ -17,6 +17,7 @@
             <tr onclick="window.location='/shoppingList/listView/<%=items.id%>'">
                 <td><%=items.listName %></td>
                 <td><%=items.totalPrice %></td>
+                <td><%= items.transactionDate == null ? '' : items.transactionDate.toISOString().split('T')[0] %> </td>
                 <td><%-include(`../partials/deleteForm.ejs`, {url: `shoppingList/${items.id}`})%></td>
             </tr>
        <% }); %> 
