@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const shoppingList = mongoose.Schema ({
 
     listName:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
         require:true,
-    
+        ref:'BrandName'
     },
     
     productName:{

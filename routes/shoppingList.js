@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const ShoppingList = require('../models/shoppingList')
-
+const BrandName = require('../models/productCompany')
 //Main Page Shopping List
 router.get('/',async(req,res)=>{
     try{
-        const shoppingList = await ShoppingList.find({})
+        const shoppingList = await ShoppingList.find({}).populate('listName').exec();
+        const brandName = await BrandName.find({})
         res.render('shoppingList/index',{
-            shopping:shoppingList
+            shopping:shoppingList,
+            brandName:brandName
         });
     }catch{
         res.redirect('/clients');
@@ -16,10 +18,8 @@ router.get('/',async(req,res)=>{
 })
 //Add Shopping List Name
 router.post('/', async(req,res)=>{
-    const shoppingList = new ShoppingList({
-       
-        listName:req.body.listName,
-      
+    const shoppingList = new ShoppingList({  
+        listName:req.body.brandName,
     })
     try{
         await shoppingList.save();
@@ -28,10 +28,29 @@ router.post('/', async(req,res)=>{
         res.redirect(`/clients`)
     }
 })
+//Shoping list Create Brand Name
+router.post('/brandName',async(req,res)=>{
+    const brandName = new BrandName({
+        name:req.body.name
+    })
+    const shoppingList = new ShoppingList({
+        listName:req.body.name
+    })
+    try{
+        brandName.save();
+        shoppingList.save();
+        res.redirect('/shoppingList')
+    }catch{
+        res.redirect('/clients')
+    }
+})
+
 //List View Router
 router.get('/listView/:id',async(req,res)=>{
     try{
-        const shoppingList = await ShoppingList.findById(req.params.id);
+        const shoppingList = await ShoppingList.findById(req.params.id)
+        .populate('listName')
+        .exec();
         res.render('shoppingList/listView',{
             list:shoppingList
         })
@@ -141,4 +160,5 @@ router.delete('/listView/:id', async(req,res)=>{
             res.redirect('clients')
     }
 })
+
 module.exports = router

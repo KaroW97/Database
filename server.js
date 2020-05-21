@@ -3,6 +3,7 @@ if(process.env.NODE_ENV !== 'production'){
 }
 const express = require('express')
 const app = express()
+const path = require('path')
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
@@ -15,14 +16,16 @@ const ShoppingList = require('./routes/shoppingList')
 const CalendarRouter = require('./routes/calendar')
 const SettingsRotuer = require('./routes/settings')
 
-
-
+console.log(__dirname)
+//app.use( express.static('public'));
+app.use('/jsFiles', express.static(__dirname + '/views/jsFiles'))
 app.set('view engine', 'ejs') 
 app.set('views',__dirname+'/views')
 app.set('layout', 'layouts/layout')
 app.use(expressLayouts)
 app.use(methodOverride('_method'))
-app.use(express.static('public')) //images
+
+
 app.use(bodyParser.urlencoded({limit:'10mb',extended:false}))
 
 
@@ -34,6 +37,7 @@ mongoose.connect(process.env.DATABASE_URL , {
 const db = mongoose.connection;
 db.on('error', error=>console.error(error)) //if error conecting database
 db.once('open', ()=>console.log('Conected to mongoose')) //only for the firsst time when we are creating 
+
 
 
 

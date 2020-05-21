@@ -4,7 +4,7 @@
     <label id="treatmentName"></label>
     <input id="treatmentName"name="treatmentName" placeholder="Nazwa zabiegu" value="<%=searchOptions.name  %>" autofocus>
 </form>
-<a href="/treatment/new">Add Treatment</a>
+<button onclick="showFormm()">Add Treatment</button>
 <table>
     <thead>
         <tr>
@@ -24,4 +24,10 @@
      
     </tbody>
 </table>
-
+<form method="POST" action="/treatment" >
+    <div style="display: none;" id ="comapnyForm" >
+        <span id ="close"class="close" onclick="closeForm()">&times;</span>
+        <%-include('./_form_fields.ejs')%>
+        <button type="submit">Dodaj</button>
+    </div>
+</form>

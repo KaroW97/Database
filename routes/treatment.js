@@ -17,12 +17,7 @@ router.get('/',async(req,res)=>{
         res.redirect('/treatment')
     }
 })
-
-//New Treatment
-router.get('/new',(req,res)=>{
-    res.render('treatment/new', {treatment:new Treatment()})
-})
-//
+//Add New Treatment
 router.post('/', async(req,res)=>{
     const treatment = new Treatment({
         treatmentName: req.body.treatmentName,
@@ -30,17 +25,16 @@ router.post('/', async(req,res)=>{
     })
 
     try{
-        const newTreatment= await treatment.save();
+        await treatment.save();
         res.redirect( `treatment`);
     }catch{
-        res.render('treatment/new',{
+        res.render('treatment',{
             treatment:treatment,
             errorMessage:'Error creating Treatment'
         });
     } 
    
 })
-
 //Delete Treatment
 router.delete('/:id', async(req,res)=>{
     let treatment;

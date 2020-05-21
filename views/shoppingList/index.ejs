@@ -1,6 +1,17 @@
-<a href="/productCompany/new">Dodaj firme</a>
+
+<button href="#" id ="showForm" onclick="showFormm()">Dodaj firme</button>
 <form method="POST" action="/shoppingList">
-    <input type="text" name="listName" placeholder="Dodaj liste" value="<%=shopping.listName%>" required>
+    <select name="brandName">
+        <% brandName.forEach(brand => { %>
+           
+            <% if(brand.id === shopping.listName){ %>
+                <option selected label="<%=brand.name%>" value="<%=brand.id%>"><%=brand.name%></option>
+            <% }else{ %>
+                <option  label="<%=brand.name%>" value="<%=brand.id%>"><%=brand.name%></option>
+            <% } %>
+        <%}); %>
+        </select>
+        <button type="submit">Dodaj</button>
 </form>
 <table>
     <thead>
@@ -13,9 +24,8 @@
     <tbody>
         
         <% shopping.forEach(items => {%>
-          
             <tr onclick="window.location='/shoppingList/listView/<%=items.id%>'">
-                <td><%=items.listName %></td>
+                <td><%=items.listName.name  == null? '':items.listName.name %></td>
                 <td><%=items.totalPrice %></td>
                 <td><%= items.transactionDate == null ? '' : items.transactionDate.toISOString().split('T')[0] %> </td>
                 <td><%-include(`../partials/deleteForm.ejs`, {url: `shoppingList/${items.id}`})%></td>
@@ -23,3 +33,10 @@
        <% }); %> 
     </tbody>
 </table>
+<form method="POST" action="/shoppingList/brandName" >
+    <div style="display: none;" id ="comapnyForm" >
+        <span id ="close"class="close" onclick="closeForm()">&times;</span>
+        <input id ="companyInput"type="text" name="name" placeholder="Dodaj nazwe firmy" value="<%=brandName.name%>" required>
+        <button type="submit">Dodaj</button>
+    </div>
+</form>

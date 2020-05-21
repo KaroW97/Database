@@ -1,15 +1,24 @@
 <form method="POST" action="/shoppingList/listView/<%=list.id%>/edit?_method=PUT">
     <input type="text" placeholder="nazwa listy" name="listName" value="<%=list.listName%>" >
     <input type="date" name="transactionDate" value="<%=list.transactionDate==null ? '' : list.transactionDate.toISOString().split('T')[0]%>" >
-    <% list.productName.forEach(element => { %>
-        <input type="text" placeholder="nazwa produktu" name="productName" value="<%=element%>" >
-       
-    <% }); %> 
-    <% list.price.forEach(element => { %>
-        <input type="text" placeholder="cena"  name="price"  value="<%=element%> " >
-    <% }); %> 
-   
-    
+    <br><div style="display: flex;">
+        <div style="padding:10px">
+        <% list.productName.forEach(element => { %>
+            <div style="margin:10px 2px">
+                <input type="text" placeholder="nazwa produktu" name="productName" value="<%=element%>" >
+            </div>
+           
+        <% }); %> 
+        </div>
+        <div  style="padding:10px" >
+        <% list.price.forEach(element => { %>
+            <div style="margin:10px 2px">
+                <input type="number" placeholder="cena"  name="price"  value="<%=element%>" >
+            </div>
+        <% }); %> 
+    </div>
+    </div>
+
      <br>
     <a href="/shoppingList/listView/<%=list.id%>">Anuluj</a>
     <button type="submit">Dodaj</button>
