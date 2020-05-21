@@ -104,7 +104,8 @@ router.delete('/:id',async(req,res)=>{
 //Edit List Router
 router.get('/listView/:id/edit', async(req,res)=>{
     try{
-        const list = await ShoppingList.findById(req.params.id);
+        const list = await ShoppingList.findById(req.params.id).populate('listName').exec();
+        
         res.render('shoppingList/edit',{
             list:list
         })
@@ -118,8 +119,8 @@ router.put('/listView/:id/edit', async(req,res)=>{
     let list
     let totalPriceCalculate = 0;
     try{
-        list = await ShoppingList.findById(req.params.id);
-        list.listName = req.body.listName
+        list = await ShoppingList.findById(req.params.id)
+        //list.listName = req.body.listName
         if( req.body.price == null ||req.body.price =='' ||req.body.price =='0')
             list.price.pull(req.body.price);
         list.price = req.body.price

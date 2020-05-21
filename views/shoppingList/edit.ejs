@@ -1,5 +1,5 @@
 <form method="POST" action="/shoppingList/listView/<%=list.id%>/edit?_method=PUT">
-    <input type="text" placeholder="nazwa listy" name="listName" value="<%=list.listName%>" >
+    <h1><%=list.listName.name%></h1>
     <input type="date" name="transactionDate" value="<%=list.transactionDate==null ? '' : list.transactionDate.toISOString().split('T')[0]%>" >
     <br><div style="display: flex;">
         <div style="padding:10px">
