@@ -1,11 +1,11 @@
 <div>
-    <input id ="input"  type="date" name="clientVisitDate" 
+    <input type="date" name="clientVisitDate" 
     value= "<%=newVisit.clientVisitDate == null ? '': newVisit.clientVisitDate.toISOString().split('T')[0] %>" >
 </div>
 <div>
     <select name="treatment">
     <% treatments.forEach(treatment => { %>
-        <% if(treatment.id === newVisit.treatment.id ){ %>
+        <% if(treatment.id === newVisit.treatment ){ %>
             <option selected label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=newVisit.treatment.treatmentName%></option>
         <% }else{ %>
             <option  label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>

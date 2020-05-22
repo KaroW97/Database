@@ -23,7 +23,8 @@ const shoppingList = mongoose.Schema ({
     totalPrice:{
         type:Number,
         require:false
-    }
+    },
+    
     /*brandName:{
         type:mongoose.Schema.Types.ObjectId,
         require:true,

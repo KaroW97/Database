@@ -1,4 +1,4 @@
-<div onclick="window.location='/clients/clientView/<%=curentClient%>/edit'">
+<div onclick="window.location='/clients/clientView/<%=clientInfo.id%>/edit'">
     <% if(clientInfo.visitDate != null) {%> 
         <p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
     <% } %> 
@@ -18,6 +18,7 @@
             </ul>
         <% } %> 
     <%})%>
+    <p>inne: <%=clientInfo.skinDiagnoseAll.other %> </p>
     <% if(clientInfo.washingFace != '') {%> 
         <p>Czym myta twarz:  <%=clientInfo.washingFace  %> </p>
     <% } %> 
@@ -40,35 +41,30 @@
         <p>Zalecana pilęgnacja:  <%=clientInfo.recommendedCare  %> </p>
     <% } %>
 </div>
-<br>
 
-<% for(var i=0;i<addedVisist.length;i++){ %> 
-    <%if(addedVisist[i].client == curentClient){%>
-     <h1>Wizyty  </h1>
-    <% break} %> 
+<br>
+<% if(addedVisist != ''){ %> 
+    <h1>Wizyty  </h1>
 <%}%>
-<% for(var i=0;i<addedVisist.length;i++){ %> 
-    <%if(addedVisist[i].client == curentClient){%>
-        <%treatments.forEach(treatmentt=>{%>
-            <%if(addedVisist[i].treatment == treatmentt.id && addedVisist[i].comment !='default'){%>
-               
-                    <div onclick="window.location='/clients/clientView/<%=addedVisist[i].id%>/editPost'">
-                        <p><%= treatmentt.treatmentName %>  <%= treatmentt.treatmentPrice %></p>
-                        <p> <%=addedVisist[i].clientVisitDate ==null ? '':addedVisist[i].clientVisitDate.toISOString().split('T')[0] %></p>
-                        <p><%=addedVisist[i].comment %> </p>
-                    </div>
-                    <%- include(`../partials/deleteForm.ejs`, {url: `/clients/clientView/${addedVisist[i].id}`})%> 
-                
-            <% } %> 
-        <% }) %>
-    <%}%>
-<%} %> 
+<%addedVisist.forEach(element => { %> 
+    <!-- -->
+    <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" id ="showForm" onclick="showFormm()">
+        <p><%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %> </p>
+        <p><%= element.comment %> </p>
+        <p><%= element.treatment.treatmentName %> </p>
+        <p><%= element.treatment.treatmentPrice %> </p>
+        <%- include(`../partials/deleteForm.ejs`, {url: `/clients/clientView/${element.id}`})%> 
+    </div>
 
-<br>
-<br>
+ 
+<%});%> 
+    
 
-<form action='/clients/clientView/<%=curentClient%>' method="POST">
+<form action='/clients/clientView/<%=clientInfo.id%>' method="POST">
     <!--Section for adding coments-->
-    <%- include('./_form_fields_editPost.ejs') %> 
+    <%- include('./_form_fields_CreatePost.ejs') %> 
     <button type="submit">Dodaj</button>
 </form>
+
+
+

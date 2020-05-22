@@ -135,7 +135,8 @@ router.post('/', async(req,res)=>{
 router.get('/clientView/:id',async(req,res)=>{
     try{
         const visit = new ClientVisits()
-        const addedVisit = await ClientVisits.find({})
+        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').exec()
+        console.log(addedVisit)
         const treatments = await Treatment.find({});
         const clientt  = await Client.findById(req.params.id)
         res.render('clients/clientView',{
@@ -164,13 +165,13 @@ router.post('/clientView/:id', async(req,res)=>{
         res.redirect( `/clients/clientView/${req.params.id}`)
     }catch{
         const treatments = await Treatment.find({});
-        const addedVisit = await ClientVisits.find({})
+        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').exec()
         const clientt  = await Client.findById(req.params.id);
         res.render(`clients/clientView`,{
             errorMessage:'Error creating Visit',
             addedVisist:addedVisit,
             newVisit:visit,
-            treatments:treatments,
+           
             curentClient:req.params.id,
             clientInfo:clientt
         })
@@ -190,34 +191,37 @@ router.delete('/clientView/:id', async(req,res)=>{
 })
 //edit Visit/Post
 router.get('/clientView/:id/editPost', async(req,res)=>{
-  
+    
     try{
-        const addedVisit = await ClientVisits.findById(req.params.id)
-        const treatments = await Treatment.find({});
+       
+       
+        const addedVisit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').exec()
+        const treatments = await Treatment.find({});//_id:addedVisit.treatment.id
+        console.log(addedVisit)
         res.render('clients/editPost',{
             treatments:treatments,
             curentVisit:req.params.id,
-            clientId:addedVisit.client,
             newVisit:addedVisit,
         })
       
     }catch(err){
-        res.redirect(`/clients/${clientId}`)
+        const addedVisit = await ClientVisits.findById(req.params.id)
+        res.redirect(`/clients/${addedVisit.id}`)
     }
-    //res.send('update post ' + req.params.id)
+  
 })
 //edit Visit/Post
 router.put('/clientView/:id/editPost', async(req,res)=>{
     let visit
     try{
-         visit = await ClientVisits.findById(req.params.id)
+         visit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').exec()
          visit.client=visit.client
          visit.comment= req.body.comment
          visit.clientVisitDate= new Date( req.body.clientVisitDate) 
          visit.treatment= req.body.treatment
 
          await visit.save();
-         res.redirect(`/clients/clientView/${visit.client}`)
+         res.redirect(`/clients/clientView/${visit.client.id}`)
     }catch(err){
         console.log(err)
         const addedVisit = await ClientVisits.findById(req.params.id)
