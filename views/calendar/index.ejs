@@ -1,10 +1,10 @@
 <form  action="/calendar" method="GET">
-<input type="date" name="dateTime" value="<%=searchOptions.dateTime%>">
-<button type="submit">Szukaj</button>
+    <input type="date" name="dateTime" value="<%=searchOptions.dateTime%>">
+    <button type="submit">Szukaj</button>
 </form>
 
 <%list.forEach(element => {%>
-    <p><%= element.transactionDate == null ? '' : element.transactionDate.toISOString().split('T')[0] %> </p>  
+    <p><%= element.transactionDate == null ? '' : element.transactionDate.toISOString().split('T')[0] %></p>  
     <p><%= element.totalPrice %> </p>  
     <p><%= element.listName.name %> </p>  
     <br>

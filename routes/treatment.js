@@ -23,7 +23,6 @@ router.post('/', async(req,res)=>{
         treatmentName: req.body.treatmentName,
         treatmentPrice: req.body.treatmentPrice
     })
-
     try{
         await treatment.save();
         res.redirect( `treatment`);

@@ -33,12 +33,12 @@ router.post('/brandName',async(req,res)=>{
     const brandName = new BrandName({
         name:req.body.name
     })
-    const shoppingList = new ShoppingList({
+    /*const shoppingList = new ShoppingList({
         listName:req.body.name
-    })
+    })*/
     try{
         brandName.save();
-        shoppingList.save();
+       /// shoppingList.save();
         res.redirect('/shoppingList')
     }catch{
         res.redirect('/clients')
@@ -66,7 +66,7 @@ router.put('/listView/:id',async(req,res)=>{
         list.productName.push(req.body.productName);
         
         if(list.transactionDate  == null)
-        list.transactionDate = Date.parse(req.body.transactionDate)|| '';
+            list.transactionDate = Date.parse(req.body.transactionDate)|| '';
 
         list.price.forEach(element => {
             totalPriceCalculate +=element;

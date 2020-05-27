@@ -48,7 +48,7 @@
 <%}%>
 <%addedVisist.forEach(element => { %> 
     <!-- -->
-    <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" id ="showForm" onclick="showFormm()">
+    <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" onclick="showFormm()">
         <p><%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %> </p>
         <p><%= element.comment %> </p>
         <p><%= element.treatment.treatmentName %> </p>
