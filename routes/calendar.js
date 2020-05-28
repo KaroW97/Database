@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const ShoppingList = require('../models/shoppingList')
+const {ensureAuthenticated} = require('../config/auth')
 //Show Calendar Page
-router.get('/',async (req,res)=>{
+router.get('/',ensureAuthenticated,async (req,res)=>{
     let todayDate = new Date();
     let shopping =  ShoppingList.find().populate('listName')
     let shoppingTwoDays =  ShoppingList.find().populate('listName')

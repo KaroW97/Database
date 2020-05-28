@@ -34,7 +34,7 @@ router.post('/registration',async(req,res)=>{
                 password:hashedPassword
             })
             await newUser.save();
-            res.redirect('users/login')
+            res.redirect('/login')
         }else if(req.body.password !=req.body.ConfirmPassword){
             res.render('users/register',{
                 errorMessage:'Hasła są różne'
@@ -64,8 +64,14 @@ router.get('/login',async (req, res)=>{
 router.post('/login', function(req, res, next){
     passport.authenticate('local',{
         successRedirect:'/calendar',
-        failureRedirect:'/users/login',
+        failureRedirect:'/login',
         failureFlash:true
     })(req,res,next)
+})
+//Logut
+router.get('/logout',(req,res)=>{
+    req.logOut();
+    req.flash('You are logout');
+    res.redirect('/')
 })
 module.exports = router;

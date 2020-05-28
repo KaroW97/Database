@@ -3,10 +3,10 @@ const router = express.Router();
 const Client = require('../models/clients');
 const Treatment = require('../models/treatment')
 const ClientVisits = require('../models/clientsVisits')
-
+const {ensureAuthenticated} = require('../config/auth')
 
 //All Clients Route
-router.get('/', async(req,res)=>{
+router.get('/', ensureAuthenticated,async(req,res)=>{
     let searchOptions ={};
     if(req.query.name!= null && req.query.name !==''){
         searchOptions.name = new RegExp(req.query.name, 'i')
@@ -26,7 +26,7 @@ router.get('/', async(req,res)=>{
 })
 
 //New Client Route Displaing form
-router.get('/new',async (req,res)=>{
+router.get('/new',ensureAuthenticated,async (req,res)=>{
    try{
     res.render('clients/new',{ clients: new Client(),})
    }catch{
@@ -132,7 +132,7 @@ router.post('/', async(req,res)=>{
 })
 
 //Show Client
-router.get('/clientView/:id',async(req,res)=>{
+router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
     try{
         const visit = new ClientVisits()
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').exec()
@@ -190,7 +190,7 @@ router.delete('/clientView/:id', async(req,res)=>{
     }
 })
 //edit Visit/Post
-router.get('/clientView/:id/editPost', async(req,res)=>{
+router.get('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
     
     try{
        
@@ -237,7 +237,7 @@ router.put('/clientView/:id/editPost', async(req,res)=>{
 })
 
 //edit
-router.get('/clientView/:id/edit', async(req,res)=>{
+router.get('/clientView/:id/edit',ensureAuthenticated, async(req,res)=>{
     try{
         const clietnEdit = await Client.findById(req.params.id)
         res.render('clients/edit',{

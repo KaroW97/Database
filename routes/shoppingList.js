@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const ShoppingList = require('../models/shoppingList')
 const BrandName = require('../models/productCompany')
+const {ensureAuthenticated} = require('../config/auth')
+
 //Main Page Shopping List
-router.get('/',async(req,res)=>{
+router.get('/',ensureAuthenticated,async(req,res)=>{
     try{
         const shoppingList = await ShoppingList.find({}).populate('listName').exec();
         const brandName = await BrandName.find({})
@@ -46,7 +48,7 @@ router.post('/brandName',async(req,res)=>{
 })
 
 //List View Router
-router.get('/listView/:id',async(req,res)=>{
+router.get('/listView/:id',ensureAuthenticated,async(req,res)=>{
     try{
         const shoppingList = await ShoppingList.findById(req.params.id)
         .populate('listName')
@@ -102,7 +104,7 @@ router.delete('/:id',async(req,res)=>{
   
 })
 //Edit List Router
-router.get('/listView/:id/edit', async(req,res)=>{
+router.get('/listView/:id/edit',ensureAuthenticated, async(req,res)=>{
     try{
         const list = await ShoppingList.findById(req.params.id).populate('listName').exec();
         

@@ -51,7 +51,7 @@ app.use(passport.session());
 
 app.use(flash())
 
-app.use('/users',IndexRouter); //login register
+app.use('/',IndexRouter); //login register
 app.use(['/clients','/clients/show','/clients/clientView/:id'],ClientRouter) //Clients
 app.use('/treatment',TreatmentRotuer)
 app.use('/calendar',CalendarRouter)//Calendar page

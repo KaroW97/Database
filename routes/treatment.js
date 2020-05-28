@@ -1,19 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const Treatment = require('../models/treatment')
-
+const {ensureAuthenticated} = require('../config/auth')
 //All Treatments
-router.get('/',async(req,res)=>{
+router.get('/',ensureAuthenticated,async(req,res)=>{
    var searchOptions={};
    if(req.query.treatmentName !=null && req.query.treatmentName !=='')
         searchOptions.treatmentName = new RegExp(req.query.treatmentName,'i');
     try{
+      
         const treatment = await Treatment.find(searchOptions);
         res.render('treatment/index',{
             treatment:treatment,
             searchOptions:searchOptions
         })
-    }catch{
+    }catch(err){
+        console.log(err)
         res.redirect('/treatment')
     }
 })
@@ -48,7 +50,7 @@ router.delete('/:id', async(req,res)=>{
     
 })
 //Edit Treatment
-router.get('/:id/edit' , async(req,res)=>{
+router.get('/:id/edit' ,ensureAuthenticated, async(req,res)=>{
     try{
         const treatment = await Treatment.findById(req.params.id);
         res.render('treatment/edit',{
