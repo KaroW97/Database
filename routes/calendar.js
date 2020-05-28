@@ -5,22 +5,25 @@ const {ensureAuthenticated} = require('../config/auth')
 //Show Calendar Page
 router.get('/',ensureAuthenticated,async (req,res)=>{
     let todayDate = new Date();
-    let shopping =  ShoppingList.find().populate('listName')
-    let shoppingTwoDays =  ShoppingList.find().populate('listName')
+
+    let shopping =  ShoppingList.find({user:req.user.id}).populate('listName')
+    let shoppingTwoDays =  ShoppingList.find({user:req.user.id}).populate('listName')
     /*if(req.query.transactionDate != null &&  req.query.transactionDate !=''){
         //szukamy w bazie danych title od naszego req.query.title
         query = query.lte('publishDate', req.query.publishedBefore) //less then or equal
     }*/
     if(req.query.dateTime != null &&  req.query.dateTime !=''){
         shopping = shopping.gte('transactionDate', req.query.dateTime)
+    }else{
+        shopping = shopping.gte('transactionDate',todayDate.toISOString().split('T')[0])
     }
-        //od obecnej daty
+    //For Two Days From Nowssssssssssssssss
+        //Todays Date
         shoppingTwoDays = shoppingTwoDays.gte('transactionDate',todayDate.toISOString().split('T')[0])
         todayDate.setDate(todayDate.getDate() + 2)
-        //do dwa dni do przodu
+        //Two Days From Now Date
         shoppingTwoDays = shoppingTwoDays.lte('transactionDate',todayDate.toISOString().split('T')[0])
     
-        
     try{
         const perchuse = await shopping.exec()
         const shoppingTwoDaysFromNow = await shoppingTwoDays.exec();
@@ -28,11 +31,11 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
             //perchuseStandard:perchuseStandardC,
             list:perchuse,
             shoppingTwoDaysFromNow:shoppingTwoDaysFromNow,
-            todayDate:todayDate,
             searchOptions:req.query || ''
         });
     }catch(err){
         console.log(err)
+        res.redirect('/shoppingList')
     }
     
 })

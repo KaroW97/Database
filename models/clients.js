@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const ClientVisits = require('./clientsVisits')
 
 const clientSchema = new mongoose.Schema({
+    user:{
+        type:String,
+        required:true
+    },
     visitDate:{
         type:Date,
         required:false

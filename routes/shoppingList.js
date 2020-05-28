@@ -5,10 +5,11 @@ const BrandName = require('../models/productCompany')
 const {ensureAuthenticated} = require('../config/auth')
 
 //Main Page Shopping List
+//TODO DODAC OBSLUGE BLEDOW
 router.get('/',ensureAuthenticated,async(req,res)=>{
     try{
-        const shoppingList = await ShoppingList.find({}).populate('listName').exec();
-        const brandName = await BrandName.find({})
+        const shoppingList = await ShoppingList.find({user:req.user.id}).populate('listName').exec();
+        const brandName = await BrandName.find({user:req.user.id})
         res.render('shoppingList/index',{
             shopping:shoppingList,
             brandName:brandName
@@ -22,6 +23,7 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
 router.post('/', async(req,res)=>{
     const shoppingList = new ShoppingList({  
         listName:req.body.brandName,
+        user:req.user.id
     })
     try{
         await shoppingList.save();
@@ -33,7 +35,8 @@ router.post('/', async(req,res)=>{
 //Shoping list Create Brand Name
 router.post('/brandName',async(req,res)=>{
     const brandName = new BrandName({
-        name:req.body.name
+        name:req.body.name,
+        user:req.user.id
     })
     /*const shoppingList = new ShoppingList({
         listName:req.body.name

@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const TreatmentSchema = mongoose.Schema({
+    user:{
+        type:String,
+        require:true
+    },
     treatmentName:{
         type:String,
         require:true

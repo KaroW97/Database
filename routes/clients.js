@@ -3,6 +3,7 @@ const router = express.Router();
 const Client = require('../models/clients');
 const Treatment = require('../models/treatment')
 const ClientVisits = require('../models/clientsVisits')
+const User = require('../models/user')
 const {ensureAuthenticated} = require('../config/auth')
 
 //All Clients Route
@@ -14,12 +15,15 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
     try{
         const treatments = await Treatment.find({});
         const clients = await Client.find(searchOptions); //we have no conditions 
+
         res.render('clients/index',{
+            user: req.user.id,
             clients:clients,
-            treatments:treatments,
+            treatments:treatments, //to raczej zbedne
             searchOptions:req.query
         });
-    }catch{
+    }catch(err){
+        console.log(err)
         res.redirect('/calendar')
     }
    
@@ -36,7 +40,7 @@ router.get('/new',ensureAuthenticated,async (req,res)=>{
 })
 
 //Create Client Route
-router.post('/', async(req,res)=>{
+router.post('/', ensureAuthenticated,async(req,res)=>{
 
     const clients = new Client({
      
@@ -117,6 +121,7 @@ router.post('/', async(req,res)=>{
         diagnose1:req.body.diagnose1,
         teraphyPlan:req.body.teraphyPlan,
         recommendedCare:req.body.recommendedCare,
+        user:req.user.id
     })
    
     try{
@@ -136,8 +141,8 @@ router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
     try{
         const visit = new ClientVisits()
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').exec()
-        console.log(addedVisit)
-        const treatments = await Treatment.find({});
+       
+        const treatments = await Treatment.find({user:req.user.id});
         const clientt  = await Client.findById(req.params.id)
         res.render('clients/clientView',{
             addedVisist:addedVisit,
@@ -152,7 +157,7 @@ router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
 })
 
 //Add new Visit/Post
-router.post('/clientView/:id', async(req,res)=>{
+router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
  
     const visit = new ClientVisits({
         client:req.params.id,
@@ -178,7 +183,7 @@ router.post('/clientView/:id', async(req,res)=>{
     }
 })
 //delete Visits/Post
-router.delete('/clientView/:id', async(req,res)=>{
+router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
     let visit, clientValue;
     try{
         visit = await ClientVisits.findById(req.params.id);
@@ -193,11 +198,8 @@ router.delete('/clientView/:id', async(req,res)=>{
 router.get('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
     
     try{
-       
-       
         const addedVisit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').exec()
-        const treatments = await Treatment.find({});//_id:addedVisit.treatment.id
-        console.log(addedVisit)
+        const treatments = await Treatment.find({user:req.user.id});//_id:addedVisit.treatment.id
         res.render('clients/editPost',{
             treatments:treatments,
             curentVisit:req.params.id,
@@ -211,7 +213,7 @@ router.get('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
   
 })
 //edit Visit/Post
-router.put('/clientView/:id/editPost', async(req,res)=>{
+router.put('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
     let visit
     try{
          visit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').exec()
@@ -223,7 +225,6 @@ router.put('/clientView/:id/editPost', async(req,res)=>{
          await visit.save();
          res.redirect(`/clients/clientView/${visit.client.id}`)
     }catch(err){
-        console.log(err)
         const addedVisit = await ClientVisits.findById(req.params.id)
         const treatments = await Treatment.find({});
         res.render('clients/editPost',{
@@ -249,7 +250,7 @@ router.get('/clientView/:id/edit',ensureAuthenticated, async(req,res)=>{
    
 })
 //Update Client 
-router.put('/clientView/:id',async (req,res)=>{
+router.put('/clientView/:id',ensureAuthenticated,async (req,res)=>{
     let clients;
     try{
         clients =  await Client.findById(req.params.id)
@@ -341,7 +342,7 @@ router.put('/clientView/:id',async (req,res)=>{
     }
 })
 //Delete Client
-router.delete('/:id',async (req,res)=>{
+router.delete('/:id',ensureAuthenticated,async (req,res)=>{
     let clients;
     try{
         clients =  await Client.findById(req.params.id);

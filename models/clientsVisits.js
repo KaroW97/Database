@@ -18,7 +18,7 @@ const clientVisits = mongoose.Schema({
         
     treatment:{
         type:mongoose.Schema.Types.ObjectId, //id of another object in our colection
-        required:true,
+        required:false,
         ref:'Treatment' //do czego sie odnosi
     },
    

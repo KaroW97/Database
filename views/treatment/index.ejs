@@ -14,12 +14,15 @@
         </tr>
     </thead>
     <tbody>   
+    
         <% treatment.forEach(treatment => {%>
-            <tr onclick="window.location='/treatment/<%=treatment.id%>/edit'">
-                <td><%=treatment.treatmentName%></td>
-                <td><%=treatment.treatmentPrice%></td>
-                <td><%- include(`../partials/deleteForm.ejs`, {url: `treatment/${treatment.id}`})%></td>
-            </tr>
+            <% if(treatment.user == user) {%> 
+                <tr onclick="window.location='/treatment/<%=treatment.id%>/edit'">
+                    <td><%=treatment.treatmentName%></td>
+                    <td><%=treatment.treatmentPrice%></td>
+                    <td><%- include(`../partials/deleteForm.ejs`, {url: `treatment/${treatment.id}`})%></td>
+                </tr>
+            <% } %> 
         <% });%>
      
     </tbody>

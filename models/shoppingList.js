@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const shoppingList = mongoose.Schema ({
-
+    user:{
+        type:String,
+        require:false
+    },
     listName:{
         type:mongoose.Schema.Types.ObjectId,
         require:true,

@@ -2,7 +2,7 @@
 
 <form method="GET" id="myform">
     <label>Name</label>
-    <input type="text" name="name" value="<%=searchOptions.name  %> ">
+    <input type="text" name="name" value="<%=searchOptions.name%>">
 </form>
 <a href="/clients/new">Dodaj klienta</a>
 <br>
@@ -16,12 +16,14 @@
     </thead>
     <tbody>
     <% clients.forEach(client => {%> 
-    <tr onclick="window.location='/clients/clientView/<%=client.id%>'">
-        <td><%=client.name%> <%=client.lastName%></td>
-        <td><%=client.phoneNumber%></td>
-        <td> <%- include(`../partials/deleteForm.ejs`, {url: `clients/${client.id}`})%> 
-         </td>
-    </tr>
+        <% if(client.user == user ){ %> 
+            <tr onclick="window.location='/clients/clientView/<%=client.id%>'">
+                <td><%=client.name%> <%=client.lastName%></td>
+                <td><%=client.phoneNumber%></td>
+                <td> <%- include(`../partials/deleteForm.ejs`, {url: `clients/${client.id}`})%> 
+                </td>
+            </tr>
+        <% } %> 
     <% }); %> 
     </tbody>
 </table>

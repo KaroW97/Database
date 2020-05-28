@@ -1,9 +1,8 @@
 
 <button href="#" id ="showForm" onclick="showFormm()">Dodaj firme</button>
-<form method="POST" action="/shoppingList">
-    <select name="brandName">
+<form id="myForm" method="POST"  action="/shoppingList" style="display: none;">
+    <select id ="select"name="brandName" >
         <% brandName.forEach(brand => { %>
-           
             <% if(brand.id === shopping.listName){ %>
                 <option selected label="<%=brand.name%>" value="<%=brand.id%>"><%=brand.name%></option>
             <% }else{ %>
@@ -13,6 +12,7 @@
         </select>
         <button type="submit">Dodaj</button>
 </form>
+
 <table>
     <thead>
         <tr>

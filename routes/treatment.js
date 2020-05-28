@@ -8,9 +8,9 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
    if(req.query.treatmentName !=null && req.query.treatmentName !=='')
         searchOptions.treatmentName = new RegExp(req.query.treatmentName,'i');
     try{
-      
         const treatment = await Treatment.find(searchOptions);
         res.render('treatment/index',{
+            user:req.user.id,
             treatment:treatment,
             searchOptions:searchOptions
         })
@@ -22,6 +22,7 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
 //Add New Treatment
 router.post('/', async(req,res)=>{
     const treatment = new Treatment({
+        user:req.user.id,
         treatmentName: req.body.treatmentName,
         treatmentPrice: req.body.treatmentPrice
     })

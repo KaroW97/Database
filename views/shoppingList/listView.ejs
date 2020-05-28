@@ -7,7 +7,7 @@
     <div style="display:flex;"  >
         <div style="padding:10px;" onclick="window.location='/shoppingList/listView/<%=list.id%>/edit'">
             <%if(list.productName != '' || list.price != '') {%> 
-                <p>Cena</p>
+                <p>Nazwa</p>
             <% } %> 
             <% list.productName.forEach(element => { %>
                 <p><%= element %>     </p>
@@ -15,7 +15,7 @@
         </div>
         <div style="padding:10px;" onclick="window.location='/shoppingList/listView/<%=list.id%>/edit'">
             <%if(list.price != '' || list.productName != '') {%> 
-                <p>Nazwa</p>
+                <p>Cena</p>
             <% } %>
            
             <% list.price.forEach(element => { %>
