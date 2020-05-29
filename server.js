@@ -46,7 +46,7 @@ db.once('open', ()=>console.log('Conected to mongoose')) //only for the firsst t
 // Passport Middleware
 app.use(flash())
 app.use(session({
-    secret:process.env.SESSION_SECRET,
+    secret:'uXap12AJDmeqsjadue',//process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:false
 }))
