@@ -3,22 +3,28 @@ const router = express.Router();
 const Client = require('../models/clients');
 const Treatment = require('../models/treatment')
 const ClientVisits = require('../models/clientsVisits')
+
 const User = require('../models/user')
 const {ensureAuthenticated} = require('../config/auth')
 
 //All Clients Route
 router.get('/', ensureAuthenticated,async(req,res)=>{
     let searchOptions ={};
+    let searchClientLastName ={};
     if(req.query.name!= null && req.query.name !==''){
         searchOptions.name = new RegExp(req.query.name, 'i')
+        searchClientLastName.lastName =  new RegExp(req.query.name, 'i')
     }
     try{
         const treatments = await Treatment.find({});
-        const clients = await Client.find(searchOptions); //we have no conditions 
-
+        const clients =  Client.find(searchOptions); //we have no conditions 
+        const clientLastName =  Client.find(searchClientLastName); 
+        let clientFind =await clients.find({user:req.user.id}).exec();
+        if(clientFind =='')
+            clientFind = await clientLastName.find({user:req.user.id}).exec(); 
         res.render('clients/index',{
             user: req.user.id,
-            clients:clients,
+            clients:clientFind,
             treatments:treatments, //to raczej zbedne
             searchOptions:req.query
         });
@@ -123,13 +129,17 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         recommendedCare:req.body.recommendedCare,
         user:req.user.id
     })
-   
+
     try{
+       
         const newClient = await clients.save();
         res.redirect(`clients/clientView/${newClient.id}`)
        
-    }catch{
+    }catch(err){
+        console.log(err)
         res.render('clients/new',{
+            user:req.user.id,
+            type:'danger',
             clients:clients,
             errorMessage:'Error creating Client', 
         });
@@ -138,10 +148,11 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
 
 //Show Client
 router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
+
     try{
         const visit = new ClientVisits()
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').exec()
-       
+     
         const treatments = await Treatment.find({user:req.user.id});
         const clientt  = await Client.findById(req.params.id)
         res.render('clients/clientView',{
@@ -158,25 +169,30 @@ router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
 
 //Add new Visit/Post
 router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
- 
+
+
     const visit = new ClientVisits({
         client:req.params.id,
         comment: req.body.comment,
         clientVisitDate:new Date( req.body.clientVisitDate) ,
         treatment: req.body.treatment,
     })
-    try{
+    try{   
+        
         await visit.save();
         res.redirect( `/clients/clientView/${req.params.id}`)
-    }catch{
+    }catch(err){
+        console.log(err)
         const treatments = await Treatment.find({});
+
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').exec()
         const clientt  = await Client.findById(req.params.id);
         res.render(`clients/clientView`,{
-            errorMessage:'Error creating Visit',
+            type:'danger',
+            errorMessage:'Wystąpił błąd podczas tworzenia Wizyty',
             addedVisist:addedVisit,
             newVisit:visit,
-           
+            treatments:treatments,
             curentClient:req.params.id,
             clientInfo:clientt
         })
@@ -215,16 +231,18 @@ router.get('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
 //edit Visit/Post
 router.put('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
     let visit
+    let clientStat
     try{
          visit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').exec()
          visit.client=visit.client
          visit.comment= req.body.comment
          visit.clientVisitDate= new Date( req.body.clientVisitDate) 
          visit.treatment= req.body.treatment
-
+         
          await visit.save();
          res.redirect(`/clients/clientView/${visit.client.id}`)
     }catch(err){
+        console.log(err)
         const addedVisit = await ClientVisits.findById(req.params.id)
         const treatments = await Treatment.find({});
         res.render('clients/editPost',{
@@ -344,6 +362,7 @@ router.put('/clientView/:id',ensureAuthenticated,async (req,res)=>{
 //Delete Client
 router.delete('/:id',ensureAuthenticated,async (req,res)=>{
     let clients;
+    let clientStats;
     try{
         clients =  await Client.findById(req.params.id);
         await clients.remove(); 

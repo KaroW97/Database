@@ -1,4 +1,7 @@
 <h1>Logowanie</h1>
+<% if(messages.error){ %>
+    <div class="alert alert-danger"><%= messages.error %> </div>
+<% } %> 
 
 <form method="POST" action="/login">
     <label for="loginEmail"></label>

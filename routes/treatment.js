@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Treatment = require('../models/treatment')
+
 const {ensureAuthenticated} = require('../config/auth')
 //All Treatments
 router.get('/',ensureAuthenticated,async(req,res)=>{

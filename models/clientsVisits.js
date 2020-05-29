@@ -21,6 +21,7 @@ const clientVisits = mongoose.Schema({
         required:false,
         ref:'Treatment' //do czego sie odnosi
     },
+
    
 
 })

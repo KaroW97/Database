@@ -17,7 +17,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
     }else{
         shopping = shopping.gte('transactionDate',todayDate.toISOString().split('T')[0])
     }
-    //For Two Days From Nowssssssssssssssss
+    //For Two Days From Now
         //Todays Date
         shoppingTwoDays = shoppingTwoDays.gte('transactionDate',todayDate.toISOString().split('T')[0])
         todayDate.setDate(todayDate.getDate() + 2)

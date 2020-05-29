@@ -1,16 +1,19 @@
 <h1>Rejestracja</h1>
+<% if(messages.logged){ %>
+    <div class="alert alert-<%=messages.success%>"><%= messages.logged%>ss</div>
+  <% } %>
 <form method="POST" action="/registration">
     <label for="companyName"></label>
-    <input type="text" id="companyName" name="companyName" placeholder="Nazwa Firmy" required>
+    <input type="text" id="companyName" name="companyName" placeholder="Nazwa Firmy" >
 
     <label for="email"></label>
-    <input type="email" id="email"name="email" placeholder="Email" required  >
+    <input type="email" id="email"name="email" placeholder="Email"   >
 
     <label for="password"></label>
-    <input type="password" id="password"name="password" placeholder="Hasło" required>
+    <input type="password" id="password"name="password" placeholder="Hasło" >
 
     <label for="confirmPassword"></label>
-    <input type="password" id="confirmPassword" name="ConfirmPassword" placeholder="Potwierdź Hasło" required >
+    <input type="password" id="confirmPassword" name="ConfirmPassword" placeholder="Potwierdź Hasło"  >
 
     <button type="submit">Zarejestruj</button>
 </form>

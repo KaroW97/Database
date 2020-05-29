@@ -1,0 +1,32 @@
+<h1>Statystyki Sprzedaży klientom</h1>
+<form method="GET" action="/statistics">
+    <input type="text" name="clientName" value="<%=searchOptions.clientName%>" placeholder="Szukaj Klienta">
+    <%- include(`../partials/dateSearchForm.ejs`, {searchFrom: `dateFrom`, searchOption:`${searchOptions.dateFrom}`, 
+    searchTo: `dateTo`, searchOption:`${searchOptions.dateTo}`}) %> 
+    <button type="submit">Szukaj</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Imie</th>
+            <th>Wydana Kwota</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    <% clients.forEach(client => {%> 
+        <% if(client.user == user ){ %> 
+            <tr onclick="window.location='/statistics/<%=client.id%>'" >
+                
+                <% var sum=0; %> 
+                <%addedVisist.forEach(element => { %> 
+                    <% client.id == element.client ?sum +=element.treatment.treatmentPrice:0 %>
+                <%});%> 
+                <td><%=sum != 0 ?client.name : ''%> <%=sum!=0 ?client.lastName:''%></td>
+                <td><%=sum !=0 ? sum : '' %></td>
+            </tr>
+        <% } %> 
+    <% }); %> 
+    </tbody>
+</table>

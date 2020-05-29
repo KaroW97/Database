@@ -4,6 +4,6 @@ module.exports={
             return next()
         }
         req.flash('Zaloguj się ')
-        res.redirect('/login')
+        res.redirect('/login',)
     }
 }

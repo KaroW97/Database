@@ -3,8 +3,8 @@ const router = express.Router();
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const User = require('../models/user')
+const {ensureAuthenticated} = require('../config/auth')
 //Passport Config
-
 router.get('/',async (req, res)=>{
     try{ 
         res.render('users/index')
@@ -16,38 +16,58 @@ router.get('/',async (req, res)=>{
 //Registration Page
 router.get('/registration',async (req, res)=>{
     try{ 
-        res.render('users/register')
+        res.render('users/register',{ user:req.user.id})
     }catch{
-        res.render('users/register')
+        res.render('users/register',{
+            errorMessage:'Coś poszło nie tak',
+            type:'danger',
+        })
     }
  
 })
 //Register Form
 router.post('/registration',async(req,res)=>{
+    var errorMessage ='';
     try{
         const findUser = await User.findOne({email:req.body.email})
         const hashedPassword = await bcrypt.hash(req.body.password,10)
-        if(req.body.password ==req.body.ConfirmPassword && findUser ==null ){
+        if(!req.body.email || !req.body.companyName || !req.body.password || !req.body.ConfirmPassword){
+            errorMessage = 'Prosze uzupełnij wszystkie pola. '
+        }
+        //Check Password
+        if(req.body.password !=req.body.ConfirmPassword){
+            errorMessage +='Wprowadzono różne hasła. '
+        }
+        //Check password lenght
+        if(req.body.password.length < 3){
+            errorMessage +=' Hasło powinno zawierac 3 znaków.'
+        }
+        if(findUser){
+            errorMessage +=' Email istnieje w bazie danych.'
+        }
+        if(errorMessage.length > 0){
+            res.render('users/register',{
+                errorMessage:errorMessage,
+                type:'danger'
+            })
+        }
+        else {
             var newUser = new User({
                 companyName:req.body.companyName,
                 email:req.body.email,
                 password:hashedPassword
             })
-            await newUser.save();
-            res.redirect('/login')
-        }else if(req.body.password !=req.body.ConfirmPassword){
-            res.render('users/register',{
-                errorMessage:'Hasła są różne'
-            })
-        }else if(findUser.email = req.body.email){
-            res.render('users/register',{
-                errorMessage:'W bazie danych istnieje ten email'
-            })
+           //await newUser.save();
+           req.flash('logged', 'Do zobaczenia!');
+           req.flash('success', 'success')
+           res.redirect('/login')
         }
-    }catch(err){
        
+    }catch(err){
         res.render('users/register',{
-            errorMessage:'Spróbuj Ponownie'
+           
+            errorMessage:'Spróbuj ponownie',
+            type:'danger'
         })
     }  
 })
@@ -69,9 +89,10 @@ router.post('/login', function(req, res, next){
     })(req,res,next)
 })
 //Logut
-router.get('/logout',(req,res)=>{
+router.get('/logout',ensureAuthenticated, (req,res)=>{
     req.logOut();
-    req.flash('You are logout');
+    req.flash('logged', 'Do zobaczenia!');
+    req.flash('success', 'success')
     res.redirect('/')
 })
 module.exports = router;

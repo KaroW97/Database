@@ -1,0 +1,36 @@
+<h1><%= clientInfo.name %> <%= clientInfo.lastName %></h1>
+<form  action="/statistics/<%=clientInfo.id%> " method="GET">
+    <input type="date" name="dateFrom" value="<%=searchOptions.dateFrom%>">
+    <input type="date" name="dateTo" value="<%=searchOptions.dateTo%>">
+    <button type="submit">Szukaj</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Imie</th>
+            <th>Liczba zabiegów</th>
+            <th>Kwota Całkowita</th>
+        </tr>
+    </thead>
+    <tbody>
+<%treatments.forEach(treatments => { %>
+    <%var count=0;pricePerTreatment=0; %>
+    <tr>
+        <%clientVisits.forEach(visit=>{%>
+            <% if(treatments.treatmentName == visit.treatment.treatmentName) {%> 
+                <%count++ %>  
+                <% pricePerTreatment+=visit.treatment.treatmentPrice %> 
+            <% } %> 
+        <% })%>
+        <td><%=count != 0 ?treatments.treatmentName : ''%> </td>
+        <td><%=count != 0 ? count : ''%>  </td>
+        <td><%=pricePerTreatment != 0 ? pricePerTreatment : ''%>  </td>
+    </tr>
+<%}); %>  
+    </tbody>
+</table>
+<br>
+<div>
+   <p>Total Price <%=totalPrice %></p> 
+</div>

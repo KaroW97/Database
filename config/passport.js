@@ -9,7 +9,7 @@ module.exports = function (passport){
       .then(user=>{
         if(!user)
           return done(null, false, {message: 'Email nie zarejestrowany'})
-
+          
         bcrypt.compare(password, user.password,(err, isMatch)=>{
           if(err) throw err;
           if(isMatch)

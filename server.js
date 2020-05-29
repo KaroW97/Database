@@ -3,13 +3,16 @@ if(process.env.NODE_ENV !== 'production'){
 }
 const express = require('express')
 const app = express()
+
+
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 
 const passport = require('passport')
-const session = require('express-session');
 const flash = require('express-flash')
+const session = require('express-session');
+
 
 const IndexRouter = require('./routes/index');
 const ClientRouter = require('./routes/clients')
@@ -17,6 +20,7 @@ const TreatmentRotuer = require('./routes/treatment')
 const ShoppingList = require('./routes/shoppingList')
 const CalendarRouter = require('./routes/calendar')
 const SettingsRotuer = require('./routes/settings')
+const ClietnSellsStats = require('./routes/clientSellsStats')
 
 
 //app.use( express.static('public'));
@@ -40,8 +44,9 @@ db.once('open', ()=>console.log('Conected to mongoose')) //only for the firsst t
 // Passport Config
 
 // Passport Middleware
+app.use(flash())
 app.use(session({
-    secret:'secret',
+    secret:process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:false
 }))
@@ -49,7 +54,6 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(flash())
 
 app.use('/',IndexRouter); //login register
 app.use(['/clients','/clients/show','/clients/clientView/:id'],ClientRouter) //Clients
@@ -57,6 +61,8 @@ app.use('/treatment',TreatmentRotuer)
 app.use('/calendar',CalendarRouter)//Calendar page
 app.use('/settings',SettingsRotuer) //Settings router
 app.use('/shoppingList',ShoppingList) //ShopingList router
+//Statistic
+app.use('/statistics', ClietnSellsStats)
 
 
 
