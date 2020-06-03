@@ -17,6 +17,15 @@ const userSchema = mongoose.Schema({
     resetLink:{
         data:String,
         default:''
+    },
+    //Email send
+    secretToken:{
+        type: String,
+        require:false
+    },
+    active:{
+        type:Boolean,
+        require:false
     }
 
 })

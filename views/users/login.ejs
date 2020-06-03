@@ -1,8 +1,10 @@
 <h1>Logowanie</h1>
 <% if(messages.error){ %>
-    <div class="alert alert-danger"><%= messages.error %> </div>
+    <div id="hideAlert"class="alert alert-danger"><%= messages.error %> </div>
 <% } %> 
-
+<% if(messages.logged){ %>
+    <div  id="hideAlert" class="alert alert-<%=messages.success%>"><%= messages.logged%></div>
+<% } %>
 <form method="POST" action="/login">
     <label for="loginEmail"></label>
     <input type="email" id="loginEmail"name="email" placeholder="Email"  >

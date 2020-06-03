@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const clientVisits = mongoose.Schema({
+    user:{
+        type:String, 
+        require:true
+    },
     client:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,

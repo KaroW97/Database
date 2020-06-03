@@ -36,7 +36,7 @@
 <form method="POST" action="/shoppingList/brandName" >
     <div style="display: none;" id ="comapnyForm" >
         <span id ="close"class="close" onclick="closeForm()">&times;</span>
-        <input id ="input"type="text" name="name" placeholder="Dodaj nazwe firmy" value="<%=brandName.name%>" required >
+        <input id ="input"type="text" name="name" placeholder="Dodaj nazwe firmy" value="<%=brandName.name%>" required autofocus >
         <button type="submit">Dodaj</button>
     </div>
 </form>

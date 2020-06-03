@@ -1,8 +1,47 @@
+
+<% if(messages.created){ %>
+    <div id="hideAlert" class="alert alert-<%=messages.success%>"> <%=messages.created%> </div>
+<% } %>
 <form  action="/calendar" method="GET">
-    <input type="date" name="dateTime" value="<%=searchOptions.dateTime%>">
+    <input id="datepicker" width="312" name="dateTime"  value="<%=searchOptions.dateTime%>" />
     <button type="submit">Szukaj</button>
 </form>
-
+<button id ="showForm" onclick="showFormm()">Dodaj Wizyte</button>
+<form method="POST" action="/calendar/visit" >
+    <div style="display: none;width: 400px;" id ="comapnyForm"  >
+       
+        <span id ="close"class="close" onclick="closeForm()">&times;</span>
+        <input name="clientName" value="" placeholder="Imie" value="<%=newVisit.clientName%>" >
+        <input name="clientLastName" value="" placeholder="Nazwisko">
+        <button type="button" href="#"id ="showClient" onclick="showClientt()">Dodaj Klienta</button>
+        <div id ="clientSelect"  style="display: none;">
+            <select name="clients">
+                <% clients.forEach(client => { %>
+                    <% if(client.id === newVisit.client ){ %>
+                        <option selected label="<%=client.name%>" value="<%=client.id%>"><%=newVisit.client.name%> <%=newVisit.client.lastName%></option>
+                    <% }else{ %>
+                        <option  label="<%=client.name%>" value="<%=client.id%>"><%=client.name%> <%=client.lastName%></option>
+                    <% } %>
+                <%}); %>
+            </select>
+        </div>
+        <%- include('./_form_field__select_treatment.ejs') %> 
+        <input id="datapickerAdd" name ="visitDate"width="312" name="dateTime"  value="<%=newVisit.visitDate  %> " />
+        <input id="timepickerFrom" name="timeFrom"  width="276" placeholder="Czas zakończenia" value="<%=newVisit.timeFrom  %>" /><br>
+        <input id="timepickerTo" name="timeTo" width="276" placeholder="Czas rozpoczęcia" value="<%=newVisit.timeTo  %>" />
+      
+        <button type="submit">Dodaj</button>
+    </div>
+</form>
+<% for(var i = 0 ; i< newVisit.length ; i++){%>
+    <p><%= newVisit[i].client != undefined ? newVisit[i].client.name :'' %> <%= newVisit[i].client != undefined? newVisit[i].client.lastName :'' %></p> 
+    <p><%= newVisit[i].clientName !=undefined? newVisit[i].clientName :''  %> <%= newVisit[i].clientLastName != undefined ? newVisit[i].clientLastName : ''%></p>  
+    <p><%= newVisit[i].visitDate == null ? '' : newVisit[i].visitDate.toISOString().split('T')[0] %></p>  
+    <p><%= newVisit[i].timeFrom %>  <%=newVisit[i].timeTo%>  </p>  
+    <p><%= newVisit[i].treatment.treatmentName %> </p>
+    <br>
+<%} %> 
+<br><br>
 <%list.forEach(element => {%>
     <p><%= element.transactionDate == null ? '' : element.transactionDate.toISOString().split('T')[0] %></p>  
     <p><%= element.totalPrice %> </p>  
@@ -18,3 +57,4 @@
 <%}); %> 
 
 
+<script src="../public/dataTimePicker.js"></script> 

@@ -169,13 +169,12 @@ router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
 
 //Add new Visit/Post
 router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
-
-
     const visit = new ClientVisits({
         client:req.params.id,
         comment: req.body.comment,
         clientVisitDate:new Date( req.body.clientVisitDate) ,
         treatment: req.body.treatment,
+        user:req.user.id
     })
     try{   
         
@@ -183,9 +182,9 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
         res.redirect( `/clients/clientView/${req.params.id}`)
     }catch(err){
         console.log(err)
-        const treatments = await Treatment.find({});
+        const treatments = await Treatment.find({user:req.user.id});
 
-        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').exec()
+        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client')
         const clientt  = await Client.findById(req.params.id);
         res.render(`clients/clientView`,{
             type:'danger',

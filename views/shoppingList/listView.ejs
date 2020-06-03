@@ -1,6 +1,6 @@
-<h1><%=list.listName.name == '' ? 'Nazwa' :list.listName.name %></h1>
+<h1 name="listName" > <%=list.listName.name == '' ? 'Nazwa' :list.listName.name %></h1>
 <% if(list.transactionDate!= null){ %> 
-    <h4>Data zamówienia: <%=list.transactionDate == null ? '' : list.transactionDate.toISOString().split('T')[0] %> </h4>
+    <h4 name="transactionDate" value="<%=list.transactionDate%>">Data zamówienia: <%=list.transactionDate == null ? '' : list.transactionDate.toISOString().split('T')[0] %> </h4>
 <% } %> 
 
 

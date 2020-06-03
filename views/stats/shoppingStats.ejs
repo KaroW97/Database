@@ -1,1 +1,45 @@
 <h1>Statystyki Zakupów</h1>
+
+<form method="GET" action="/statistics/shopping">
+    <input type="text" name="product" value="<%=searchOptions.product%>" placeholder="Szukaj Produktu">
+    <%- include(`../partials/dateSearchForm.ejs`, {searchFrom: `dateFrom`, searchOptionFrom:`${searchOptions.dateFrom}`, 
+    searchTo: `dateTo`, searchOptionTo:`${searchOptions.dateTo}`}) %>
+
+    <button type="submit">Szukaj</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Cena</th>
+            <th>Ilość</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%companyDistinctShopping.forEach(distShopping => { %>
+            <tr>
+                <td><%= distShopping %></td>
+                <% countAmountOfBoughtProducts=0; countPriceOfBoughtProducts=0 %> 
+                <% companyShopping.forEach(shopping=>{ %>
+                    <% if(shopping.productName == distShopping ) {%> 
+                        <% countAmountOfBoughtProducts++ %> 
+                        <% countPriceOfBoughtProducts+=shopping.productPrice %> 
+                    <% } %>    
+                   
+                <%}) %> 
+                <td><%=countPriceOfBoughtProducts %> </td>
+                <td><%=countAmountOfBoughtProducts %> </td>
+               
+                <td><%- include('../partials/deleteForm' ,{url: `/statistics/shopping/${distShopping}`}) %> </td>
+            </tr>
+         
+        <%}); %> 
+      
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>Kwota: <%= totalPrice %> </td>
+            <td>Ilość: <%=amount  %> <td>
+    </tfoot>
+</table>

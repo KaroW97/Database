@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const ShoppingList = require('../models/shoppingList')
 const BrandName = require('../models/productCompany')
+const CompanyShopping = require('../models/stats/companyShoppingStats')
 const {ensureAuthenticated} = require('../config/auth')
 
 //Main Page Shopping List
@@ -20,7 +21,7 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
     
 })
 //Add Shopping List Name
-router.post('/', async(req,res)=>{
+router.post('/', ensureAuthenticated,async(req,res)=>{
     const shoppingList = new ShoppingList({  
         listName:req.body.brandName,
         user:req.user.id
@@ -38,18 +39,13 @@ router.post('/brandName',async(req,res)=>{
         name:req.body.name,
         user:req.user.id
     })
-    /*const shoppingList = new ShoppingList({
-        listName:req.body.name
-    })*/
     try{
         brandName.save();
-       /// shoppingList.save();
         res.redirect('/shoppingList')
     }catch{
         res.redirect('/clients')
     }
 })
-
 //List View Router
 router.get('/listView/:id',ensureAuthenticated,async(req,res)=>{
     try{
@@ -63,35 +59,48 @@ router.get('/listView/:id',ensureAuthenticated,async(req,res)=>{
         res.redirect('/shoppingList');
     }
 })
-router.put('/listView/:id',async(req,res)=>{
+router.put('/listView/:id',ensureAuthenticated,async(req,res)=>{
     let totalPriceCalculate = 0;
+    let list;
     try{
+       
         list =  await ShoppingList.findById(req.params.id);
         list.price.push(Number(req.body.price)),
         list.productName.push(req.body.productName);
-        
         if(list.transactionDate  == null)
-            list.transactionDate = Date.parse(req.body.transactionDate)|| '';
+        list.transactionDate = Date.parse(req.body.transactionDate)|| '';
 
         list.price.forEach(element => {
             totalPriceCalculate +=element;
         });
         list.totalPrice = totalPriceCalculate
+        const shoppingStatistics = new CompanyShopping({
+            productName:req.body.productName,
+            productPrice:req.body.price,
+            user:req.user.id,
+            transactionDate:Date.parse(req.body.transactionDate)||list.transactionDate
+        })
+
+        console.log(shoppingStatistics);
+    
+        await shoppingStatistics.save();
         await list.save();
         res.redirect(`/shoppingList/listView/${list.id}`);
-    }catch{
+    }catch(err){
+        console.log(err)
         const shopping  = await ShoppingList.findById(req.params.id)
         const addedShoping = await ShoppingList.find({_id:shopping.id});
 
-        res.render('shoppingList/new',{
-            errorMessage:'Error Creating List',
-            list:list,
+        res.render('shoppingList/listView',{
+            type:'danger',
+            errorMessage:'Błąd Tworzenia Listy',
+            list:shopping,
             addedShoping:addedShoping
         })
     }
 })
 //Delete Shopping List Router
-router.delete('/:id',async(req,res)=>{
+router.delete('/:id',ensureAuthenticated,async(req,res)=>{
     try{
         const list = await ShoppingList.findById(req.params.id);
         await list.remove();
@@ -120,7 +129,7 @@ router.get('/listView/:id/edit',ensureAuthenticated, async(req,res)=>{
   
 })
 //Edit List Item
-router.put('/listView/:id/edit', async(req,res)=>{
+router.put('/listView/:id/edit',ensureAuthenticated, async(req,res)=>{
     let list
     let totalPriceCalculate = 0;
     try{
@@ -145,7 +154,7 @@ router.put('/listView/:id/edit', async(req,res)=>{
   
 })
 //Delete List Item
-router.delete('/listView/:id', async(req,res)=>{
+router.delete('/listView/:id',ensureAuthenticated, async(req,res)=>{
        try{
         let elem = req.params.id.split(',');
         const list = await ShoppingList.findById(elem[0]);

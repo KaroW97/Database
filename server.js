@@ -24,7 +24,7 @@ const ClietnSellsStats = require('./routes/clientSellsStats')
 
 
 //app.use( express.static('public'));
-app.use('/jsFiles', express.static(__dirname + '/views/jsFiles'))
+app.use('/public', express.static(__dirname + '/views/public'))
 app.set('view engine', 'ejs') 
 app.set('views',__dirname+'/views')
 app.set('layout', 'layouts/layout')
@@ -46,7 +46,7 @@ db.once('open', ()=>console.log('Conected to mongoose')) //only for the firsst t
 // Passport Middleware
 app.use(flash())
 app.use(session({
-    secret:'uXap12AJDmeqsjadue',//process.env.SESSION_SECRET,
+    secret:process.env.SESSION_SECRET,//'uXap12AJDmeqsjadue',//process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:false
 }))
