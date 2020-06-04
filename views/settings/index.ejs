@@ -1,1 +1,34 @@
-Update User profile
+<% if(messages.error){ %>
+    <div  id="hideAlert" class="alert alert-<%=messages.danger%>"><%= messages.error%></div>
+<% } %>
+
+<div>
+    <p>Zmień hasło </p>
+    <p>Dobrze jest użyć silnego hasła, którego nie używasz gdzie indziej</p>
+    <form action="/settings/changepassword" method="POST">
+        <input value="<%=user.password%>" type="password">
+        <input type="password" name="newPassword" placeholder="Nowe Hasło">
+        <input type="password"name="confirmNewPassword" placeholder="Potwierdź Hasło">
+        <button type="submit">Zapisz zmiany</button>
+    </form>
+</div><br><br>
+
+<div >
+    <p>Zmień email </p>
+    <form action="/settings/changeemail" method="POST">
+        <input value="<%=user.email%>" type="email">
+        <input type="email" name="newEmail"placeholder="Nowy Email">
+        <input type="email" name="confirmNewEmial" placeholder="Potwierdź Email">
+        <button type="submit">Zapisz zmiany</button>
+    </form>
+</div><br><br>
+
+<div>
+    <p>Zmień nazwe firmy </p>
+    <form action="/settings/changecompanyname" method="POST">
+        <input value="<%=user.companyName %>" type="text">
+        <input type="text" name="newCompanyName"placeholder="Nowa Nazwa Firmy">
+        <button type="submit" >Zapisz zmiany</button>
+    </form>
+</div>
+

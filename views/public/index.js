@@ -32,6 +32,6 @@ function checkIfNull(){
     if(hideAlert){
         setTimeout(()=>{
             hideAlert.style.display='none';
-        },1500)
+        },2500)
     }
 })();
