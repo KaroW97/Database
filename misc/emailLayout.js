@@ -55,7 +55,7 @@ module.exports = function emailLook(secretToken) {
         <img class="imgStyle" src="cid:logo">
     </div>
     <h3 class="header sharedProp" >Dziękujemy za rejestracj&#281;!</h3>
-    <p style="color:red"class="paragrafFirst sharedProp paragraphs" >Proszę zweryfikuj swoje konto za pomocą kodu:</p>
+    <p class="paragrafFirst sharedProp paragraphs" >Proszę zweryfikuj swoje konto za pomocą kodu:</p>
     <p class="paragrafSec sharedProp paragraphs">${secretToken}</p>
     <p class="paragrafTh sharedProp paragraphs"> Na stronie:<a href="http://localhost:3000/verify">http://localhost:3000/verify</a>  </p>
     <p class="footer sharedProp paragraphs">Miłego nia!</p>
