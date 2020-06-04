@@ -57,7 +57,7 @@ module.exports = function emailLook(secretToken) {
     <h3 class="header sharedProp" >Dziękujemy za rejestracj&#281;!</h3>
     <p class="paragrafFirst sharedProp paragraphs" >Proszę zweryfikuj swoje konto za pomocą kodu:</p>
     <p class="paragrafSec sharedProp paragraphs">${secretToken}</p>
-    <p class="paragrafTh sharedProp paragraphs"> Na stronie:<a href="http://localhost:3000/verify">http://localhost:3000/verify</a>  </p>
+    <p class="paragrafTh sharedProp paragraphs"> Na stronie:<a href="https://beauty-base.herokuapp.com/verify">https://beauty-base.herokuapp.com/verify</a>  </p>
     <p class="footer sharedProp paragraphs">Miłego nia!</p>
 </div>
 
