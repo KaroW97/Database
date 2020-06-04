@@ -22,7 +22,6 @@ router.get('/registration',async (req, res)=>{
     try{ 
         res.render('users/register')
     }catch(err){
-        console.log(err)
         res.render('users/register',{
             errorMessage:'Coś poszło nie tak',
             type:'danger',
@@ -68,20 +67,22 @@ router.post('/registration',async(req,res)=>{
             active:false
             })
          
-          // console.log(newUser)
            await newUser.save();
            let email= emailLook(secretToken)
             //send mailer
-           await mailer.sendEmail('beautybasehelp@gmail.com',req.body.email,'Zweryfikuj swoje konto Beauty Base!',email)
+           await mailer.sendEmail('beautybasehelp@gmail.com',req.body.email,'Zweryfikuj swoje konto Beauty Base!',email,
+          {
+            file:'logo2.JPG',
+            path: './views/public/logo2.JPG',
+            cid:'logo'
+            })
            req.flash('logged', 'Sprawdź swój email!');
            req.flash('success', 'success')
            res.redirect('/login')
         }
        
     }catch(err){
-        console.log(err)
         res.render('users/register',{
-           
             errorMessage:'Spróbuj ponownie',
             type:'danger'
         })
@@ -100,7 +101,6 @@ router.put('/verify',async(req,res)=>{
     let user
     try{
         const secretTokenn = req.body.secretToken
-        console.log(secretTokenn)
         user = await User.findOne({secretToken:secretTokenn})
        
         if(!user){
@@ -113,7 +113,6 @@ router.put('/verify',async(req,res)=>{
         user.secretToken = '';
       
         await user.save();
-        console.log(user)
         req.flash('succesRegister','Teraz możesz się zarejestrować');
         req.flash('succes','succes');
         res.redirect('/login')

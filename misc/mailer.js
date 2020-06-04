@@ -15,9 +15,9 @@ const transport = nodemailer.createTransport({
 
 
 module.exports ={
-    sendEmail(from, to, subject, html){
+    sendEmail(from, to, subject, html,attachments ){
         return new Promise((reslove,reject)=>{
-            transport.sendMail({from, subject, to, html},(err, info)=>{
+            transport.sendMail({from, subject, to, html, attachments},(err, info)=>{
                 if(err) reject(err);
                 reslove(info)
             })
