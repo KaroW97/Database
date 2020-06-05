@@ -5,8 +5,8 @@ const passport = require('passport')
 const User = require('../models/user')
 const randomstring=require('randomstring');  //Emeil confirmation 
 const {ensureAuthenticated} = require('../config/auth')
-const emailLook =require('../misc/emailLayout')
-const forgotPasswordLook = require('../misc/emailLayout')
+
+const emailLook = require('../misc/emailLayout')
 const mailer  = require('../misc/mailer')
 
 //Passport Config
@@ -69,7 +69,12 @@ router.post('/registration',async(req,res)=>{
             })
          
            await newUser.save();
-           let email= emailLook(secretToken)
+           let email= emailLook(secretToken,'Dziękujemy za rejestrację', 
+           'Proszę zweryfikuj swoje konto za pomocą kodu:',
+           'Na stronie:',
+           'https://beauty-base.herokuapp.com/verify',
+           'Miłego dnia!'
+           )
             //send mailer
            await mailer.sendEmail('beautybasehelp@gmail.com',req.body.email,'Zweryfikuj swoje konto Beauty Base!',email,
             {
@@ -163,7 +168,7 @@ router.post('/forgot',async(req,res)=>{
         if(searchUser!=null && searchUser!=''){
             const secretTokenn =randomstring.generate();
            
-            let email= forgotPasswordLook(secretTokenn,
+            let email= emailLook(secretTokenn,
                 'Witaj!',
                 `Otrzymaliśmy prośbę dotyczącą zresetowania Twojego hasła Beauty Base.
                 Wprowadź następujący kod resetowania hasła:`,` Na stronie: ` 

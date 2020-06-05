@@ -3,7 +3,7 @@ const router =express.Router();
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const mailer  = require('../misc/mailer')
-const forgotPasswordLook = require('../misc/emailLayout')
+const emailLook = require('../misc/emailLayout')
 const {ensureAuthenticated} = require('../config/auth')
 
 //Show current options
@@ -29,7 +29,7 @@ router.post('/changepassword', async(req,res)=>{
             user.password = hashed;
            
             //(secretToken='', header='',paragrafFirst='',paragrafTh='', link='', footer='')
-            let email= forgotPasswordLook(``,
+            let email= emailLook(``,
                 'Witaj!',
                 `Twoje hasło Beauty Base powiązane z kontem`,`${user.email} ` 
                 ,  `zostało zmienione `,
@@ -72,7 +72,7 @@ router.post('/changeemail', async(req,res)=>{
             let oldEmial = user.email;
             user.email = req.body.newEmail
             await user.save();
-            let email= forgotPasswordLook(``,
+            let email= emailLook(``,
                 'Witaj!',
                 `Twoj email ${oldEmial} został  zmieniony na`,`${user.email}.` 
                 ,  ` `,
@@ -112,7 +112,7 @@ router.post('/changecompanyname', async(req,res)=>{
         user  = await User.findById(req.user.id);
         user.companyName = req.body.newCompanyName;
         await user.save();
-        let email= forgotPasswordLook(``,
+        let email= emailLook(``,
         'Witaj!',
         `Nazwa twojej firmy została zmieniona na`,`"${user.companyName}"` 
         ,  ``,
