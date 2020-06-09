@@ -14,11 +14,12 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
         shopping = shopping.gte('transactionDate', req.query.dateTime)
     else
         shopping = shopping.gte('transactionDate',todayDate.toISOString().split('T')[0])
-    //For Two Days From Now //Todays Date
+
+    //For Two Days From Now //Todays Date Or Only Shopping To Figure Out
     shoppingTwoDays = shoppingTwoDays.gte('transactionDate',todayDate.toISOString().split('T')[0])
-    todayDate.setDate(todayDate.getDate() + 2)
+   // todayDate.setDate(todayDate.getDate() + 2)
     //Two Days From Now Date
-    shoppingTwoDays = shoppingTwoDays.lte('transactionDate',todayDate.toISOString().split('T')[0])
+    //shoppingTwoDays = shoppingTwoDays.lte('transactionDate',todayDate.toISOString().split('T')[0])
     try{
         const perchuse = await shopping.exec()
         const shoppingTwoDaysFromNow = await shoppingTwoDays.exec();
@@ -36,7 +37,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
         });
     }catch(err){
         console.log(err)
-        res.redirect('/shoppingList')
+        res.redirect('/login')
     }
     
 })

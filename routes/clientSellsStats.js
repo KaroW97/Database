@@ -58,6 +58,7 @@ router.get('/treatment', async(req,res)=>{
         const treatment =  Treatment.find(searchTreatment)//.find({user:req.user.id});
         let treatments = await treatment.find({user:req.user.id}).exec();
         const clientVisits = await cliantStats.find({user:req.user.id}).exec()
+       
         let totalAmountOfTreatments =  calculateAmountOfTreatments(treatments,clientVisits )
         let totalAmountOfSpent = calculateTotalAmountSpent(clientVisits);
         res.render('stats/treatmentStats',{
@@ -99,7 +100,6 @@ router.get('/shopping', async(req,res)=>{
         let price = totalShoppingPrice(companyShopping)
         let amount = totalShoppingAmount(companyShopping)
         res.render('stats/shoppingStats',{
-            user:req.user.id,
             companyShopping:companyShopping,
             companyDistinctShopping:companyDistinctShopping,
             countAmountOfBoughtProducts:countAmountOfBoughtProducts,
@@ -153,7 +153,7 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
         const treatment = await Treatment.find()
         res.render('stats/clientStatsView',{
             clientInfo:clientt,
-            user:req.user.id,
+          
             clientVisits:clientVisit,
             treatments:treatment,
             totalPrice:totalPrcie,

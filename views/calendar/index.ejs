@@ -41,14 +41,8 @@
     <p><%= newVisit[i].treatment.treatmentName %> </p>
     <br>
 <%} %> 
-<br><br>
-<%list.forEach(element => {%>
-    <p><%= element.transactionDate == null ? '' : element.transactionDate.toISOString().split('T')[0] %></p>  
-    <p><%= element.totalPrice %> </p>  
-    <p><%= element.listName.name == null ? '' :element.listName.name %> </p>  
-    <br>
-<%}); %> 
-<h1>Na dwa dni</h1>
+
+<h1>Lista Zakupów</h1>
 <%shoppingTwoDaysFromNow.forEach(element => {%>
     <p><%= element.transactionDate == null ? '' : element.transactionDate.toISOString().split('T')[0] %> </p>  
     <p><%= element.totalPrice %> </p>  

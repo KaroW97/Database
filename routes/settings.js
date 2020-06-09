@@ -50,7 +50,7 @@ router.post('/changepassword', async(req,res)=>{
             req.flash('error','Hasła się różnią.')
             req.flash('danger','danger')
             res.render('settings/index',{
-                user:user
+            
             })
             return;
         }
@@ -60,7 +60,7 @@ router.post('/changepassword', async(req,res)=>{
         res.render('settings/index',{
             errorMessage:'Coś poszło nie tak.',
             type:'danger',
-            user:user
+            
         })
     }
 })
@@ -92,14 +92,14 @@ router.post('/changeemail', async(req,res)=>{
             req.flash('error',"Podano różne email'e")
             req.flash('danger','danger')
             res.render('settings/index',{
-                user:user
+                
             })
             return;
         }
     }catch(err){
         console.log(err)
         res.render('settings/index',{
-            user:user,
+          
             errorMessage:'Coś poszło nie tak.',
             type:'danger'
         })
@@ -133,7 +133,7 @@ router.post('/changecompanyname', async(req,res)=>{
         res.render('settings/index',{
             errorMessage:'Coś poszło nie tak.',
             type:'danger',
-            user:user
+           
         })
     }
 })

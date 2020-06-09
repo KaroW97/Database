@@ -5,7 +5,6 @@ module.exports = function (passport){
   // Local Strategy
   passport.use(new LocalStrategy({usernameField:'email'},(email, password, done)=>{
     //Match User
-
     User.findOne({email:email})
       .then(user=>{
         //Check if user exists
@@ -16,7 +15,7 @@ module.exports = function (passport){
         bcrypt.compare(password, user.password,(err, isMatch)=>{
           //Check if account has been verified
           if(!user.active){
-            return done(null, false, {message:'Musisz najpierw zweryfikować email.'})
+            return done(null, false, {message:'Musisz najpierw zweryfikować email'})
           }
           if(err) throw err;
           if(isMatch)

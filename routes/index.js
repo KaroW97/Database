@@ -32,29 +32,30 @@ router.get('/registration',async (req, res)=>{
 })
 //Register Form
 router.post('/registration',async(req,res)=>{
-    var errorMessage ='';
+   
     try{
         const findUser = await User.findOne({email:req.body.email})
         const hashedPassword = await bcrypt.hash(req.body.password,10)
         if(!req.body.email || !req.body.companyName || !req.body.password || !req.body.ConfirmPassword){
-            errorMessage = 'Prosze uzupełnij wszystkie pola. '
+            req.flash('logged', 'Prosze uzupełnij wszystkie pola');
+            req.flash('success', 'danger')
         }
         //Check Password
         if(req.body.password !=req.body.ConfirmPassword){
-            errorMessage +='Wprowadzono różne hasła. '
+            req.flash('logged', 'Wprowadzono różne hasła');
+            req.flash('success', 'danger')
         }
         //Check password lenght
         if(req.body.password.length < 3){
-            errorMessage +=' Hasło powinno zawierac 3 znaków.'
+            req.flash('logged', 'Hasło powinno zawierac 3 znaków');
+            req.flash('success', 'danger')
         }
         if(findUser){
-            errorMessage +=' Email istnieje w bazie danych.'
+           req.flash('logged', 'Email istnieje w bazie danych');
+            req.flash('success', 'danger')
         }
-        if(errorMessage.length > 0){
-            res.render('users/register',{
-                errorMessage:errorMessage,
-                type:'danger'
-            })
+        if(findUser || req.body.password.length < 3 || req.body.password !=req.body.ConfirmPassword){
+            res.render('users/register')
             return;
         }
         else {
@@ -67,7 +68,6 @@ router.post('/registration',async(req,res)=>{
                 secretToken:secretToken,
                 active:false
             })
-         
            await newUser.save();
            let email= emailLook(secretToken,'Dziękujemy za rejestrację', 
            'Proszę zweryfikuj swoje konto za pomocą kodu:',
@@ -137,11 +137,16 @@ router.get('/login',async (req, res)=>{
 })
 // Login Process
 router.post('/login', function(req, res, next){
-    passport.authenticate('local',{
-        successRedirect:'/calendar',
-        failureRedirect:'/login',
-        failureFlash:true
-    })(req,res,next)
+    if(req.body.email=='' || req.body.password ==''){
+        req.flash('error','Uzupełnij wszystkie pola')
+        res.render('users/login')
+      }else{
+        passport.authenticate('local',{
+            successRedirect:'/calendar',
+            failureRedirect:'/login',
+            failureFlash:true
+        })(req,res,next)
+      }
 })
 //Logut
 router.get('/logout',ensureAuthenticated, (req,res)=>{

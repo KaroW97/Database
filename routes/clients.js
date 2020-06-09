@@ -23,7 +23,6 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
         if(clientFind =='')
             clientFind = await clientLastName.find({user:req.user.id}).exec(); 
         res.render('clients/index',{
-            user: req.user.id,
             clients:clientFind,
             treatments:treatments, //to raczej zbedne
             searchOptions:req.query
@@ -138,10 +137,10 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
     }catch(err){
         console.log(err)
         res.render('clients/new',{
-            user:req.user.id,
+          
             type:'danger',
             clients:clients,
-            errorMessage:'Error creating Client', 
+            errorMessage:'Bład w trakcie tworzenia klienta', 
         });
     }
 })
@@ -179,6 +178,8 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
     try{   
         
         await visit.save();
+        req.flash('mess','Dodano wizyte');
+        req.flash('type','success')
         res.redirect( `/clients/clientView/${req.params.id}`)
     }catch(err){
         console.log(err)
@@ -186,14 +187,14 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
 
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client')
         const clientt  = await Client.findById(req.params.id);
+        req.flash('mess','Nie udało się dodać wizyty');
+        req.flash('type','danger')
         res.render(`clients/clientView`,{
-            type:'danger',
-            errorMessage:'Wystąpił błąd podczas tworzenia Wizyty',
             addedVisist:addedVisit,
             newVisit:visit,
             treatments:treatments,
             curentClient:req.params.id,
-            clientInfo:clientt
+            clientInfo:clientt,
         })
     }
 })
@@ -204,6 +205,8 @@ router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
         visit = await ClientVisits.findById(req.params.id);
         clientValue= visit.client
         await visit.remove();
+        req.flash('mess','Wizyta została usunięta');
+        req.flash('type','info')
         res.redirect( `/clients/clientView/${clientValue}`)
     }catch(err){
         res.redirect(`/clients/clientView/${req.params.id}`)
@@ -239,6 +242,8 @@ router.put('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
          visit.treatment= req.body.treatment
          
          await visit.save();
+         req.flash('mess','Wizyta została edytowana');
+         req.flash('type','success')
          res.redirect(`/clients/clientView/${visit.client.id}`)
     }catch(err){
         console.log(err)
@@ -345,6 +350,8 @@ router.put('/clientView/:id',ensureAuthenticated,async (req,res)=>{
 
 
         await clients.save();
+        req.flash('mess','Dane klienta zostały edytowane.');
+        req.flash('type','success')
         res.redirect(`/clients/clientView/${clients.id}`)
     }catch(err){
         if(clients == null){

@@ -54,7 +54,22 @@ require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-
+app.get('*', (req,res,next)=>{
+    res.locals.user = req.user || null;
+    next();
+})
+app.post('*', (req,res,next)=>{
+    res.locals.user = req.user || null;
+    next();
+})
+app.put('*', (req,res,next)=>{
+    res.locals.user = req.user || null;
+    next();
+})
+app.delete('*', (req,res,next)=>{
+    res.locals.user = req.user || null;
+    next();
+})
 app.use('/',IndexRouter); //login register
 app.use(['/clients','/clients/show','/clients/clientView/:id'],ClientRouter) //Clients
 app.use('/treatment',TreatmentRotuer)

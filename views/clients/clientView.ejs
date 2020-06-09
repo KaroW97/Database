@@ -1,3 +1,9 @@
+
+<div id="hideAlert">
+    <% if(messages.mess){ %>
+        <div class="alert alert-<%=messages.type%>"><%= messages.mess%></div>
+    <% } %>
+</div>
 <div onclick="window.location='/clients/clientView/<%=clientInfo.id%>/edit'">
     <% if(clientInfo.visitDate != null) {%> 
         <p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
@@ -46,6 +52,7 @@
 <% if(addedVisist != ''){ %> 
     <h1>Wizyty  </h1>
 <%}%>
+
 <%addedVisist.forEach(element => { %> 
     <!-- -->
     <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" onclick="showFormm()">

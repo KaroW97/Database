@@ -11,7 +11,6 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
     try{
         const treatment = await Treatment.find(searchOptions);
         res.render('treatment/index',{
-            user:req.user.id,
             treatment:treatment,
             searchOptions:searchOptions
         })
@@ -21,7 +20,7 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
     }
 })
 //Add New Treatment
-router.post('/', async(req,res)=>{
+router.post('/',ensureAuthenticated, async(req,res)=>{
     const treatment = new Treatment({
         user:req.user.id,
         treatmentName: req.body.treatmentName,
@@ -39,13 +38,12 @@ router.post('/', async(req,res)=>{
    
 })
 //Delete Treatment
-router.delete('/:id', async(req,res)=>{
+router.delete('/:id',ensureAuthenticated, async(req,res)=>{
     let treatment;
     try{
         treatment = await Treatment.findById(req.params.id);
         await treatment.remove();
         res.redirect('/treatment');
-      
     }catch{
         res.redirect('/treatment')
     }
@@ -63,7 +61,7 @@ router.get('/:id/edit' ,ensureAuthenticated, async(req,res)=>{
     }
 })
 
-router.put('/:id', async(req,res)=>{
+router.put('/:id',ensureAuthenticated, async(req,res)=>{
     let treatment;
     try{
         treatment = await Treatment.findById(req.params.id)
@@ -78,7 +76,5 @@ router.put('/:id', async(req,res)=>{
             errorMessage:'Error updating Client', 
         })
     }
-  
-
 })
 module.exports = router

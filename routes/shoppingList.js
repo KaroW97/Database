@@ -79,10 +79,7 @@ router.put('/listView/:id',ensureAuthenticated,async(req,res)=>{
             productPrice:req.body.price,
             user:req.user.id,
             transactionDate:Date.parse(req.body.transactionDate)||list.transactionDate
-        })
-
-        console.log(shoppingStatistics);
-    
+        })    
         await shoppingStatistics.save();
         await list.save();
         res.redirect(`/shoppingList/listView/${list.id}`);
@@ -113,13 +110,11 @@ router.delete('/:id',ensureAuthenticated,async(req,res)=>{
             res.redirect(`/shoppingList/listView/${list.id}`)
         }   
     }
-  
 })
 //Edit List Router
 router.get('/listView/:id/edit',ensureAuthenticated, async(req,res)=>{
     try{
         const list = await ShoppingList.findById(req.params.id).populate('listName').exec();
-        
         res.render('shoppingList/edit',{
             list:list
         })
@@ -147,8 +142,7 @@ router.put('/listView/:id/edit',ensureAuthenticated, async(req,res)=>{
         await list.save();
         res.redirect(`/shoppingList/listView/${list.id}`);
 
-    }catch(err){
-        console.log(err)
+    }catch{
         res.redirect(`/shoppingList`);
     }
   
@@ -171,7 +165,6 @@ router.delete('/listView/:id',ensureAuthenticated, async(req,res)=>{
             res.redirect(`/shoppingList/listView/${list.id}`);
         }
     }catch(err){
-        console.log(err)
             res.redirect('clients')
     }
 })
