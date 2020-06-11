@@ -9,7 +9,8 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
    if(req.query.treatmentName !=null && req.query.treatmentName !=='')
         searchOptions.treatmentName = new RegExp(req.query.treatmentName,'i');
     try{
-        const treatment = await Treatment.find(searchOptions);
+        const treatment = await Treatment.find(searchOptions).find({user:req.user.id});
+        console.log(treatment)
         res.render('treatment/index',{
             treatment:treatment,
             searchOptions:searchOptions
