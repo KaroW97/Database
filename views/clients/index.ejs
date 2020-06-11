@@ -6,27 +6,24 @@
 </form>
 <a href="/clients/new">Dodaj klienta</a>
 <br>
-<table>
-    <thead>
-        <tr>
-            <th>Imie</th>
-            <th>Numer telefonu</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    <% clients.forEach(client => {%> 
-        <% if(client.user == user.id ){ %> 
-            <tr onclick="window.location='/clients/clientView/<%=client.id%>'">
-                <td><%=client.name%> <%=client.lastName%></td>
-                <td><%=client.phoneNumber%></td>
-                <td> <%- include(`../partials/deleteForm.ejs`, {url: `clients/${client.id}`})%> 
-                </td>
+<form method="POST" action="/clients?_method=DELETE">
+    <input type="submit" value="Usuń">
+    <table>
+        <thead>
+            <tr>
+                <th>Imie</th>
+                <th>Numer telefonu</th>
+                <th></th>
             </tr>
-        <% } %> 
-    <% }); %> 
-    </tbody>
-</table>
-
-
-
+        </thead>
+        <tbody>
+            <% clients.forEach(client => {%> 
+                    <tr>
+                        <td onclick="window.location='/clients/clientView/<%=client.id%>'"><%=client.name%> <%=client.lastName%></td>
+                        <td onclick="window.location='/clients/clientView/<%=client.id%>'"><%=client.phoneNumber%></td>
+                        <td><input type="checkbox" name="chackboxDelet" value="<%=client.id%>"></td>
+                    </tr>
+            <% }); %> 
+        </tbody>
+    </table>
+</form>

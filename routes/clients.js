@@ -3,7 +3,7 @@ const router = express.Router();
 const Client = require('../models/clients');
 const Treatment = require('../models/treatment')
 const ClientVisits = require('../models/clientsVisits')
-
+const ObjectId = require('mongodb').ObjectId;
 const User = require('../models/user')
 const {ensureAuthenticated} = require('../config/auth')
 
@@ -199,7 +199,7 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
     }
 })
 //delete Visits/Post
-router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
+/*router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
     let visit, clientValue;
     try{
         visit = await ClientVisits.findById(req.params.id);
@@ -210,6 +210,37 @@ router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
         res.redirect( `/clients/clientView/${clientValue}`)
     }catch(err){
         res.redirect(`/clients/clientView/${req.params.id}`)
+    }
+})*/
+//delete Visits/Post
+router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
+    let visit, clientValue,client;
+   
+    try{
+        client = await Client.findById(req.params.id)
+        if(req.body.chackboxDelet!= null ){
+            
+            if(Array.isArray(req.body.chackboxDelet)){
+              for(var i = 0; i < (req.body.chackboxDelet).length; i++){
+                visit = await ClientVisits.findById(ObjectId(req.body.chackboxDelet[i]));
+                clientValue= visit.client
+                await visit.remove();
+              } 
+              req.flash('mess','Wizyty zostały usunięte');
+              req.flash('type','info')
+            }else{
+                visit = await ClientVisits.findById(ObjectId(req.body.chackboxDelet));
+                clientValue= visit.client
+                await visit.remove();
+                req.flash('mess','Wizyta została usunięta');
+                req.flash('type','info')
+            }
+          }
+          res.redirect(`/clients/clientView/${client._id}`)
+    }catch(err){
+        console.log(err);
+        client = await Client.findById(req.params.id)
+        res.redirect(`/clients/clientView/${client._id}`) 
     }
 })
 //edit Visit/Post
@@ -366,7 +397,7 @@ router.put('/clientView/:id',ensureAuthenticated,async (req,res)=>{
     }
 })
 //Delete Client
-router.delete('/:id',ensureAuthenticated,async (req,res)=>{
+/*router.delete('/:id',ensureAuthenticated,async (req,res)=>{
     let clients;
     let clientStats;
     try{
@@ -380,5 +411,28 @@ router.delete('/:id',ensureAuthenticated,async (req,res)=>{
             res.redirect(`/clients/clientView/${clients.id}`)
         }   
     }
+})*/
+////
+router.delete('/', async(req,res)=>{
+    try{
+        console.log(req.body.chackboxDelet)
+        if(req.body.chackboxDelet!= null ){
+            if(Array.isArray(req.body.chackboxDelet)){
+              for(var i = 0; i < (req.body.chackboxDelet).length; i++){
+                client =  await Client.findById(ObjectId(req.body.chackboxDelet[i]));
+                await client.remove(); 
+              } 
+             
+            }else{
+                client =  await Client.findById(ObjectId(req.body.chackboxDelet));
+                await client.remove();  
+            }
+          }
+          res.redirect('/clients') 
+    }catch(err){
+        console.log(err);
+        res.redirect('/calendar')       
+    }
+  
 })
 module.exports = router;
