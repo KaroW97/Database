@@ -199,20 +199,6 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
     }
 })
 //delete Visits/Post
-/*router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
-    let visit, clientValue;
-    try{
-        visit = await ClientVisits.findById(req.params.id);
-        clientValue= visit.client
-        await visit.remove();
-        req.flash('mess','Wizyta została usunięta');
-        req.flash('type','info')
-        res.redirect( `/clients/clientView/${clientValue}`)
-    }catch(err){
-        res.redirect(`/clients/clientView/${req.params.id}`)
-    }
-})*/
-//delete Visits/Post
 router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
     let visit, clientValue,client;
    

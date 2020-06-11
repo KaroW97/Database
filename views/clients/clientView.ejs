@@ -53,21 +53,10 @@
     <h1>Wizyty  </h1>
 <%}%>
 
-<%addedVisist.forEach(element => { %> 
-    <!-- -->
-    <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" onclick="showFormm()">
-        <p><%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %> </p>
-        <p><%= element.comment %> </p>
-        <p><%= element.treatment.treatmentName %> </p>
-        <p><%= element.treatment.treatmentPrice %> </p>
-        <%- include(`../partials/deleteForm.ejs`, {url: `/clients/clientView/${element.id}`})%> 
-    </div>
-
- 
-<%});%> 
 <br><br><hr>
 <form method="post" action="/clients/clientView/<%=clientInfo.id%>?_method=DELETE ">
     <input type="submit" value="Usuń">
+    <br><hr>
     <%addedVisist.forEach(element => { %> 
         <!-- -->
         <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" onclick="showFormm()">

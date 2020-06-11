@@ -26,7 +26,7 @@ const ShoppingList = require('./routes/shoppingList')
 const CalendarRouter = require('./routes/calendar')
 const SettingsRotuer = require('./routes/settings')
 const ClietnSellsStats = require('./routes/clientSellsStats')
-const Documents = require('./routes/documents.js');
+
 const Document = require('./routes/document.js');
 
 
@@ -100,7 +100,7 @@ app.use('/settings',SettingsRotuer) //Settings router
 app.use('/shoppingList',ShoppingList) //ShopingList router
 //Statistic
 app.use('/statistics', ClietnSellsStats)
-app.use('/documents',Documents);
+app
 app.use('/document',Document)
 
 
