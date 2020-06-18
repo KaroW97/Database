@@ -21,7 +21,7 @@
             <tr onclick="window.location='/statistics/<%=client.id%>'" >
                 <% sum=0 %> 
                 <%addedVisist.forEach(element => { %> 
-                    <% client.id == element.client ?sum +=element.treatment.treatmentPrice:0 %>
+                    <%element.treatment == null ?'' :client.id == element.client ?sum +=element.treatment.treatmentPrice:0 %>
                 <%});%> 
                 <td><%=client.name %> <%=client.lastName%></td>
                 <td><%=sum %></td>

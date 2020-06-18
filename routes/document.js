@@ -46,24 +46,50 @@ router.get('/', ensureAuthenticated,async(req, res) => {
     }
 })
 //Upload File
-router.post('/',ensureAuthenticated,upload.array('file'),(req,res)=>{
-    res.redirect('/document')
+router.post('/',ensureAuthenticated,upload.array('file'),async(req,res)=>{
+    try{
+        req.flash('mess','Dodano plik');
+        req.flash('type','success')
+        res.redirect('/document')
+    }catch(err){
+        req.flash('mess','Nie udało się dodac plik');
+        req.flash('type','danger')
+        res.redirect('/document')
+    }
+
 })
 //Delete File
-router.delete('/',ensureAuthenticated,(req,res)=>{
-    console.log(req.body.deleteRow)
-    if(Array.isArray(req.body.deleteRow)){
-        for(var i =0; i<req.body.deleteRow.length; i++){
-            req.app.locals.gfs.remove({_id:ObjectId(req.body.deleteRow[i]),root:'uploads'}, function (err, gridStore) {
-                if (err)  throw(err);
-            });
+router.delete('/',ensureAuthenticated,async(req,res)=>{
+    try{
+        if(req.body.deleteRow != null){
+            if(Array.isArray(req.body.deleteRow)){
+                for(var i =0; i<req.body.deleteRow.length; i++){
+                    await req.app.locals.gfs.remove({_id:ObjectId(req.body.deleteRow[i]),root:'uploads'}, function (err, gridStore) {
+                        if (err)  throw(err);
+                    });
+                }
+                req.flash('mess','Usunięto pliki');
+                req.flash('type','success')
+            }else{
+               await  req.app.locals.gfs.remove({_id:ObjectId(req.body.deleteRow),root:'uploads'}, function (err, gridStore) {
+                    if (err) throw(err);
+                });
+                req.flash('mess','Usunięto plik');
+                req.flash('type','success')
+            }
+        }else{
+            req.flash('mess','Nie wybrano plików do usunięcia');
+            req.flash('type','info') 
         }
-    }else{
-        req.app.locals.gfs.remove({_id:ObjectId(req.body.deleteRow),root:'uploads'}, function (err, gridStore) {
-            if (err) throw(err);
-        });
+    
+    
+        res.redirect('/document') 
+    }catch(err){
+        req.flash('mess','Nie udało się usunąć plik');
+        req.flash('type','danger')
+        res.redirect('/document') 
     }
-    res.redirect('/document') 
+
    
 })
 

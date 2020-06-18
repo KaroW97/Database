@@ -21,13 +21,15 @@
             <% sum=0 %> 
             <% moneySpent=0 %> 
             <%clientVisits.forEach(element => { %> 
-                <%if(treatment.id == element.treatment.id){%>
-                    <% sum++ %> 
+                <%if(element.treatment!= null &&treatment.id == element.treatment.id){%>
+                    <% sum++;treatmentExists = true;%> 
                     <% moneySpent+=element.treatment.treatmentPrice %> 
                 <% } %> 
             <%});%> 
+          
             <td><%=sum%> </td>
             <td><%=moneySpent%> </td>
+      
         </tr>    
     <% }); %> 
         

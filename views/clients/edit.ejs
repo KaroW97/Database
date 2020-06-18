@@ -1,4 +1,6 @@
-<form action="/clients/clientView/<%=clients.id%>?_method=PUT" method="POST" >
+<%-include('../partials/infoMessages.ejs')%>
+
+<form method="POST" action="/clients/clientView/<%=clients.id%>?_method=PUT" >
     <%-include('./_form_fields_edit.ejs')%>
     <%- include('./_form_fields.ejs') %> 
     <br>

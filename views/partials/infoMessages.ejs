@@ -1,0 +1,17 @@
+
+    <% if(messages.mess){ %>
+   
+      
+            <div class="alert alert-<%=messages.type%>  ">
+                <%= messages.mess%> 
+            </div>
+            
+          
+    <% } %>
+
+  <script>
+ 
+ $( document ).ready(function() {
+    $(".alert" ).fadeOut(3000); 
+});
+  </script>

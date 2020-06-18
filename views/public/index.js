@@ -1,3 +1,4 @@
+
 function showFormm(){
     let comapnyForm = document.getElementById('comapnyForm');
     let input = document.getElementById('input')
@@ -27,11 +28,4 @@ function checkIfNull(){
         myForm.style.display="block"    
 }
 
-(function hideMessage(){
-    let hideAlert = document.getElementById('hideAlert');
-    if(hideAlert){
-        setTimeout(()=>{
-            hideAlert.style.display='none';
-        },2500)
-    }
-})();
+

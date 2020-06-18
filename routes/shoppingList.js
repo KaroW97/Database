@@ -3,6 +3,8 @@ const router = express.Router();
 const ShoppingList = require('../models/shoppingList')
 const BrandName = require('../models/productCompany')
 const CompanyShopping = require('../models/stats/companyShoppingStats')
+const ObjectId = require('mongodb').ObjectId;
+
 const {ensureAuthenticated} = require('../config/auth')
 
 //Main Page Shopping List
@@ -28,8 +30,10 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
     })
     try{
         await shoppingList.save();
+  
         res.redirect(`/shoppingList/listView/${shoppingList.id}`)
     }catch{
+
         res.redirect(`/clients`)
     }
 })
@@ -40,9 +44,13 @@ router.post('/brandName',async(req,res)=>{
         user:req.user.id
     })
     try{
-        brandName.save();
+       await brandName.save();
+        req.flash('mess','Dodano nową listę zakupów do bazy.')
+        req.flash('type','success')
         res.redirect('/shoppingList')
     }catch{
+        req.flash('mess','Dodanie listy do bazy nie powiodło się')
+        req.flash('type','danger')
         res.redirect('/clients')
     }
 })
@@ -55,6 +63,7 @@ router.get('/listView/:id',ensureAuthenticated,async(req,res)=>{
         res.render('shoppingList/listView',{
             list:shoppingList
         })
+
     }catch{
         res.redirect('/shoppingList');
     }
@@ -80,35 +89,56 @@ router.put('/listView/:id',ensureAuthenticated,async(req,res)=>{
             user:req.user.id,
             transactionDate:Date.parse(req.body.transactionDate)||list.transactionDate
         })    
+        req.flash('mess','Dodano element do listy')
+        req.flash('type','success')
         await shoppingStatistics.save();
         await list.save();
-        res.redirect(`/shoppingList/listView/${list.id}`);
+ 
+        res.redirect(`/shoppingList/listView/${list.id}`)
+ 
+
     }catch(err){
         console.log(err)
         const shopping  = await ShoppingList.findById(req.params.id)
         const addedShoping = await ShoppingList.find({_id:shopping.id});
-
+        req.flash('mess','Coś poszło nie tak.')
+        req.flash('type','succesdangers')
         res.render('shoppingList/listView',{
-            type:'danger',
-            errorMessage:'Błąd Tworzenia Listy',
             list:shopping,
             addedShoping:addedShoping
         })
     }
 })
+
 //Delete Shopping List Router
-router.delete('/:id',ensureAuthenticated,async(req,res)=>{
+router.delete('/',ensureAuthenticated,async(req,res)=>{
+    console.log(req.body.chackboxDelete)
+    var list
     try{
-        const list = await ShoppingList.findById(req.params.id);
-        await list.remove();
+        if(req.body.chackboxDelete!= null){
+            if(Array.isArray(req.body.chackboxDelete)){
+                for(var i=0;i<req.body.chackboxDelete.length; i++){
+                    list = await ShoppingList.findById(req.body.chackboxDelete[i]);
+                    await list.remove();
+                }
+                req.flash('mess','Usunięto listy zakupów.')
+                req.flash('type','success')
+            }else{
+                list = await ShoppingList.findById(req.body.chackboxDelete);
+                await list.remove();
+                req.flash('mess','Usunięto liste zakupów.')
+                req.flash('type','success')
+            }
+        
+        }else{
+            req.flash('mess','Nie podano zabiegu do usunącia')
+            req.flash('type','info')
+        }
         res.redirect('/shoppingList');
     }catch{
-      
-        if(clients == null){
-            res.redirect('/clients')
-        }else{
-            res.redirect(`/shoppingList/listView/${list.id}`)
-        }   
+        req.flash('mess','Nie udało się usunąć rekordu.')
+        req.flash('type','danger')
+        res.redirect(`/shoppingList`)   
     }
 })
 //Edit List Router
@@ -138,17 +168,21 @@ router.put('/listView/:id/edit',ensureAuthenticated, async(req,res)=>{
 
         list.price.forEach(element =>totalPriceCalculate +=element);
         list.totalPrice = totalPriceCalculate
-     
+        req.flash('mess','Lista została zedytowana.')
+        req.flash('type','success')
         await list.save();
+  
         res.redirect(`/shoppingList/listView/${list.id}`);
 
     }catch{
+        req.flash('mess','Nie udało się zedytować listy.')
+        req.flash('type','danger')
         res.redirect(`/shoppingList`);
     }
   
 })
 //Delete List Item
-router.delete('/listView/:id',ensureAuthenticated, async(req,res)=>{
+/*router.delete('/listView/:id',ensureAuthenticated, async(req,res)=>{
        try{
         let elem = req.params.id.split(',');
         const list = await ShoppingList.findById(elem[0]);
@@ -167,6 +201,49 @@ router.delete('/listView/:id',ensureAuthenticated, async(req,res)=>{
     }catch(err){
             res.redirect('clients')
     }
+})*/
+//Delete List Item
+router.delete('/listView/:id',ensureAuthenticated, async(req,res)=>{
+   
+    var list
+    try{
+       
+        if(Array.isArray(req.body.chackboxDelete)){
+            list  = await ShoppingList.findById(req.params.id);
+            let sorted = (req.body.chackboxDelete).sort().reverse();
+            for(var i=0;i<sorted.length ; i++){
+                let elem = sorted[i];
+                list.totalPrice -= list.price[elem]
+                list.price.splice(elem,1)
+                list.productName.splice(elem,1 )    
+            }
+            req.flash('mess','Rekordy zostały usunięte')
+            req.flash('type','success')
+        }else{
+          
+            let elem = req.body.chackboxDelete;
+            list = await ShoppingList.findById(req.params.id);
+            
+            list.totalPrice -= list.price[elem]
+            list.price.splice(elem,1)
+            list.productName.splice(elem,1)
+           
+            req.flash('mess','Rekord został usunięty')
+            req.flash('type','success')
+        }
+        if(list.price == 0 || list.productName == ''||list.productName == []){
+            list.remove()
+            res.redirect(`/shoppingList`);
+        }else{
+            list.save();
+            res.redirect(`/shoppingList/listView/${list.id}`);
+        }
+        
+       
+ }catch(err){
+     console.log(err)
+         res.redirect('/shoppingList')
+ }
 })
 
 module.exports = router

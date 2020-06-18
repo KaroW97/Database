@@ -1,30 +1,36 @@
 <h2>All Treatments</h2>
-
+<%-include('../partials/infoMessages.ejs')%>
 <form method="GET">
     <label id="treatmentName"></label>
     <input id="treatmentName"name="treatmentName" placeholder="Nazwa zabiegu" value="<%=searchOptions.name  %>" autofocus>
 </form>
 <button onclick="showFormm() " >Add Treatment</button>
-<table>
-    <thead>
-        <tr>
-            <th >Nazwa</th>
-            <th >Cena</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>   
+
+<form method="post" action="/treatment?_method=DELETE">
+    <input type="submit" value="Usuń">
+    <table>
+        <thead>
+            <tr>
+                <th >Nazwa</th>
+                <th >Cena</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>   
+            <% treatment.forEach(treatment => {%>
+                    <tr>
+                        <td onclick="window.location='/treatment/<%=treatment.id%>/edit'"><%=treatment.treatmentName%></td>
+                        <td onclick="window.location='/treatment/<%=treatment.id%>/edit'"><%=treatment.treatmentPrice%></td>
+                        <td><input type="checkbox" name="chackboxDelete" value="<%=treatment.id%>"></td>
+                       
+                    </tr>
+            <% });%>
+         
+        </tbody>
+    </table>
     
-        <% treatment.forEach(treatment => {%>
-                <tr onclick="window.location='/treatment/<%=treatment.id%>/edit'">
-                    <td><%=treatment.treatmentName%></td>
-                    <td><%=treatment.treatmentPrice%></td>
-                    <td><%- include(`../partials/deleteForm.ejs`, {url: `treatment/${treatment.id}`})%></td>
-                </tr>
-        <% });%>
-     
-    </tbody>
-</table>
+</form>
+
 <form method="POST" action="/treatment" >
     <div style="display: none;" id ="comapnyForm" >
         <span id ="close"class="close" onclick="closeForm()">&times;</span>

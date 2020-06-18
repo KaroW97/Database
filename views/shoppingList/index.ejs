@@ -1,3 +1,5 @@
+ <%- include('../partials/infoMessages.ejs') %> 
+
 
 <button href="#" id ="showForm" onclick="showFormm()">Dodaj firme</button>
 <form id="myForm" method="POST"  action="/shoppingList" style="display: none;">
@@ -13,26 +15,30 @@
         <button type="submit">Dodaj</button>
 </form>
 
-<table>
-    <thead>
-        <tr>
-            <td>Nazwa Listy</td>
-            <td>Cena</td>
-            <td>Data</td>
-        </tr>
-    </thead>
-    <tbody>
-        
-        <% shopping.forEach(items => {%>
-            <tr onclick="window.location='/shoppingList/listView/<%=items.id%>'">
-                <td><%=items.listName.name  == null? '':items.listName.name %></td>
-                <td><%=items.totalPrice %></td>
-                <td><%= items.transactionDate == null ? '' : items.transactionDate.toISOString().split('T')[0] %> </td>
-                <td><%-include(`../partials/deleteForm.ejs`, {url: `shoppingList/${items.id}`})%></td>
+<form method="POST" action="/shoppingList?_method=DELETE">
+    <input type="submit" value="Usuń">
+    <table>
+        <thead>
+            <tr>
+                <td>Nazwa Listy</td>
+                <td>Cena</td>
+                <td>Data</td>
             </tr>
-       <% }); %> 
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            
+            <% shopping.forEach(items => {%>
+                <tr>
+                    <td  onclick="window.location='/shoppingList/listView/<%=items.id%>'"><%=items.listName.name  == null? '':items.listName.name %></td>
+                    <td  onclick="window.location='/shoppingList/listView/<%=items.id%>'"><%=items.totalPrice %></td>
+                    <td  onclick="window.location='/shoppingList/listView/<%=items.id%>'"><%= items.transactionDate == null ? '' : items.transactionDate.toISOString().split('T')[0] %> </td>
+                    <td><input type="checkbox" name="chackboxDelete" value="<%=items.id%>"></td>
+                </tr>
+           <% }); %> 
+        </tbody>
+    </table>
+</form>
+
 <form method="POST" action="/shoppingList/brandName" >
     <div style="display: none;" id ="comapnyForm" >
         <span id ="close"class="close" onclick="closeForm()">&times;</span>

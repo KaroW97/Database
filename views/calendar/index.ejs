@@ -38,7 +38,7 @@
     <p><%= newVisit[i].clientName !=undefined? newVisit[i].clientName :''  %> <%= newVisit[i].clientLastName != undefined ? newVisit[i].clientLastName : ''%></p>  
     <p><%= newVisit[i].visitDate == null ? '' : newVisit[i].visitDate.toISOString().split('T')[0] %></p>  
     <p><%= newVisit[i].timeFrom %>  <%=newVisit[i].timeTo%>  </p>  
-    <p><%= newVisit[i].treatment.treatmentName %> </p>
+    <p><%= newVisit[i].treatment== null?'':newVisit[i].treatment.treatmentName %> </p>
     <br>
 <%} %> 
 

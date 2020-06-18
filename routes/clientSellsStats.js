@@ -58,10 +58,12 @@ router.get('/treatment', async(req,res)=>{
         const treatment =  Treatment.find(searchTreatment)//.find({user:req.user.id});
         let treatments = await treatment.find({user:req.user.id}).exec();
         const clientVisits = await cliantStats.find({user:req.user.id}).exec()
-       
-        let totalAmountOfTreatments =  calculateAmountOfTreatments(treatments,clientVisits )
-        let totalAmountOfSpent = calculateTotalAmountSpent(clientVisits);
+        if(clientVisits.treatment != null){
+            var totalAmountOfTreatments =  calculateAmountOfTreatments(treatments,clientVisits )
+            var totalAmountOfSpent = calculateTotalAmountSpent(clientVisits);
+        }
         res.render('stats/treatmentStats',{
+            treatmentExists: false,
             treatments:treatments,
             clientVisits:clientVisits,
             user:req.user.id,
@@ -114,7 +116,7 @@ router.get('/shopping', async(req,res)=>{
     }
    
 })
-router.delete('/shopping/:id', async(req,res)=>{
+/*router.delete('/shopping/:id', async(req,res)=>{
     try{
         let shopping = await CompanyShopping.find({productName:req.params.id});
         for(var i=0;i<shopping.length ; i++)
@@ -136,6 +138,36 @@ router.delete('/shopping/:id', async(req,res)=>{
             errorMessage:'Nie udało się usunąć'
         })
     }
+})*/
+router.delete('/shopping', async(req,res)=>{
+   
+    var shopping;
+    try{
+        if(req.body.checkboxDelete != null ){
+            for(var i=0; i<req.body.checkboxDelete.length;i++)
+                var shopping = await CompanyShopping.find({productName:req.body.checkboxDelete}).find({user:req.user.id});
+            for(var i=0;i<shopping.length ; i++)
+                await shopping[i].remove()
+
+            if(shopping.length >1){
+                req.flash('mess','Usunięto Statystyki Produktów')
+                req.flash('type','success')
+            }else{
+                req.flash('mess','Usunięto Statystyke Produktu')
+                req.flash('type','success')
+            }
+        }else{
+            req.flash('mess','Nie Podano Elementu Do Usunięcia')
+            req.flash('type','info') 
+        }
+        res.redirect('/statistics/shopping')
+    }catch(err){
+        console.log(err)
+        req.flash('mess','Nie udało się usunąć rekordu.')
+        req.flash('type','danger')
+        res.redirect('/statistics/shopping')
+       
+    }
 })
 //Client Statistics
 router.get('/:id', ensureAuthenticated,async(req,res)=>{
@@ -149,11 +181,12 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
     try{
         const clientt  = await Client.findById(req.params.id)
         const clientVisit = await clientVisitDate.exec()
-        var totalPrcie = calculateTotalPrice(clientVisit)
+        
+        if(clientVisit.treatment!=null)
+            var totalPrcie = calculateTotalPrice(clientVisit)
         const treatment = await Treatment.find()
         res.render('stats/clientStatsView',{
             clientInfo:clientt,
-          
             clientVisits:clientVisit,
             treatments:treatment,
             totalPrice:totalPrcie,

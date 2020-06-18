@@ -18,9 +18,9 @@
     <%var count=0;pricePerTreatment=0; %>
     <tr>
         <%clientVisits.forEach(visit=>{%>
-            <% if(treatments.treatmentName == visit.treatment.treatmentName) {%> 
+            <% if( visit.treatment!= null&&treatments.treatmentName == visit.treatment.treatmentName) {%> 
                 <%count++ %>  
-                <% pricePerTreatment+=visit.treatment.treatmentPrice %> 
+                <%visit.treatment== null?'':pricePerTreatment+=visit.treatment.treatmentPrice %> 
             <% } %> 
         <% })%>
         <td><%=count != 0 ?treatments.treatmentName : ''%> </td>

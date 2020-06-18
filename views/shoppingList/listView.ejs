@@ -1,8 +1,14 @@
+
+<%-include('../partials/infoMessages.ejs')%>
+
+
 <h1 name="listName" > <%=list.listName.name == '' ? 'Nazwa' :list.listName.name %></h1>
 <% if(list.transactionDate!= null){ %> 
     <h4 name="transactionDate" value="<%=list.transactionDate%>">Data zamówienia: <%=list.transactionDate == null ? '' : list.transactionDate.toISOString().split('T')[0] %> </h4>
 <% } %> 
 
+<form method="post" action="/shoppingList/listView/<%=list.id%>?_method=DELETE">
+    <input type="submit" value="Usuń">
 
     <div style="display:flex;"  >
         <div style="padding:10px;" onclick="window.location='/shoppingList/listView/<%=list.id%>/edit'">
@@ -25,12 +31,14 @@
         <div style="margin:50px 10px 0 10px">
             <% list.price.forEach((element, index) => { %>
                 <div style="padding:6.5px 0;">
-                    <%-include(`../partials/deleteForm.ejs`, {url: `/shoppingList/listView/${[list.id, index]}`})%>
+                    <input type="checkbox" name="chackboxDelete" value="<%=index%>">
                 </div>
         <% }); %> 
         </div>
      
     </div>
+</form>
+
 
 <%if(list.totalPrice != 0) {%> 
     <p style="padding:0 10px 10px 10px;">Do zapłaty: <%=list.totalPrice%></p>

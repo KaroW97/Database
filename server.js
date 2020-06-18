@@ -4,7 +4,6 @@ if(process.env.NODE_ENV !== 'production'){
 const express = require('express')
 const app = express()
 
-
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
@@ -26,9 +25,7 @@ const ShoppingList = require('./routes/shoppingList')
 const CalendarRouter = require('./routes/calendar')
 const SettingsRotuer = require('./routes/settings')
 const ClietnSellsStats = require('./routes/clientSellsStats')
-
 const Document = require('./routes/document.js');
-
 
 //app.use( express.static('public'));
 app.use('/public', express.static(__dirname + '/views/public'))
@@ -68,9 +65,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-
-
 app.get('*', (req,res,next)=>{
+   
+  
     app.locals.gfs = gfs;
     res.locals.user = req.user || null;
     next();
@@ -81,11 +78,13 @@ app.post('*', (req,res,next)=>{
     next();
 })
 app.put('*', (req,res,next)=>{
+    
     app.locals.gfs = gfs;
     res.locals.user = req.user || null;
     next();
 })
 app.delete('*', (req,res,next)=>{
+    
     app.locals.gfs = gfs;
     res.locals.user = req.user || null;
     next();

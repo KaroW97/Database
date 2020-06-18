@@ -1,21 +1,15 @@
+<%-include('../partials/infoMessages.ejs')%>
 
-<div id="hideAlert">
-    <% if(messages.mess){ %>
-        <div class="alert alert-<%=messages.type%>"><%= messages.mess%></div>
-    <% } %>
-</div>
 <div onclick="window.location='/clients/clientView/<%=clientInfo.id%>/edit'">
+    <h1><%=clientInfo.name%> <%=clientInfo.lastName%></h1>
+    <p>Numer Telefonu: <%=clientInfo.phoneNumber%></p>
     <% if(clientInfo.visitDate != null) {%> 
         <p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
-    <% } %> 
-    <% if(clientInfo.nextVisitDate != null) {%> 
-        <p>Natępna wizyta :<%=clientInfo.nextVisitDate == null ? '' :clientInfo.nextVisitDate.toISOString().split('T')[0] %></p>
     <% } %> 
     <% if(clientInfo.dateOfBirth != null) {%> 
         <p>Urodziny: <%=clientInfo.dateOfBirth == null ? '' :clientInfo.dateOfBirth.toISOString().split('T')[0] %></p>
     <% } %> 
-    <p>Imie  <%=clientInfo.name%> Nazwisko  <%=clientInfo.lastName%></p>
-    <p>Numer Telefonu: <%=clientInfo.phoneNumber%></p>
+
     <p>Diagnoza</p>
     <%Object.keys(clientInfo.skinDiagnoseAll).forEach(element=>{%>
         <% if(clientInfo.skinDiagnoseAll[element].value == true && element !='$init'){ %> 
@@ -53,21 +47,21 @@
     <h1>Wizyty  </h1>
 <%}%>
 
-<br><br><hr>
+
 <form method="post" action="/clients/clientView/<%=clientInfo.id%>?_method=DELETE ">
     <input type="submit" value="Usuń">
-    <br><hr>
+    <br>
     <%addedVisist.forEach(element => { %> 
         <!-- -->
         <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" onclick="showFormm()">
             <p><%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %> </p>
             <p><%= element.comment %> </p>
-            <p><%= element.treatment.treatmentName %> </p>
-            <p><%= element.treatment.treatmentPrice %> </p>
-           
+            <p><%= element.treatment== null ? 'Nie ma w ofercie' :element.treatment.treatmentName %> </p>
+            <p><%= element.treatment== null ? '' :element.treatment.treatmentPrice %> </p>
+            
         </div>
         <input type="checkbox" name="chackboxDelet" value="<%=element.id%>" >
-     
+        <hr>
     <%});%> 
         
 </form>

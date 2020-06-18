@@ -132,15 +132,18 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
     try{
        
         const newClient = await clients.save();
+        req.flash('mess','Dodano klienta do bazy.');
+        req.flash('type','success')
         res.redirect(`clients/clientView/${newClient.id}`)
+        
        
     }catch(err){
         console.log(err)
+        req.flash('mess','Nie udało się dodać klienta do bazy.');
+        req.flash('type','danger')
         res.render('clients/new',{
           
-            type:'danger',
             clients:clients,
-            errorMessage:'Bład w trakcie tworzenia klienta', 
         });
     }
 })
@@ -176,15 +179,17 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
         user:req.user.id
     })
     try{   
-        
+        if(req.body.treatment== null){
+            req.flash('mess','Nie masz żadnych zabiegów w bazie');
+            req.flash('type','danger')
+            res.redirect( `/clients/clientView/${req.params.id}`)
+        }
         await visit.save();
         req.flash('mess','Dodano wizyte');
         req.flash('type','success')
         res.redirect( `/clients/clientView/${req.params.id}`)
     }catch(err){
-        console.log(err)
         const treatments = await Treatment.find({user:req.user.id});
-
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client')
         const clientt  = await Client.findById(req.params.id);
         req.flash('mess','Nie udało się dodać wizyty');
@@ -205,7 +210,6 @@ router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
     try{
         client = await Client.findById(req.params.id)
         if(req.body.chackboxDelet!= null ){
-            
             if(Array.isArray(req.body.chackboxDelet)){
               for(var i = 0; i < (req.body.chackboxDelet).length; i++){
                 visit = await ClientVisits.findById(ObjectId(req.body.chackboxDelet[i]));
@@ -213,14 +217,17 @@ router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
                 await visit.remove();
               } 
               req.flash('mess','Wizyty zostały usunięte');
-              req.flash('type','info')
+              req.flash('type','succes')
             }else{
                 visit = await ClientVisits.findById(ObjectId(req.body.chackboxDelet));
                 clientValue= visit.client
                 await visit.remove();
                 req.flash('mess','Wizyta została usunięta');
-                req.flash('type','info')
+                req.flash('type','success')
             }
+          }else{
+            req.flash('mess','Nie wybrano wizyty do usunięcia');
+            req.flash('type','info')
           }
           res.redirect(`/clients/clientView/${client._id}`)
     }catch(err){
@@ -261,7 +268,7 @@ router.put('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
          await visit.save();
          req.flash('mess','Wizyta została edytowana');
          req.flash('type','success')
-         res.redirect(`/clients/clientView/${visit.client.id}`)
+         return res.redirect(`/clients/clientView/${visit.client.id}`)
     }catch(err){
         console.log(err)
         const addedVisit = await ClientVisits.findById(req.params.id)
@@ -374,9 +381,10 @@ router.put('/clientView/:id',ensureAuthenticated,async (req,res)=>{
         if(clients == null){
             res.redirect('/')
         }else{
+            req.flash('mess','Nie udało się edytować klienta.');
+            req.flash('type','danger')
             res.render('clients/edit',{
-                clients:clients,
-                errorMessage:'Error updating Client', 
+                clients:clients
             });
         }
        
@@ -408,15 +416,24 @@ router.delete('/', async(req,res)=>{
                 client =  await Client.findById(ObjectId(req.body.chackboxDelet[i]));
                 await client.remove(); 
               } 
+              req.flash('mess','Udało się usunąć klientów')
+              req.flash('type','success') 
              
             }else{
                 client =  await Client.findById(ObjectId(req.body.chackboxDelet));
                 await client.remove();  
+                req.flash('mess','Udało się usunąć klienta')
+                req.flash('type','success') 
             }
+          }else{
+            req.flash('mess','Nie wybrano klientów do usunięcia')
+            req.flash('type','info') 
           }
           res.redirect('/clients') 
     }catch(err){
         console.log(err);
+        req.flash('mess','Nie udało się usunąć klienta')
+        req.flash('type','danger') 
         res.redirect('/calendar')       
     }
   
