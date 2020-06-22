@@ -7,12 +7,19 @@
 <div>
 
     <% if(files) {%> 
-        <form action="/document?_method=DELETE" method="POST">
+        <form action="/document?_method=DELETE" method="POST"  >
             <input type="submit" value="Usuń">
             <%files.forEach(file =>{%>
                 <% if(file.metadata.user == user){%>
-                    <p name="fileDelete" value="<%=file._id%>"> <%= file.metadata.initialFilename %> </p>
+                  
+                  
+                        <p name="fileDelete" value="<%=file._id%>">
+                            <%=file.metadata.initialFilename%>
+                       </p>
+                 
                     <input name="deleteRow" type="checkbox" value="<%=file._id%>">
+                    <button type="button" onclick="location.href='document/<%=file.filename%>';">Pobierz</button>
+             
                     <hr>
                 <%} %> 
             
@@ -27,4 +34,5 @@
         window.location.reload();
         }
     }
+  
 </script>

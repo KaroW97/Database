@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8" >
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>Database</title>
-
-    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../../public/cssFile.css">
     <link rel="stylesheet" type="text/css" href="../../public/fontAwesome/css/fontawesome.min.css">
@@ -23,17 +22,18 @@
     <link href="/Areas/Development/dist/modular/css/core.css" rel="stylesheet" type="text/css">
     <link href="/Areas/Development/dist/modular/css/datepicker.css" rel="stylesheet" type="text/css">
     <script src="/Areas/Development/dist/modular/js/datepicker.js"></script>-->
-    
-  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+
+
 </head>
-<body onload="checkIfNull()" >
+<body  >
     
     <% if(user) {%> 
         <%-include('../partials/header')%>
     <% } %> 
     <%- body %> 
 
-<script src="../public/index.js"></script> 
-
+    <script type="text/javascript"  src="../../public/index.js"  charset="utf-8"></script> 
+    <script type="text/javascript"  src="../../public/jsFile.js"  charset="utf-8"></script> 
 </body>
 </html>

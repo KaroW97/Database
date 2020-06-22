@@ -6,7 +6,50 @@ const ClientVisits = require('../models/clientsVisits')
 const ObjectId = require('mongodb').ObjectId;
 const User = require('../models/user')
 const {ensureAuthenticated} = require('../config/auth')
+///
+const fs = require('fs');
+let pdf = require("html-pdf");
+let path = require("path");
+let ejs = require("ejs");
+//Get Client pdf file 
 
+router.get('/clientPdf/:id', async(req,res) => {
+ 
+    try{
+        const clientt  =  await Client.findById(req.params.id)
+        res.render("clients/temp",{clientt:clientt})
+     /*   (err, data)=>{
+            if(err)
+                console.log(err)
+            else{
+                let options = {
+                    "height": "11.25in",
+                    "width": "8.5in",
+                    "header": {
+                        "height": "20mm"
+                    },
+                    "footer": {
+                        "height": "20mm",
+                    },
+                };
+                pdf.create(data, options).toFile("report.pdf", function (err, data) {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        console.log('git')
+                    }
+                });
+            }
+            
+        })*/
+        //res.redirect('/clients')
+    }catch(err){
+        console.log(err)
+        res.redirect('/clients')
+    }
+
+  
+})
 //All Clients Route
 router.get('/', ensureAuthenticated,async(req,res)=>{
     let searchOptions ={};
@@ -154,9 +197,10 @@ router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
     try{
         const visit = new ClientVisits()
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').exec()
-     
+        console.log(addedVisit)
         const treatments = await Treatment.find({user:req.user.id});
         const clientt  = await Client.findById(req.params.id)
+     
         res.render('clients/clientView',{
             addedVisist:addedVisit,
             treatments:treatments,

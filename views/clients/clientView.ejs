@@ -1,5 +1,11 @@
 <%-include('../partials/infoMessages.ejs')%>
+<%-include('./pdfTemplate.ejs') %>
+<button onclick="window.location='/clients/clientPdf/<%=clientInfo.id%>'">PDF</button>
+<button type="button" onclick="window.location='/clients/clientPdf/<%=clientInfo.id%>';" download="ss">Pobierz</button>
 
+
+<button id="pdf"onclick='pdf()'>Click</button>
+<br><hr>
 <div onclick="window.location='/clients/clientView/<%=clientInfo.id%>/edit'">
     <h1><%=clientInfo.name%> <%=clientInfo.lastName%></h1>
     <p>Numer Telefonu: <%=clientInfo.phoneNumber%></p>
@@ -49,20 +55,27 @@
 
 
 <form method="post" action="/clients/clientView/<%=clientInfo.id%>?_method=DELETE ">
-    <input type="submit" value="Usuń">
-    <br>
-    <%addedVisist.forEach(element => { %> 
-        <!-- -->
-        <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" onclick="showFormm()">
-            <p><%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %> </p>
-            <p><%= element.comment %> </p>
-            <p><%= element.treatment== null ? 'Nie ma w ofercie' :element.treatment.treatmentName %> </p>
-            <p><%= element.treatment== null ? '' :element.treatment.treatmentPrice %> </p>
+   
+        <input type="submit" value="Usuń">
+        <br>
+      
+        <%addedVisist.forEach(element => { %> 
+            <!-- -->
             
-        </div>
-        <input type="checkbox" name="chackboxDelet" value="<%=element.id%>" >
-        <hr>
-    <%});%> 
+            <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" onclick="showFormm()">
+               
+                <p><%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %> </p>
+         
+                <p><%= element.comment %> </p>
+                <p><%= element.treatment== null ? 'Nie ma w ofercie' :element.treatment.treatmentName %> </p>
+                <p><%= element.treatment== null ? '' :element.treatment.treatmentPrice %> </p>
+              
+            </div>
+       
+            <input type="checkbox" name="chackboxDelet" value="<%=element.id%>" >
+            <hr>
+        <%});%>
+
         
 </form>
 
@@ -75,3 +88,45 @@
 
 
 
+
+    
+<script>
+    function pdf(){
+        var elem = Number(`<%-addedVisist.length%>`)
+      
+        var doc =  new jsPDF();
+      
+     `<%addedVisist.forEach((element, index)=> { %>`
+       
+        elem--;
+            doc.setFontSize(13)
+            doc.setDrawColor(162, 123, 56); // draw red lines
+            doc.text(`<%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %>`, 15,15 + `<%=index%>` * 55)
+            doc.line(15,16.5 + `<%=index%>` * 55,39,16.5 + `<%=index%>` * 55)
+
+            doc.setFontSize(10)
+            doc.text('Zabieg',15,23 + `<%=index%>` * 55)
+            doc.setFontSize(13)
+            doc.text(`<%= element.treatment== null ? 'Nie ma w ofercie' :element.treatment.treatmentName %>`, 15,28 + `<%=index%>` * 55)
+
+            doc.setFontSize(10)
+            doc.text('Cena: ',180,23 + `<%=index%>` * 55)
+            doc.setFontSize(13)
+            doc.text(`<%= element.treatment== null ? '' :+element.treatment.treatmentPrice%>`, 180,28 + `<%=index%>` * 55,{maxWidth:'40'})
+
+            doc.setFontSize(10)
+            doc.text('Komentarz: ',15,35 + `<%=index%>` * 55)
+            doc.setFontSize(13)
+            doc.text(`<%=element.comment%>` + `<%=element.comment.length%>`, 15,40 + `<%=index%>` * 55,{maxWidth:'185'})
+            doc.setLineWidth(0.1);
+            doc.line(15,47 + `<%=index%>` * 55,200,47 + `<%=index%>` * 55)
+        
+  
+        if(elem ==0){
+            doc.save(`<%=clientInfo.name%> <%=clientInfo.lastName%> Wizyty.pdf`);
+        }
+           
+           
+    `  <%});%>`
+     }
+</script>

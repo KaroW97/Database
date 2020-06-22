@@ -11,11 +11,9 @@ const methodOverride = require('method-override')
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session');
+
 //FILE UPLOADER
-const multer = require('multer');
-const crypto = require('crypto');
-const path = require('path');
-const GridFsStorage = require('multer-gridfs-storage');
+
 const Grid = require('gridfs-stream');
 //
 const IndexRouter = require('./routes/index');
@@ -28,13 +26,12 @@ const ClietnSellsStats = require('./routes/clientSellsStats')
 const Document = require('./routes/document.js');
 
 //app.use( express.static('public'));
-app.use('/public', express.static(__dirname + '/views/public'))
+app.use('/public', express.static(__dirname + '/public'))
 app.set('view engine', 'ejs') 
 app.set('views',__dirname+'/views')
 app.set('layout', 'layouts/layout')
 app.use(expressLayouts)
 app.use(methodOverride('_method'))
-
 app.use(bodyParser.urlencoded({limit:'10mb',extended:false}))
 
 const mongoose =  require('mongoose')

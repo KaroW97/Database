@@ -3,7 +3,6 @@
     <div>
         <input type="date" name="visitDate"  value="<%=clients.visitDate ==null ? '':clients.visitDate.toISOString().split('T')[0]%>" >
         
-        <input type="date" name="nextVisitDate"  value="<%=clients.nextVisitDate ==null ? '':clients.nextVisitDate.toISOString().split('T')[0]%>" >
     </div>
     
     <%-include('./_form_fields_edit.ejs')%>

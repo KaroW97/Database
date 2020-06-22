@@ -42,8 +42,26 @@ router.get('/', ensureAuthenticated,async(req, res) => {
         })
     }catch(err){
         console.log(err)
-        res.redirect()
+        res.redirect('/document')
     }
+})
+//Get One Document
+router.get('/:filename', ensureAuthenticated,async(req, res) => {
+    try{
+        req.app.locals.gfs.files.findOne({ filename: req.params.filename}, (err, file)=>{
+            if(!file || file.length === 0){
+                res.redirect('/document')
+            }
+            const readstream =req.app.locals.gfs.createReadStream(file.filename);
+            readstream.pipe(res); 
+       
+        });
+    }catch(err){
+        console.log(err)
+
+        res.redirect('/document')
+    }
+    
 })
 //Upload File
 router.post('/',ensureAuthenticated,upload.array('file'),async(req,res)=>{
@@ -52,6 +70,7 @@ router.post('/',ensureAuthenticated,upload.array('file'),async(req,res)=>{
         req.flash('type','success')
         res.redirect('/document')
     }catch(err){
+       
         req.flash('mess','Nie udało się dodac plik');
         req.flash('type','danger')
         res.redirect('/document')
@@ -81,8 +100,6 @@ router.delete('/',ensureAuthenticated,async(req,res)=>{
             req.flash('mess','Nie wybrano plików do usunięcia');
             req.flash('type','info') 
         }
-    
-    
         res.redirect('/document') 
     }catch(err){
         req.flash('mess','Nie udało się usunąć plik');

@@ -21,11 +21,12 @@ function showClientt(){
         comapnyForm.style.display = 'none'
     }
 }
+
+
 function checkIfNull(){
     let select  =  document.getElementById('select');
     let myForm = document.getElementById('myForm')
     if(select && select.options.length != 0)
         myForm.style.display="block"    
 }
-
 
