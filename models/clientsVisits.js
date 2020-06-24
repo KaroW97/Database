@@ -25,9 +25,11 @@ const clientVisits = mongoose.Schema({
         required:false,
         ref:'Treatment' //do czego sie odnosi
     },
-
-   
-
+    shopping:{
+        type:String,
+        required:false,
+    }
+    
 })
 
 module.exports = mongoose.model('ClientVisits',clientVisits);

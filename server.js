@@ -96,7 +96,6 @@ app.use('/settings',SettingsRotuer) //Settings router
 app.use('/shoppingList',ShoppingList) //ShopingList router
 //Statistic
 app.use('/statistics', ClietnSellsStats)
-app
 app.use('/document',Document)
 
 

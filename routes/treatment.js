@@ -75,18 +75,7 @@ router.delete('/',ensureAuthenticated, async(req,res)=>{
     
 })
 //Edit Treatment
-router.get('/:id/edit' ,ensureAuthenticated, async(req,res)=>{
-    try{
-        const treatment = await Treatment.findById(req.params.id);
-        res.render('treatment/edit',{
-            treatment:treatment,
-        });
-    }catch{
-        res.redirect('/treatment')
-    }
-})
-
-router.put('/:id',ensureAuthenticated, async(req,res)=>{
+router.put('/edit/:id',ensureAuthenticated, async(req,res)=>{
     let treatment;
     try{
         treatment = await Treatment.findById(req.params.id)
@@ -97,10 +86,9 @@ router.put('/:id',ensureAuthenticated, async(req,res)=>{
         req.flash('type','success')
         res.redirect('/treatment')
     }catch(err){
-        console.log(err)
         req.flash('mess','Nie udało się zedytować zabiegu')
         req.flash('type','danger')
-        res.redirect('/treatment/edit',{
+        res.redirect('/treatment',{
             treatment:treatment
         })
     }

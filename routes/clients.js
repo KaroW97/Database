@@ -5,6 +5,7 @@ const Treatment = require('../models/treatment')
 const ClientVisits = require('../models/clientsVisits')
 const ObjectId = require('mongodb').ObjectId;
 const User = require('../models/user')
+
 const {ensureAuthenticated} = require('../config/auth')
 ///
 const fs = require('fs');
@@ -13,43 +14,7 @@ let path = require("path");
 let ejs = require("ejs");
 //Get Client pdf file 
 
-router.get('/clientPdf/:id', async(req,res) => {
- 
-    try{
-        const clientt  =  await Client.findById(req.params.id)
-        res.render("clients/temp",{clientt:clientt})
-     /*   (err, data)=>{
-            if(err)
-                console.log(err)
-            else{
-                let options = {
-                    "height": "11.25in",
-                    "width": "8.5in",
-                    "header": {
-                        "height": "20mm"
-                    },
-                    "footer": {
-                        "height": "20mm",
-                    },
-                };
-                pdf.create(data, options).toFile("report.pdf", function (err, data) {
-                    if (err) {
-                        console.log(err)
-                    } else {
-                        console.log('git')
-                    }
-                });
-            }
-            
-        })*/
-        //res.redirect('/clients')
-    }catch(err){
-        console.log(err)
-        res.redirect('/clients')
-    }
 
-  
-})
 //All Clients Route
 router.get('/', ensureAuthenticated,async(req,res)=>{
     let searchOptions ={};
@@ -196,8 +161,8 @@ router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
 
     try{
         const visit = new ClientVisits()
-        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').exec()
-        console.log(addedVisit)
+        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product').exec()
+     
         const treatments = await Treatment.find({user:req.user.id});
         const clientt  = await Client.findById(req.params.id)
      
@@ -206,7 +171,7 @@ router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
             treatments:treatments,
             newVisit:visit,
             curentClient:req.params.id,
-            clientInfo:clientt  
+            clientInfo:clientt,
         })
     }catch{
         res.redirect('/clients')
@@ -220,7 +185,8 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
         comment: req.body.comment,
         clientVisitDate:new Date( req.body.clientVisitDate) ,
         treatment: req.body.treatment,
-        user:req.user.id
+        user:req.user.id,
+        shopping:req.body.shopping
     })
     try{   
         if(req.body.treatment== null){
@@ -234,7 +200,7 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
         res.redirect( `/clients/clientView/${req.params.id}`)
     }catch(err){
         const treatments = await Treatment.find({user:req.user.id});
-        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client')
+        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product')
         const clientt  = await Client.findById(req.params.id);
         req.flash('mess','Nie udało się dodać wizyty');
         req.flash('type','danger')
@@ -284,7 +250,8 @@ router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
 router.get('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
     
     try{
-        const addedVisit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').exec()
+        const addedVisit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').populate( 'product').exec()
+
         const treatments = await Treatment.find({user:req.user.id});//_id:addedVisit.treatment.id
         res.render('clients/editPost',{
             treatments:treatments,
@@ -308,7 +275,7 @@ router.put('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
          visit.comment= req.body.comment
          visit.clientVisitDate= new Date( req.body.clientVisitDate) 
          visit.treatment= req.body.treatment
-         
+         visit.shopping = req.body.shopping
          await visit.save();
          req.flash('mess','Wizyta została edytowana');
          req.flash('type','success')
@@ -451,9 +418,8 @@ router.put('/clientView/:id',ensureAuthenticated,async (req,res)=>{
     }
 })*/
 ////
-router.delete('/', async(req,res)=>{
+router.delete('/', ensureAuthenticated,async(req,res)=>{
     try{
-        console.log(req.body.chackboxDelet)
         if(req.body.chackboxDelet!= null ){
             if(Array.isArray(req.body.chackboxDelet)){
               for(var i = 0; i < (req.body.chackboxDelet).length; i++){

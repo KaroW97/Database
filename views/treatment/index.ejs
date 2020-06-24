@@ -19,8 +19,8 @@
         <tbody>   
             <% treatment.forEach(treatment => {%>
                     <tr>
-                        <td onclick="window.location='/treatment/<%=treatment.id%>/edit'"><%=treatment.treatmentName%></td>
-                        <td onclick="window.location='/treatment/<%=treatment.id%>/edit'"><%=treatment.treatmentPrice%></td>
+                        <td onclick="showEditForm(`<%=treatment.treatmentName%>`,`<%=treatment.treatmentPrice%>`,null,`treatment/edit/<%=treatment.id%>?_method=PUT`)"><%=treatment.treatmentName%></td>
+                        <td onclick="showEditForm(`<%=treatment.treatmentName%>`,`<%=treatment.treatmentPrice%>`,null,`treatment/edit/<%=treatment.id%>?_method=PUT`)"><%=treatment.treatmentPrice%></td>
                         <td><input type="checkbox" name="chackboxDelete" value="<%=treatment.id%>"></td>
                        
                     </tr>
@@ -30,6 +30,18 @@
     </table>
     
 </form>
+
+<div id="popUpPage" style="display: none">
+    <form id="editForm" method="post" action="">
+        <span id ="close"class="close" onclick="closeEditForm()">&times;</span>
+        <label for="input"></label>
+        <input type="text" id="productName" placeholder="Nazwa" value=""  name="treatmentName"  required >
+    
+        <label for="treatmentPrice"></label>
+        <input type="number" id="productPrice" placeholder="Cena" value="" name="treatmentPrice" required>
+        <button type="submit">Edytuj</button>
+    </form>
+</div>
 
 <form method="POST" action="/treatment" >
     <div style="display: none;" id ="comapnyForm" >
