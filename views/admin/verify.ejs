@@ -1,0 +1,10 @@
+<% if(messages.error){ %>
+    <div  id="hideAlert" class="alert alert-<%=messages.danger%>"><%= messages.error%></div>
+<% } %>
+
+<form method="POST" action="/admin-verify?_method=PUT">
+    <label for="secretToken">Tajny Klucz</label>
+    <input type="text" id="secretToken"name="secretToken" placeholder="Tajny Klucz"  required autofocus>
+
+    <button type="submit">Zweryfikuj</button>
+</form>

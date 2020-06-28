@@ -22,7 +22,7 @@ function showClientt(){
     }
 }
 //Edit form
-function showEditForm( productName=null, productPrice=null, productCapacity=null, action,comment=null){
+function showEditForm( productName=null, productPrice=null, productCapacity=null, action,date=null){
    document.getElementById('editForm').action = action;
    let producttName = document.getElementById('productName') ;
    let producttPrice = document.getElementById('productPrice') ;
@@ -47,3 +47,6 @@ function checkIfNull(){
         myForm.style.display="block"    
 }
 
+$( document ).ready(function() {
+    $(".alert" ).fadeOut(3000); 
+});

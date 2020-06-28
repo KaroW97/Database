@@ -9,6 +9,11 @@ const {ensureAuthenticated} = require('../config/auth')
 const emailLook = require('../misc/emailLayout')
 const mailer  = require('../misc/mailer')
 
+const {  
+     userVerify, 
+    userRegistry
+} = require('../config/authentication')
+//Regular User
 //Passport Config
 router.get('/',async (req, res)=>{
     try{ 
@@ -32,67 +37,7 @@ router.get('/registration',async (req, res)=>{
 })
 //Register Form
 router.post('/registration',async(req,res)=>{
-   
-    try{
-        const findUser = await User.findOne({email:req.body.email})
-        const hashedPassword = await bcrypt.hash(req.body.password,10)
-        if(!req.body.email || !req.body.companyName || !req.body.password || !req.body.ConfirmPassword){
-            req.flash('logged', 'Prosze uzupełnij wszystkie pola');
-            req.flash('success', 'danger')
-        }
-        //Check Password
-        if(req.body.password !=req.body.ConfirmPassword){
-            req.flash('logged', 'Wprowadzono różne hasła');
-            req.flash('success', 'danger')
-        }
-        //Check password lenght
-        if(req.body.password.length < 3){
-            req.flash('logged', 'Hasło powinno zawierac 3 znaków');
-            req.flash('success', 'danger')
-        }
-        if(findUser){
-           req.flash('logged', 'Email istnieje w bazie danych');
-            req.flash('success', 'danger')
-        }
-        if(findUser || req.body.password.length < 3 || req.body.password !=req.body.ConfirmPassword){
-            res.render('users/register')
-            return;
-        }
-        else {
-               //Flag account inactive
-            const secretToken =randomstring.generate();  //email verify
-            var newUser = new User({
-                companyName:req.body.companyName,
-                email:req.body.email,
-                password:hashedPassword,
-                secretToken:secretToken,
-                active:false
-            })
-           await newUser.save();
-           let email= emailLook(secretToken,'Dziękujemy za rejestrację', 
-           'Proszę zweryfikuj swoje konto za pomocą kodu:',
-           'Na stronie:',
-           'https://beauty-base.herokuapp.com/verify',
-           'Miłego dnia!'
-           )
-            //send mailer
-           await mailer.sendEmail('beautybasehelp@gmail.com',req.body.email,'Zweryfikuj swoje konto Beauty Base!',email,
-            {
-                file:'logo2.JPG',
-                path: './views/public/logo2.JPG',
-                cid:'logo'
-            })
-           req.flash('logged', 'Sprawdź swój email!');
-           req.flash('success', 'success')
-           res.redirect('/login')
-        }
-       
-    }catch(err){
-        res.render('users/register',{
-            errorMessage:'Spróbuj ponownie',
-            type:'danger'
-        })
-    }  
+    await userRegistry(req.body,'user',res,req,'/login','user/register')
 })
 //Email send
 //Verify Registration
@@ -104,27 +49,7 @@ router.get('/verify',async(req,res)=>{
     }
 })
 router.put('/verify',async(req,res)=>{
-    let user
-    try{
-        const secretTokenn = req.body.secretToken
-        user = await User.findOne({secretToken:secretTokenn})
-       
-        if(!user){
-            req.flash('error','Nie znaleziono takiego użytkownika.')
-            req.flash('danger','danger');
-            res.redirect('/verify');
-            return;
-        }
-        user.active = true;
-        user.secretToken = '';
-      
-        await user.save();
-        req.flash('succesRegister','Teraz możesz się zarejestrować');
-        req.flash('succes','succes');
-        res.redirect('/login')
-    }catch{
-        res.redirect('/')
-    }
+    await userVerify(req.body,res,req,'/login', '/verify');
 })
 //Front Page
 router.get('/login',async (req, res)=>{
@@ -251,5 +176,68 @@ router.post('/changePassword' ,async(req,res)=>{
     }
 })
 /////////Change Password If Token is Correct
-
+////////ADMIN
+//Registration Page
+router.get('/admin-register',async (req, res)=>{
+    try{ 
+        res.render('admin/register')
+    }catch(err){
+        res.render('admin/register',{
+            errorMessage:'Coś poszło nie tak',
+            type:'danger',
+        })
+    }
+ 
+})
+//Register Form
+router.post('/admin-register',async(req,res)=>{
+    await userRegistry(req.body,'admin',res,req,'/admin-login','admin/register')
+})
+//Front Page
+router.get('/admin-login',async (req, res)=>{
+    try{
+            res.render('admin/login')
+    }catch(err){
+        console.log(err)
+        res.render('admin/login')
+    }
+ 
+})
+// Login Process
+router.post('/admin-login', function(req, res, next){
+    if(req.body.email=='' || req.body.password ==''){
+        req.flash('error','Uzupełnij wszystkie pola')
+        res.render('admin/login')
+      }else{
+        passport.authenticate('local',{
+            successRedirect:'/admin-view',
+            failureRedirect:'/admin-login',
+            failureFlash:true
+        })(req,res,next)
+      }
+})
+//Admin View
+router.get('/admin-view',async (req, res)=>{
+    try{
+        if(req.user.isAdmin())
+            res.render('admin/index', {layout: "layouts/layoutAdmin"})
+        else
+            res.sendStatus(403)
+    }catch(err){
+        console.log(err)
+        res.render('admin/login')
+    }
+ 
+})
+//Verify Registration
+router.get('/admin-verify',async(req,res)=>{
+    try{
+        res.render('admin/verify');
+    }catch{
+        res.redirect('/')
+    }
+})
+router.put('/admin-verify',async(req,res)=>{
+    await userVerify(req.body,res,req,'/admin-login', '/admin-verify');
+})
 module.exports = router;

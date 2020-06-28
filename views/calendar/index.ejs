@@ -18,9 +18,9 @@
             <select name="clients">
                 <% clients.forEach(client => { %>
                     <% if(client.id === newVisit.client ){ %>
-                        <option selected label="<%=client.name%>" value="<%=client.id%>"><%=newVisit.client.name%> <%=newVisit.client.lastName%></option>
+                        <option selected label="<%=newVisit.client.name%> <%=newVisit.client.lastName%>" value="<%=client.id%>"></option>
                     <% }else{ %>
-                        <option  label="<%=client.name%>" value="<%=client.id%>"><%=client.name%> <%=client.lastName%></option>
+                        <option  label="<%=client.name%> <%=client.lastName%>" value="<%=client.id%>"></option>
                     <% } %>
                 <%}); %>
             </select>

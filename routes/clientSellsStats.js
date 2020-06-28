@@ -181,9 +181,9 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
     try{
         const clientt  = await Client.findById(req.params.id)
         const clientVisit = await clientVisitDate.exec()
-        
-        if(clientVisit.treatment!=null)
-            var totalPrcie = calculateTotalPrice(clientVisit)
+       
+       
+        var totalPrcie = calculateTotalPrice(clientVisit)
         const treatment = await Treatment.find()
         res.render('stats/clientStatsView',{
             clientInfo:clientt,
@@ -231,8 +231,12 @@ function calculateTotalAmountSpent(clientVisits){
 }
 function calculateTotalPrice(clientVisits){
     let countTotal=0;
-    for(var i=0;i<clientVisits.length ;i++)
-        countTotal+=clientVisits[i].treatment.treatmentPrice
+    for(var i=0;i<clientVisits.length ;i++){
+        if(clientVisits[i].treatment!= null)
+            countTotal+=clientVisits[i].treatment.treatmentPrice
+    }
+    
+    
     return countTotal
 }
 

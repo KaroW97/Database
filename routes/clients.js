@@ -8,12 +8,6 @@ const User = require('../models/user')
 
 const {ensureAuthenticated} = require('../config/auth')
 ///
-const fs = require('fs');
-let pdf = require("html-pdf");
-let path = require("path");
-let ejs = require("ejs");
-//Get Client pdf file 
-
 
 //All Clients Route
 router.get('/', ensureAuthenticated,async(req,res)=>{

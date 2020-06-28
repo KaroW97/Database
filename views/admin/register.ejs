@@ -1,4 +1,5 @@
 <h1>Rejestracja</h1>
+
 <div id="hideAlert">
     <% if(messages.err){ %>
         <% messages.err.forEach(element => {%>
@@ -8,12 +9,10 @@
     <% } %>
 </div>
 
-<form method="POST" action="/registration">
-    <label for="companyName"></label>
-    <input type="text" id="companyName" name="companyName" placeholder="Nazwa Firmy" >
-
+<form method="POST" action="/admin-register">
+    
     <label for="email"></label>
-    <input type="email" id="email"name="email" placeholder="Email"   >
+    <input type="email" id="email"name="email" placeholder="Email"  >
 
     <label for="password"></label>
     <input type="password" id="password"name="password" placeholder="Hasło" >

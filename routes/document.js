@@ -20,7 +20,7 @@ var storage = new GridFsStorage({
             filename: filename,
             bucketName: 'uploads',
             metadata: {
-                'user':req.user.id,
+                'user':ObjectId(req.user.id),
                 'initialFilename':file.originalname
             }
           };

@@ -4,6 +4,16 @@ const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const mailer  = require('../misc/mailer')
 const emailLook = require('../misc/emailLayout')
+////////////////////////////////////////////////////////////////
+const ObjectId = require('mongodb').ObjectId;
+const Client = require('../models/clients');
+const CompanyShopping = require('../models/stats/companyShoppingStats')
+const ShoppingList = require('../models/shoppingList')
+const BrandName = require('../models/productCompany')
+const Treatment = require('../models/treatment')
+const FutureVisit = require('../models/clientFutureVisit')
+const ClientVisits = require('../models/clientsVisits')
+// TODO: Get Files to delete 
 const {ensureAuthenticated} = require('../config/auth')
 
 //Show current options
@@ -20,7 +30,7 @@ router.get('/',ensureAuthenticated, async(req,res)=>{
         res.redirect('/calendar')
     } 
 })
-router.post('/changepassword', async(req,res)=>{
+router.put('/change-password',ensureAuthenticated, async(req,res)=>{
     let user
     try{
         user  = await User.findById(req.user.id);
@@ -64,7 +74,7 @@ router.post('/changepassword', async(req,res)=>{
         })
     }
 })
-router.post('/changeemail', async(req,res)=>{
+router.put('/change-email',ensureAuthenticated, async(req,res)=>{
     let user
     try{
         user = await User.findById(req.user.id);
@@ -106,7 +116,7 @@ router.post('/changeemail', async(req,res)=>{
     }
 })
 
-router.post('/changecompanyname', async(req,res)=>{
+router.put('/change-companyname',ensureAuthenticated, async(req,res)=>{
     let user
     try{
         user  = await User.findById(req.user.id);
@@ -137,8 +147,57 @@ router.post('/changecompanyname', async(req,res)=>{
         })
     }
 })
-/*router.put('/',(req,res)=>{
-    res.send('Update Stings');
-})*/
+router.delete('/delete-account',ensureAuthenticated, async(req,res)=>{
+    try {
+        let user = await User.findById(req.user.id);
+        let clients = await Client.find({user:req.user.id});
+        let companyShopping = await CompanyShopping.find({user:req.user.id});
+        let shoppingList = await ShoppingList.find({user:req.user.id});
+        let brandName = await BrandName.find({user:req.user.id});
+        let treatments = await Treatment.find({user:req.user.id});
+        let futureVisit = await FutureVisit.find({user:req.user.id});
+        let clientVisits = await ClientVisits.find({user:req.user.id});
+      
+        for (let client of clients)
+            await client.remove()
+            
+        for (let list of shoppingList)
+            await list.remove()
+
+        for (let brand of brandName)
+            await brand.remove()
+
+        for (let clientVisit of clientVisits)
+            await clientVisit.remove()
+
+        for (let visit of futureVisit)
+            await visit.remove()
+
+        for (let shopping of companyShopping)
+            await shopping.remove()
+
+        for (let treatment of treatments)
+            await treatment.remove()
+
+        await req.app.locals.gfs.files.find({'metadata.user':ObjectId(req.user.id)}).toArray( (err, files)=> {
+            if (err) throw err
+            for(var file of files){
+            
+                req.app.locals.gfs.remove({_id:ObjectId(file._id),root:'uploads'}, function (err, gridStore) {
+                    if (err)  throw(err);
+                
+                });
+            }       
+        })
+    
+        req.flash('logged','Konto użytkownika zostało usunięte')
+        await user.remove();
+        res.redirect('/login'); //TODO: Redirect on Main Page Maybe
+    }catch(err){
+        console.log(err)
+        res.redirect('/settings');
+    }
+})
+
 
 module.exports = router;

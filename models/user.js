@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const userSchema = mongoose.Schema({
     companyName:{
         type:String,
-        require:true
+        require:false
     },
     email:{
         type: String,
@@ -26,8 +26,18 @@ const userSchema = mongoose.Schema({
     active:{
         type:Boolean,
         require:false
+    },
+    role:{
+        type: String,
+        default: "user",
+        enum: ["user", "admin"]
     }
 
 })
-
+userSchema.methods.isUser = function() {
+    return (this.role === "user");
+};
+userSchema.methods.isAdmin = function() {
+    return (this.role === "admin");
+};
 module.exports = mongoose.model('User', userSchema)

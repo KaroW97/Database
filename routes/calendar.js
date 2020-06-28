@@ -7,6 +7,7 @@ const Client = require('../models/clients')
 const {ensureAuthenticated} = require('../config/auth')
 //Show Calendar Page
 router.get('/',ensureAuthenticated,async (req,res)=>{
+ 
     let todayDate = new Date();
     let shopping =  ShoppingList.find({user:req.user.id}).populate('listName')
     let shoppingTwoDays =  ShoppingList.find({user:req.user.id}).populate('listName')
@@ -26,15 +27,21 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
         const treatment = await Treatment.find({user:req.user.id});
         const clients =  await Client.find({user:req.user.id});
         const futureVisit = await FutureVisit.find({user:req.user.id}).populate('client').populate('treatment')
-        res.render('calendar/index',{
-            //perchuseStandard:perchuseStandardC,
-            list:perchuse,
-            shoppingTwoDaysFromNow:shoppingTwoDaysFromNow,
-            searchOptions:req.query || '',
-            newVisit:futureVisit,
-            treatments:treatment,
-            clients:clients
-        });
+        if(req.user.isUser())
+            res.render('calendar/index',{
+                //perchuseStandard:perchuseStandardC,
+                list:perchuse,
+                shoppingTwoDaysFromNow:shoppingTwoDaysFromNow,
+                searchOptions:req.query || '',
+                newVisit:futureVisit,
+                treatments:treatment,
+                clients:clients
+            });
+        else{
+            res.sendStatus(403)
+        }
+        
+       
     }catch(err){
         console.log(err)
         res.redirect('/login')

@@ -29,6 +29,9 @@
             
             <% shopping.forEach(items => {%>
                 <tr>
+                   
+
+                    
                     <td  onclick="window.location='/shoppingList/listView/<%=items.id%>'"><%=items.listName.name  == null? '':items.listName.name %></td>
                     <td  onclick="window.location='/shoppingList/listView/<%=items.id%>'"><%=items.totalPrice %></td>
                     <td  onclick="window.location='/shoppingList/listView/<%=items.id%>'"><%= items.transactionDate == null ? '' : items.transactionDate.toISOString().split('T')[0] %> </td>
@@ -38,6 +41,8 @@
         </tbody>
     </table>
 </form>
+
+
 
 <form method="POST" action="/shoppingList/brandName" >
     <div style="display: none;" id ="comapnyForm" >

@@ -10,7 +10,7 @@ module.exports = function (passport){
         //Check if user exists
         if(!user)
           return done(null, false, {message: 'Email nie zarejestrowany'})
-
+        
         //Check if password is correct
         bcrypt.compare(password, user.password,(err, isMatch)=>{
           //Check if account has been verified

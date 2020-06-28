@@ -29,7 +29,7 @@ const Document = require('./routes/document.js');
 app.use('/public', express.static(__dirname + '/public'))
 app.set('view engine', 'ejs') 
 app.set('views',__dirname+'/views')
-app.set('layout', 'layouts/layout')
+app.set('layout', 'layouts/layout','layouts/layoutAdmin')
 app.use(expressLayouts)
 app.use(methodOverride('_method'))
 app.use(bodyParser.urlencoded({limit:'10mb',extended:false}))

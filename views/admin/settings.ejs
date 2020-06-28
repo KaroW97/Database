@@ -5,7 +5,7 @@
 <div>
     <p>Zmień hasło </p>
     <p>Dobrze jest użyć silnego hasła, którego nie używasz gdzie indziej</p>
-    <form action="/settings/change-password?_method=PUT" method="POST">
+    <form action="/settings/changepassword" method="POST">
         <input value="<%=user.password%>" type="password">
         <input type="password" name="newPassword" placeholder="Nowe Hasło">
         <input type="password"name="confirmNewPassword" placeholder="Potwierdź Hasło">
@@ -15,26 +15,11 @@
 
 <div >
     <p>Zmień email </p>
-    <form action="/settings/change-email?_method=PUT" method="POST">
+    <form action="/settings/changeemail" method="POST">
         <input value="<%=user.email%>" type="email">
         <input type="email" name="newEmail"placeholder="Nowy Email">
         <input type="email" name="confirmNewEmial" placeholder="Potwierdź Email">
         <button type="submit">Zapisz zmiany</button>
     </form>
 </div><br><br>
-
-<div>
-    <p>Zmień nazwe firmy </p>
-    <form action="/settings/change-companyname?_method=PUT" method="POST">
-        <input value="<%=user.companyName %>" type="text">
-        <input type="text" name="newCompanyName"placeholder="Nowa Nazwa Firmy">
-        <button type="submit" >Zapisz zmiany</button>
-    </form>
-</div>
-<div>
-    <p>Jeśli chcesz usunąć swoje konto nacisnij: </p>
-    <form action="/settings/delete-account?_method=DELETE" method="POST">
-        <button type="submit" >Zapisz zmiany</button>
-    </form>
-</div>
 
