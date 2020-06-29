@@ -18,14 +18,14 @@
     <form action="/settings/change-email?_method=PUT" method="POST">
         <input value="<%=user.email%>" type="email">
         <input type="email" name="newEmail"placeholder="Nowy Email">
-        <input type="email" name="confirmNewEmial" placeholder="Potwierdź Email">
+        <input type="email" name="confirmNewEmail" placeholder="Potwierdź Email">
         <button type="submit">Zapisz zmiany</button>
     </form>
 </div><br><br>
 
 <div>
     <p>Zmień nazwe firmy </p>
-    <form action="/settings/change-companyname?_method=PUT" method="POST">
+    <form action="/settings/change-company-name?_method=PUT" method="POST">
         <input value="<%=user.companyName %>" type="text">
         <input type="text" name="newCompanyName"placeholder="Nowa Nazwa Firmy">
         <button type="submit" >Zapisz zmiany</button>

@@ -4,7 +4,7 @@
 
 <button  onclick='pdff(); pdfVisits();'>Print</button>
 <br><hr>
-<div onclick="window.location='/clients/clientView/<%=clientInfo.id%>/edit'">
+<div onclick="window.location='/clients/client-view/<%=clientInfo.id%>/edit'">
     <h1><%=clientInfo.name%> <%=clientInfo.lastName%></h1>
     <p>Numer Telefonu: <%=clientInfo.phoneNumber%></p>
     <% if(clientInfo.visitDate != null) {%> 
@@ -51,13 +51,13 @@
     <h1>Wizyty  </h1>
 <%}%>
 <button  onclick='pdfVisits();'>Print</button>
-<form method="post" action="/clients/clientView/<%=clientInfo.id%>?_method=DELETE ">
+<form method="post" action="/clients/client-view/<%=clientInfo.id%>?_method=DELETE ">
    
         <input type="submit" value="Usuń">
         <br>
         <%addedVisist.forEach(element => { %> 
             <!-- --> 
-            <div  onclick="window.location='/clients/clientView/<%=element.id%>/editPost'" onclick="showFormm()">
+            <div  onclick="window.location='/clients/client-view/<%=element.id%>/editPost'" onclick="showFormm()">
                 <p><%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %> </p>
                 <p><%= element.comment %> </p>
                 <p><%= element.treatment== null ? 'Nie ma w ofercie' :element.treatment.treatmentName %> </p>
@@ -72,16 +72,8 @@
 
 
 
-<form action='/clients/clientView/<%=clientInfo.id%>' method="POST">
+<form action='/clients/client-view/<%=clientInfo.id%>' method="POST">
     <!--Section for adding coments-->
     <%- include('./_form_fields_CreatePost.ejs') %> 
     <button type="submit">Dodaj</button>
 </form>
-
-
-
-
-    
-<script>
-  
-</script>

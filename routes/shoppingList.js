@@ -31,14 +31,14 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
     try{
         await shoppingList.save();
   
-        res.redirect(`/shoppingList/listView/${shoppingList.id}`)
+        res.redirect(`/shopping-list/list-view/${shoppingList.id}`)
     }catch{
 
         res.redirect(`/clients`)
     }
 })
 //Shoping list Create Brand Name
-router.post('/brandName',async(req,res)=>{
+router.post('/brand-name',async(req,res)=>{
     const brandName = new BrandName({
         name:req.body.name,
         user:req.user.id
@@ -47,7 +47,7 @@ router.post('/brandName',async(req,res)=>{
        await brandName.save();
         req.flash('mess','Dodano nową listę zakupów do bazy.')
         req.flash('type','success')
-        res.redirect('/shoppingList')
+        res.redirect('/shopping-list')
     }catch{
         req.flash('mess','Dodanie listy do bazy nie powiodło się')
         req.flash('type','danger')
@@ -55,7 +55,7 @@ router.post('/brandName',async(req,res)=>{
     }
 })
 //List View Router
-router.get('/listView/:id',ensureAuthenticated,async(req,res)=>{
+router.get('/list-view/:id',ensureAuthenticated,async(req,res)=>{
     try{
         const shoppingList = await ShoppingList.findById(req.params.id)
         .populate('listName')
@@ -65,10 +65,10 @@ router.get('/listView/:id',ensureAuthenticated,async(req,res)=>{
         })
 
     }catch{
-        res.redirect('/shoppingList');
+        res.redirect('/shopping-list');
     }
 })
-router.put('/listView/:id',ensureAuthenticated,async(req,res)=>{
+router.put('/list-view/:id',ensureAuthenticated,async(req,res)=>{
     let totalPriceCalculate = 0;
     let list;
     try{
@@ -94,7 +94,7 @@ router.put('/listView/:id',ensureAuthenticated,async(req,res)=>{
         await shoppingStatistics.save();
         await list.save();
  
-        res.redirect(`/shoppingList/listView/${list.id}`)
+        res.redirect(`/shopping-list/list-view/${list.id}`)
  
 
     }catch(err){
@@ -103,7 +103,7 @@ router.put('/listView/:id',ensureAuthenticated,async(req,res)=>{
         const addedShoping = await ShoppingList.find({_id:shopping.id});
         req.flash('mess','Coś poszło nie tak.')
         req.flash('type','succesdangers')
-        res.render('shoppingList/listView',{
+        res.render('shoppingList/list-view',{
             list:shopping,
             addedShoping:addedShoping
         })
@@ -138,23 +138,23 @@ router.delete('/',ensureAuthenticated,async(req,res)=>{
     }catch{
         req.flash('mess','Nie udało się usunąć rekordu.')
         req.flash('type','danger')
-        res.redirect(`/shoppingList`)   
+        res.redirect(`/shopping-list`)   
     }
 })
 //Edit List Router
-router.get('/listView/:id/edit',ensureAuthenticated, async(req,res)=>{
+router.get('/list-view/:id/edit',ensureAuthenticated, async(req,res)=>{
     try{
         const list = await ShoppingList.findById(req.params.id).populate('listName').exec();
         res.render('shoppingList/edit',{
             list:list
         })
     }catch{
-        res.redirect(`/shoppingList/listView/${list.id}`)
+        res.redirect(`/shopping-list/list-view/${list.id}`)
     }
   
 })
 //Edit List Item
-router.put('/listView/:id/edit',ensureAuthenticated, async(req,res)=>{
+router.put('/list-view/:id/edit',ensureAuthenticated, async(req,res)=>{
     let list
     let totalPriceCalculate = 0;
     try{
@@ -172,38 +172,18 @@ router.put('/listView/:id/edit',ensureAuthenticated, async(req,res)=>{
         req.flash('type','success')
         await list.save();
   
-        res.redirect(`/shoppingList/listView/${list.id}`);
+        res.redirect(`/shopping-list/list-view/${list.id}`);
 
     }catch{
         req.flash('mess','Nie udało się zedytować listy.')
         req.flash('type','danger')
-        res.redirect(`/shoppingList`);
+        res.redirect(`/shopping-list`);
     }
   
 })
+
 //Delete List Item
-/*router.delete('/listView/:id',ensureAuthenticated, async(req,res)=>{
-       try{
-        let elem = req.params.id.split(',');
-        const list = await ShoppingList.findById(elem[0]);
-        //pricee = list.totalPrice 
-        //pricee = pricee- list.price[elem[1]]
-        list.totalPrice -= list.price[elem[1]]
-        list.price.splice(elem[1],1)
-        list.productName.splice(elem[1],1)
-        if(list.price == 0 || list.productName == ''|| list.productName == []){
-            list.remove()
-            res.redirect(`/shoppingList`);
-        }else{
-            list.save();
-            res.redirect(`/shoppingList/listView/${list.id}`);
-        }
-    }catch(err){
-            res.redirect('clients')
-    }
-})*/
-//Delete List Item
-router.delete('/listView/:id',ensureAuthenticated, async(req,res)=>{
+router.delete('/list-view/:id',ensureAuthenticated, async(req,res)=>{
    
     var list
     try{
@@ -233,16 +213,16 @@ router.delete('/listView/:id',ensureAuthenticated, async(req,res)=>{
         }
         if(list.price == 0 || list.productName == ''||list.productName == []){
             list.remove()
-            res.redirect(`/shoppingList`);
+            res.redirect(`/shopping-list`);
         }else{
             list.save();
-            res.redirect(`/shoppingList/listView/${list.id}`);
+            res.redirect(`/shopping-list/list-view/${list.id}`);
         }
         
        
  }catch(err){
      console.log(err)
-         res.redirect('/shoppingList')
+         res.redirect('/shopping-list')
  }
 })
 

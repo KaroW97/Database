@@ -1,1 +1,24 @@
-Jestem
+<%-include('../partials/infoMessages.ejs')%>
+
+
+<form method="POST" action="/admin?_method=DELETE">
+    <input type="submit" value="Usuń">
+    <table>
+        <thead>
+            <tr>
+                <th>Nazwa Firmy</th>
+                <th>Email</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% user.forEach(user => {%> 
+                    <tr>
+                        <td> <%= user.companyName%></td>
+                        <td ><%=user.email%></td>
+                        <td><input type="checkbox" name="chackboxDelet" value="<%=user.id%>"></td>
+                    </tr>
+            <% }); %> 
+        </tbody>
+    </table>
+</form>

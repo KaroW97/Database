@@ -1,14 +1,34 @@
-<h1>Logowanie</h1>
+<link rel="stylesheet" type="text/css" href="../../public/css/login.css">
 <%-include('../partials/indexMessage.ejs')%>
-<form method="POST" action="/login">
-    <label for="loginEmail"></label>
-    <input type="email" id="loginEmail"name="email" placeholder="Email"  >
+<div class="center-main-div">
+    <div class="main-div" >
+        <h1>Logowanie</h1>
+        <div class="form">
+          
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="loginEmail"></label>
+                    <input type="email" id="loginEmail"name="email" placeholder="Email"  >
+                
+                    <label for="loginPassword"></label>
+                    <input type="password" id="loginPassword"name="password" placeholder="Hasło">
+                </div>
+                  
+              
+              <div class="button">
+                <button type="submit">Logowanie</button>
 
-    <label for="loginPassword"></label>
-    <input type="password" id="loginPassword"name="password" placeholder="Hasło">
+              </div>
+            </form>
+            <div class="href-div">
+                <a href="/registration">Nie masz konta? Zarejestruj się!</a><br>
+                <a href="/forgot">Nie pamiętasz hasła?</a>
+            </div>
+         
+        </div>
+   
+    </div>
+</div>
 
-    <button type="submit">Zaloguj</button>
-</form>
-<a href="/registration">Zarejestruj się</a>
-<a href="/forgot">Nie pamiętam hasła</a><br>
-<a href="/">Anuluj</a>
+
+

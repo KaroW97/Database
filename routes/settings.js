@@ -34,7 +34,20 @@ router.put('/change-password',ensureAuthenticated, async(req,res)=>{
     let user
     try{
         user  = await User.findById(req.user.id);
-        if(user != null &&req.body.newPassword == req.body.confirmNewPassword){
+        if(req.body.newPassword == ''|| req.body.confirmNewPassword == ''){
+
+            req.flash('error','Wypełnij wszystkie pola ')
+            req.flash('danger','info')
+            res.redirect('/settings')
+            return
+        }
+        else if(req.body.newPassword.length < 3 || req.body.confirmNewPassword.length < 3){
+            req.flash('error','Hasło musi mieć przynajmniej 3 znaki')
+            req.flash('danger','danger')
+            res.redirect('/settings')
+            return
+        }
+        else if(user != null &&req.body.newPassword == req.body.confirmNewPassword){
             let hashed = await bcrypt.hash(req.body.newPassword,10)
             user.password = hashed;
            
@@ -49,7 +62,7 @@ router.put('/change-password',ensureAuthenticated, async(req,res)=>{
             await mailer.sendEmail('beautybasehelp@gmail.com',user.email,'Zmieniono hasło Beauty Base!',email,
              {
                  file:'logo2.JPG',
-                 path: './views/public/logo2.JPG',
+                 path: './public/logo2.JPG',
                  cid:'logo'
              })
             req.flash('error','Hasło zostało zmienione')
@@ -78,7 +91,12 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
     let user
     try{
         user = await User.findById(req.user.id);
-        if(user != null && req.body.newEmail == req.body.confirmNewEmial){
+        if( req.body.newEmail=='' ||req.body.confirmNewEmail==''){
+            req.flash('error','Wypełnij wszystkie pola potrzebne do zmiany hasła')
+            req.flash('danger','info')
+            res.redirect('/settings')
+        }
+        else if(user != null && req.body.newEmail == req.body.confirmNewEmail){
             let oldEmial = user.email;
             user.email = req.body.newEmail
             await user.save();
@@ -92,7 +110,7 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
             await mailer.sendEmail('beautybasehelp@gmail.com',user.email,'Zmieniono email Beauty Base!',email,
             {
                 file:'logo2.JPG',
-                path: './views/public/logo2.JPG',
+                path: './public/logo2.JPG',
                 cid:'logo'
             })
             req.flash('error','Email został zmieniony.')
@@ -116,7 +134,7 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
     }
 })
 
-router.put('/change-companyname',ensureAuthenticated, async(req,res)=>{
+router.put('/change-company-name',ensureAuthenticated, async(req,res)=>{
     let user
     try{
         user  = await User.findById(req.user.id);
@@ -132,7 +150,7 @@ router.put('/change-companyname',ensureAuthenticated, async(req,res)=>{
         await mailer.sendEmail('beautybasehelp@gmail.com',user.email,'Zmieniono nazwe firmy Beauty Base!',email,
         {
             file:'logo2.JPG',
-            path: './views/public/logo2.JPG',
+            path: './public/logo2.JPG',
             cid:'logo'
         })
 

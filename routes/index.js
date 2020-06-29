@@ -3,21 +3,23 @@ const router = express.Router();
 const bcrypt = require('bcryptjs')
 const passport = require('passport')
 const User = require('../models/user')
-const randomstring=require('randomstring');  //Emeil confirmation 
 const {ensureAuthenticated} = require('../config/auth')
-
-const emailLook = require('../misc/emailLayout')
-const mailer  = require('../misc/mailer')
 
 const {  
      userVerify, 
-    userRegistry
+    userRegistry,
+    userChangePassword,
+    changePassword
 } = require('../config/authentication')
 //Regular User
 //Passport Config
 router.get('/',async (req, res)=>{
     try{ 
-        res.render('users/index')
+        if(req.user){
+            return res.redirect('/calendar')
+        }
+        return res.render('users/index')
+     
     }catch{
         res.render('users/index')
     }
@@ -26,8 +28,13 @@ router.get('/',async (req, res)=>{
 //Registration Page
 router.get('/registration',async (req, res)=>{
     try{ 
-        res.render('users/register')
+        if(req.user){
+            return res.redirect('/calendar')
+        }
+        res.render('users/register')  
+      
     }catch(err){
+        console.log(err)
         res.render('users/register',{
             errorMessage:'Coś poszło nie tak',
             type:'danger',
@@ -54,7 +61,12 @@ router.put('/verify',async(req,res)=>{
 //Front Page
 router.get('/login',async (req, res)=>{
     try{
+        if(req.user){
+            return res.redirect('/calendar')
+        }
         res.render('users/login')
+
+        
     }catch{
         res.render('users/login')
     }
@@ -92,47 +104,10 @@ router.get('/forgot' ,async(req,res)=>{
     }
 })
 router.post('/forgot',async(req,res)=>{
-    let searchUser
-    try{
-        searchUser = await User.findOne({email:req.body.forgotPassword})
-        if(searchUser!=null && searchUser!=''){
-            const secretTokenn =randomstring.generate();
-           
-            let email= emailLook(secretTokenn,
-                'Witaj!',
-                `Otrzymaliśmy prośbę dotyczącą zresetowania Twojego hasła Beauty Base.
-                Wprowadź następujący kod resetowania hasła:`,` Na stronie: ` 
-                ,'https://beauty-base.herokuapp.com/changepassword',
-                'Miłego dnia!'
-            )
-            searchUser.secretToken = secretTokenn
-            searchUser.active = false;
-            //send mailer
-           await searchUser.save();
-           await mailer.sendEmail('beautybasehelp@gmail.com',req.body.forgotPassword,'Zmień hasło Beauty Base!',email,
-            {
-                file:'logo2.JPG',
-                path: './views/public/logo2.JPG',
-                cid:'logo'
-            })
-           
-           
-            req.flash('success','success')
-            req.flash('logged','Sprawdź swoją skrzynkę email.')
-            res.redirect('/login')
-        }else{
-            res.render('users/forgot',{
-                type:'danger',
-                errorMessage:'Nie znaleźliśmy twojego emaila w bazie danych. Spróbuj jeszcze raz.'
-            })
-        }
-    }catch(err){
-        console.log(err)
-        res.redirect('/')
-    }
+    await userChangePassword(req.body,res,req,'user','/login','user/forgot') 
 })
 //Reset Password Verification
-router.get('/changePassword' ,async(req,res)=>{
+router.get('/change-password' ,async(req,res)=>{
     try{
         res.render('users/changePassword')
     }catch{
@@ -143,37 +118,8 @@ router.get('/changePassword' ,async(req,res)=>{
     }
   
 })
-router.post('/changePassword' ,async(req,res)=>{
-    let searchUser
-    try{
-        searchUser  = await User.findOne({secretToken:req.body.secretToken})
-        if(searchUser!=null && searchUser!='' && req.body.password == req.body.passwordConfirm){
-            const hashedPassword = await bcrypt.hash(req.body.password,10)
-            searchUser.password = hashedPassword
-            searchUser.secretToken ='';
-            searchUser.active = true;
-            await searchUser.save();
-            req.flash('success','success');
-            req.flash('logged', 'Zmieniono hasło możesz się zalogować!')
-            res.redirect('/login')
-        }else if(req.body.password != req.body.passwordConfirm){
-            res.render('users/changePassword',{
-                type:'danger',
-                errorMessage: 'Wprowadź takie same hasła.'
-            })
-        }else{
-            res.render('users/changePassword',{
-                type:'danger',
-                errorMessage: 'Błędny token'
-            })
-        }
-    }catch(err){
-        console.log(err)
-        res.render('users/changePassword',{
-            type:'danger',
-            errorMessage: 'Coś poszło nie tak'
-        })
-    }
+router.post('/change-password' ,async(req,res)=>{
+    await changePassword(req.body,res,req,'/login','users/changePassword')
 })
 /////////Change Password If Token is Correct
 ////////ADMIN
@@ -210,25 +156,13 @@ router.post('/admin-login', function(req, res, next){
         res.render('admin/login')
       }else{
         passport.authenticate('local',{
-            successRedirect:'/admin-view',
+            successRedirect:'/admin',
             failureRedirect:'/admin-login',
             failureFlash:true
         })(req,res,next)
       }
 })
-//Admin View
-router.get('/admin-view',async (req, res)=>{
-    try{
-        if(req.user.isAdmin())
-            res.render('admin/index', {layout: "layouts/layoutAdmin"})
-        else
-            res.sendStatus(403)
-    }catch(err){
-        console.log(err)
-        res.render('admin/login')
-    }
- 
-})
+
 //Verify Registration
 router.get('/admin-verify',async(req,res)=>{
     try{
@@ -239,5 +173,40 @@ router.get('/admin-verify',async(req,res)=>{
 })
 router.put('/admin-verify',async(req,res)=>{
     await userVerify(req.body,res,req,'/admin-login', '/admin-verify');
+})
+//Reset Email Password
+router.get('/admin-forgot' ,async(req,res)=>{
+    try{
+        res.render('admin/forgot')
+    }catch{
+        res.render('admin/forgot',{
+            type:'danger',
+            errorMessage: 'Coś poszło nie tak '
+        })
+    }
+})
+router.post('/admin-forgot',async(req,res)=>{
+    await userChangePassword(req.body,res,req,'admin','/admin-login','admin/forgot') 
+})
+//Reset Password Verification
+router.get('/admin-change-password' ,async(req,res)=>{
+    try{
+        res.render('admin/changePassword')
+    }catch{
+        res.render('admin/changePassword',{
+            type:'danger',
+            errorMessage: 'Coś poszło nie tak '
+        })
+    }
+  
+})
+router.post('/admin-change-password' ,async(req,res)=>{
+    await changePassword(req.body,res,req,'/admin-login','admin/changePassword')
+})
+router.get('/admin-logout',ensureAuthenticated, (req,res)=>{
+    req.logOut();
+    req.flash('logged', 'Do zobaczenia!');
+    req.flash('success', 'success')
+    res.redirect('/admin-login')
 })
 module.exports = router;

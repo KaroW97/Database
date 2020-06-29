@@ -1,5 +1,5 @@
-<form action='/clients/clientView/<%=curentVisit%>/editPost?_method=PUT' method="POST">
+<form action='/clients/client-view/<%=curentVisit%>/editPost?_method=PUT' method="POST">
     <%- include('./_form_fields_editPost.ejs') %> 
-    <a href="/clients/clientView/<%= newVisit.client.id %> ">Anuluj</a>
+    <a href="/clients/client-view/<%= newVisit.client.id %> ">Anuluj</a>
     <button type="submit">Aktualizuj</button>
 </form>

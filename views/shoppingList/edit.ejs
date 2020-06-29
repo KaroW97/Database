@@ -1,4 +1,4 @@
-<form method="POST" action="/shoppingList/listView/<%=list.id%>/edit?_method=PUT">
+<form method="POST" action="/shopping-list/list-view/<%=list.id%>/edit?_method=PUT">
     <h1><%=list.listName.name%></h1>
     <input type="date" name="transactionDate" value="<%=list.transactionDate==null ? '' : list.transactionDate.toISOString().split('T')[0]%>" >
     <br><div style="display: flex;">
@@ -20,6 +20,6 @@
     </div>
 
      <br>
-    <a href="/shoppingList/listView/<%=list.id%>">Anuluj</a>
+    <a href="/shopping-list/list-view/<%=list.id%>">Anuluj</a>
     <button type="submit">Dodaj</button>
 </form>

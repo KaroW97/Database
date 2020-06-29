@@ -1,9 +1,9 @@
 <%-include('../partials/infoMessages.ejs')%>
 
-<form method="POST" action="/clients/clientView/<%=clients.id%>?_method=PUT" >
+<form method="POST" action="/clients/client-view/<%=clients.id%>?_method=PUT" >
     <%-include('./_form_fields_edit.ejs')%>
     <%- include('./_form_fields.ejs') %> 
     <br>
-    <a href="/clients/clientView/<%=clients.id%>">Anuluj</a>
+    <a href="/clients/client-view/<%=clients.id%>">Anuluj</a>
     <button type="submit">Aktualizuj</button>
 </form>

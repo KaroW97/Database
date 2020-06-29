@@ -19,8 +19,8 @@
         <tbody>
             <% clients.forEach(client => {%> 
                     <tr>
-                        <td onclick="window.location='/clients/clientView/<%=client.id%>'"><%=client.name%> <%=client.lastName%></td>
-                        <td onclick="window.location='/clients/clientView/<%=client.id%>'"><%=client.phoneNumber%></td>
+                        <td onclick="window.location='/clients/client-view/<%=client.id%>'"><%=client.name%> <%=client.lastName%></td>
+                        <td onclick="window.location='/clients/client-view/<%=client.id%>'"><%=client.phoneNumber%></td>
                         <td><input type="checkbox" name="chackboxDelet" value="<%=client.id%>"></td>
                     </tr>
             <% }); %> 

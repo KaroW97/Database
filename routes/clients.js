@@ -136,7 +136,7 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         const newClient = await clients.save();
         req.flash('mess','Dodano klienta do bazy.');
         req.flash('type','success')
-        res.redirect(`clients/clientView/${newClient.id}`)
+        res.redirect(`clients/client-view/${newClient.id}`)
         
        
     }catch(err){
@@ -151,7 +151,7 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
 })
 
 //Show Client
-router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
+router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
 
     try{
         const visit = new ClientVisits()
@@ -173,7 +173,7 @@ router.get('/clientView/:id',ensureAuthenticated,async(req,res)=>{
 })
 
 //Add new Visit/Post
-router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
+router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
     const visit = new ClientVisits({
         client:req.params.id,
         comment: req.body.comment,
@@ -186,12 +186,12 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
         if(req.body.treatment== null){
             req.flash('mess','Nie masz żadnych zabiegów w bazie');
             req.flash('type','danger')
-            res.redirect( `/clients/clientView/${req.params.id}`)
+            res.redirect( `/clients/client-view/${req.params.id}`)
         }
         await visit.save();
         req.flash('mess','Dodano wizyte');
         req.flash('type','success')
-        res.redirect( `/clients/clientView/${req.params.id}`)
+        res.redirect( `/clients/client-view/${req.params.id}`)
     }catch(err){
         const treatments = await Treatment.find({user:req.user.id});
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product')
@@ -208,7 +208,7 @@ router.post('/clientView/:id',ensureAuthenticated, async(req,res)=>{
     }
 })
 //delete Visits/Post
-router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
+router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
     let visit, clientValue,client;
    
     try{
@@ -233,15 +233,15 @@ router.delete('/clientView/:id',ensureAuthenticated, async(req,res)=>{
             req.flash('mess','Nie wybrano wizyty do usunięcia');
             req.flash('type','info')
           }
-          res.redirect(`/clients/clientView/${client._id}`)
+          res.redirect(`/clients/client-view/${client._id}`)
     }catch(err){
         console.log(err);
         client = await Client.findById(req.params.id)
-        res.redirect(`/clients/clientView/${client._id}`) 
+        res.redirect(`/clients/client-view/${client._id}`) 
     }
 })
 //edit Visit/Post
-router.get('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
+router.get('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
     
     try{
         const addedVisit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').populate( 'product').exec()
@@ -260,7 +260,7 @@ router.get('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
   
 })
 //edit Visit/Post
-router.put('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
+router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
     let visit
     let clientStat
     try{
@@ -273,7 +273,7 @@ router.put('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
          await visit.save();
          req.flash('mess','Wizyta została edytowana');
          req.flash('type','success')
-         return res.redirect(`/clients/clientView/${visit.client.id}`)
+         return res.redirect(`/clients/client-view/${visit.client.id}`)
     }catch(err){
         console.log(err)
         const addedVisit = await ClientVisits.findById(req.params.id)
@@ -289,7 +289,7 @@ router.put('/clientView/:id/editPost',ensureAuthenticated, async(req,res)=>{
 })
 
 //edit
-router.get('/clientView/:id/edit',ensureAuthenticated, async(req,res)=>{
+router.get('/client-view/:id/edit',ensureAuthenticated, async(req,res)=>{
     try{
         const clietnEdit = await Client.findById(req.params.id)
         res.render('clients/edit',{
@@ -301,7 +301,7 @@ router.get('/clientView/:id/edit',ensureAuthenticated, async(req,res)=>{
    
 })
 //Update Client 
-router.put('/clientView/:id',ensureAuthenticated,async (req,res)=>{
+router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
     let clients;
     try{
         clients =  await Client.findById(req.params.id)
@@ -381,7 +381,7 @@ router.put('/clientView/:id',ensureAuthenticated,async (req,res)=>{
         await clients.save();
         req.flash('mess','Dane klienta zostały edytowane.');
         req.flash('type','success')
-        res.redirect(`/clients/clientView/${clients.id}`)
+        res.redirect(`/clients/client-view/${clients.id}`)
     }catch(err){
         if(clients == null){
             res.redirect('/')
@@ -396,22 +396,6 @@ router.put('/clientView/:id',ensureAuthenticated,async (req,res)=>{
     }
 })
 //Delete Client
-/*router.delete('/:id',ensureAuthenticated,async (req,res)=>{
-    let clients;
-    let clientStats;
-    try{
-        clients =  await Client.findById(req.params.id);
-        await clients.remove(); 
-        res.redirect(`/clients`)
-    }catch{
-        if(clients == null){
-            res.redirect('/')
-        }else{
-            res.redirect(`/clients/clientView/${clients.id}`)
-        }   
-    }
-})*/
-////
 router.delete('/', ensureAuthenticated,async(req,res)=>{
     try{
         if(req.body.chackboxDelet!= null ){

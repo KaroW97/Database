@@ -11,7 +11,7 @@ const methodOverride = require('method-override')
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session');
-
+const {ensureAuthenticated} = require('./config/auth')
 //FILE UPLOADER
 
 const Grid = require('gridfs-stream');
@@ -24,6 +24,7 @@ const CalendarRouter = require('./routes/calendar')
 const SettingsRotuer = require('./routes/settings')
 const ClietnSellsStats = require('./routes/clientSellsStats')
 const Document = require('./routes/document.js');
+const Admin = require('./routes/admin');
 
 //app.use( express.static('public'));
 app.use('/public', express.static(__dirname + '/public'))
@@ -72,12 +73,14 @@ app.get('*', (req,res,next)=>{
 app.post('*', (req,res,next)=>{
     app.locals.gfs = gfs;
     res.locals.user = req.user || null;
+    
     next();
 })
 app.put('*', (req,res,next)=>{
     
     app.locals.gfs = gfs;
     res.locals.user = req.user || null;
+
     next();
 })
 app.delete('*', (req,res,next)=>{
@@ -93,10 +96,11 @@ app.use(['/clients','/clients/show','/clients/clientView/:id'],ClientRouter) //C
 app.use('/treatment',TreatmentRotuer)
 app.use('/calendar',CalendarRouter)//Calendar page
 app.use('/settings',SettingsRotuer) //Settings router
-app.use('/shoppingList',ShoppingList) //ShopingList router
+app.use('/shopping-list',ShoppingList) //ShopingList router
 //Statistic
 app.use('/statistics', ClietnSellsStats)
 app.use('/document',Document)
+app.use('/admin',Admin)
 
 
 app.listen(process.env.PORT || 3000); //proces is getting from server

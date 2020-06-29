@@ -38,7 +38,9 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
                 clients:clients
             });
         else{
+            req.logOut();
             res.sendStatus(403)
+         
         }
         
        
