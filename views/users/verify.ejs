@@ -1,10 +1,17 @@
+<link rel="stylesheet" type="text/css" href="../../public/css/verify.css">
+
 <% if(messages.error){ %>
     <div  id="hideAlert" class="alert alert-<%=messages.danger%>"><%= messages.error%></div>
 <% } %>
+<div class="center-main-div">
+    <div class="main-div">
+        <form method="POST"  action="/verify?_method=PUT">
+            <h1>Weryfikacja</h1>
+            <label for="secretToken"></label>
+            <input type="text" id="secretToken"name="secretToken" placeholder="Klucz Weryfikacyjny"  required autofocus>
+        
+            <button type="submit">Zweryfikuj</button>
+        </form>
+    </div>
+</div>
 
-<form method="POST" action="/verify?_method=PUT">
-    <label for="secretToken">Tajny Klucz</label>
-    <input type="text" id="secretToken"name="secretToken" placeholder="Tajny Klucz"  required autofocus>
-
-    <button type="submit">Zweryfikuj</button>
-</form>

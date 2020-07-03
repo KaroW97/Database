@@ -1,24 +1,54 @@
+<link rel="stylesheet" type="text/css" href="../../public/css/admin/index.css">
 <%-include('../partials/infoMessages.ejs')%>
 
+<div class="center-main-div">
+    <div class="main-div">
+     
+        <div class="div-top">
+            <input type="text" placeholder="Użytkownik">
+            <form method="POST" action="/admin?_method=DELETE">
+            <button type="submit" value="Usuń">  <i class="far fa-trash-alt"></i></button>
+        </div>
+       
+                <table id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Nazwa Firmy</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-<form method="POST" action="/admin?_method=DELETE">
-    <input type="submit" value="Usuń">
-    <table>
-        <thead>
-            <tr>
-                <th>Nazwa Firmy</th>
-                <th>Email</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <% user.forEach(user => {%> 
-                    <tr>
-                        <td> <%= user.companyName%></td>
-                        <td ><%=user.email%></td>
-                        <td><input type="checkbox" name="chackboxDelet" value="<%=user.id%>"></td>
-                    </tr>
-            <% }); %> 
-        </tbody>
-    </table>
-</form>
+                        <% user.forEach(user => {%> 
+                                <tr>
+                                    <td> <%=user.companyName%></td>
+                                    <td ><%=user.email%></td>
+                                    <td><%=user.active == true ? 'Zweryfikowany' : 'Nie zweryfiowany'%></td>
+                                    <td><input type="checkbox" name="chackboxDelet" value="<%=user.id%>"></td>
+                                </tr>
+                        <% }); %> 
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+<script>
+   
+     let lenght = $('#myTable >tbody >tr').length;
+    if(lenght < 10) {
+      
+        for(var i=0; i <10-lenght; i++) {
+            $("#myTable>tbody").append(`   
+            <tr style="height:44px">
+                <td style="color:transparent"></td>
+                <td ></td>
+                <td></td>
+                <td></td>
+            </tr>`)
+        }
+    }
+     
+ 
+</script>

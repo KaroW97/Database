@@ -44,7 +44,7 @@ router.get('/registration',async (req, res)=>{
 })
 //Register Form
 router.post('/registration',async(req,res)=>{
-    await userRegistry(req.body,'user',res,req,'/login','user/register')
+    await userRegistry(req.body,'user',res,req,'/login','users/register')
 })
 //Email send
 //Verify Registration
@@ -104,7 +104,7 @@ router.get('/forgot' ,async(req,res)=>{
     }
 })
 router.post('/forgot',async(req,res)=>{
-    await userChangePassword(req.body,res,req,'user','/login','user/forgot') 
+    await userChangePassword(req.body,res,req,'user','/login','users/forgot') 
 })
 //Reset Password Verification
 router.get('/change-password' ,async(req,res)=>{
@@ -126,6 +126,10 @@ router.post('/change-password' ,async(req,res)=>{
 //Registration Page
 router.get('/admin-register',async (req, res)=>{
     try{ 
+        if(req.user){
+            req.logOut();
+            res.redirect('/admin-register')
+        }
         res.render('admin/register')
     }catch(err){
         res.render('admin/register',{
@@ -142,7 +146,12 @@ router.post('/admin-register',async(req,res)=>{
 //Front Page
 router.get('/admin-login',async (req, res)=>{
     try{
-            res.render('admin/login')
+        if(req.user){
+            req.logOut();
+            res.redirect('/admin-login')
+        }
+        res.render('admin/login')
+
     }catch(err){
         console.log(err)
         res.render('admin/login')
@@ -166,6 +175,10 @@ router.post('/admin-login', function(req, res, next){
 //Verify Registration
 router.get('/admin-verify',async(req,res)=>{
     try{
+        if(req.user){
+            req.logOut();
+            res.redirect('/admin-verify')
+        }
         res.render('admin/verify');
     }catch{
         res.redirect('/')
@@ -177,6 +190,10 @@ router.put('/admin-verify',async(req,res)=>{
 //Reset Email Password
 router.get('/admin-forgot' ,async(req,res)=>{
     try{
+        if(req.user){
+            req.logOut();
+            res.redirect('/admin-forgot')
+        }
         res.render('admin/forgot')
     }catch{
         res.render('admin/forgot',{
@@ -191,6 +208,10 @@ router.post('/admin-forgot',async(req,res)=>{
 //Reset Password Verification
 router.get('/admin-change-password' ,async(req,res)=>{
     try{
+        if(req.user){
+            req.logOut();
+            res.redirect('/admin-change-password')
+        }
         res.render('admin/changePassword')
     }catch{
         res.render('admin/changePassword',{

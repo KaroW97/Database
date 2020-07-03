@@ -57,7 +57,7 @@ router.delete('/',ensureAuthenticated,async(req,res)=>{
   
 })
 
-router.get('/settings',async (req,res)=>{
+router.get('/settings',ensureAuthenticated,async (req,res)=>{
     try{
         let admin = await User.findById(req.user.id)
         res.render('admin/settings',{

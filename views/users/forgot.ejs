@@ -1,11 +1,16 @@
-
+<link rel="stylesheet" href="../../public/css/forgot.css">
 <% if(messages.sent){ %>
     <div id="hideAlert" class="alert alert-<%=messages.success%>"> <%=messages.sent%> </div>
 <% } %>
-<p>Zapomniałeś hasła?</p>
-<form method="POST" action="/forgot">
-    <label for="forgotPassword"></label>
-    <input type="text" id="forgotPassword"name="forgotPassword" placeholder="Podaj swój email"  required autofocus>
 
-    <button type="submit">Resetuj</button>
-</form>
+<div class="center-main-div">
+    <div class="main-div">
+        <form method="POST" action="/forgot">
+            <h1>Zapomniałeś Hasła?</h1>
+            <label for="forgotPassword"></label>
+            <input type="text" id="forgotPassword"name="forgotPassword" placeholder="Podaj swój email"  required autofocus>
+        
+            <button type="submit">Resetuj</button>
+        </form>
+    </div>
+</div>

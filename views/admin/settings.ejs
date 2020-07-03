@@ -1,25 +1,45 @@
+<link rel="stylesheet" href="../../public/css/admin/settings.css">
 <% if(messages.error){ %>
     <div  id="hideAlert" class="alert alert-<%=messages.danger%>"><%= messages.error%></div>
 <% } %>
-
-<div>
-    <p>Zmień hasło </p>
-    <p>Dobrze jest użyć silnego hasła, którego nie używasz gdzie indziej</p>
-    <form action="/admin/settings/change-password?_method=PUT" method="POST">
-        <input value="<%=admin.password%>" type="password">
-        <input type="password" name="newPassword" placeholder="Nowe Hasło">
-        <input type="password"name="confirmNewPassword" placeholder="Potwierdź Hasło">
-        <button type="submit">Zapisz zmiany</button>
-    </form>
-</div><br><br>
-
-<div >
-    <p>Zmień email </p>
-    <form action="/admin/settings/change-email?_method=PUT" method="POST">
-        <input value="<%=admin.email%>" type="email">
-        <input type="email" name="newEmail"placeholder="Nowy Email">
-        <input type="email" name="confirmNewEmail" placeholder="Potwierdź Email">
-        <button type="submit">Zapisz zmiany</button>
-    </form>
-</div><br><br>
+<div class="center-main-div">
+    <div class="main-div">
+        <div class="separate">
+            <p>Zmień hasło </p>
+            <form action="/admin/settings/change-password?_method=PUT" method="POST">
+                 <div class="change">
+                     <input value="<%=admin.password%>" type="password">
+                     <input type="password" name="newPassword" placeholder="Nowe Hasło">
+                     <input type="password"name="confirmNewPassword" placeholder="Potwierdź Hasło">
+                 </div>
+                 <div class="center">
+                     <button type="submit">Edytuj</button>
+                 </div >
+             </form>
+        </div>
+       
+        <div class="separate">
+            <p>Zmień email </p>
+            <form action="/admin/settings/change-email?_method=PUT" method="POST">
+                <div class="change">
+                    <input value="<%=admin.email%>" type="email">
+                    <input type="email" name="newEmail"placeholder="Nowy Email">
+                    <input type="email" name="confirmNewEmail" placeholder="Potwierdź Email">
+                </div>
+                <div class="center">
+                    <button type="submit">Edytuj</button>
+                </div>
+               
+            </form>
+        </div>
+        <div class="separate">
+            <p>Jeśli chcesz usunąć swoje konto nacisnij: </p>
+            <form action="/admin/settings/delete-account?_method=PUT" method="POST">
+                <div class="center">
+                    <button type="submit">Edytuj</button>
+                </div>
+            </form>
+        </div>
+     </div>
+</div>
 
