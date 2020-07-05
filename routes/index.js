@@ -15,8 +15,10 @@ const {
 //Passport Config
 router.get('/',async (req, res)=>{
     try{ 
-        if(req.user){
+        if(req.user.role === 'user'){
             return res.redirect('/calendar')
+        }else if(req.user.role === 'admin'){
+            return res.redirect('/admin')
         }
         return res.render('users/index')
      
@@ -226,8 +228,10 @@ router.post('/admin-change-password' ,async(req,res)=>{
 })
 router.get('/admin-logout',ensureAuthenticated, (req,res)=>{
     req.logOut();
-    req.flash('logged', 'Do zobaczenia!');
+   
+    req.flash('logged', 'Do zobaczenia!!');
     req.flash('success', 'success')
+   
     res.redirect('/admin-login')
 })
 module.exports = router;

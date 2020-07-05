@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user')
-const {ensureAuthenticated} = require('../config/auth')
+const {ensureAuthenticatedAdmin} = require('../config/auth')
 const bcrypt = require('bcryptjs')
 const mailer  = require('../misc/mailer')
 const emailLook = require('../misc/emailLayout')
 ////////////////////////////////////////////////////////////////
 
 const {adminDeleteUsers} = require('../config/authentication')
-router.get('/',ensureAuthenticated, async(req, res) => {
+router.get('/',ensureAuthenticatedAdmin, async(req, res) => {
     try{
         let user =await User.find({role:'user'});
         if(req.user.isAdmin())
@@ -27,7 +27,7 @@ router.get('/',ensureAuthenticated, async(req, res) => {
     }
 })
 //Delete admin
-router.delete('/',ensureAuthenticated,async(req,res)=>{
+router.delete('/',ensureAuthenticatedAdmin,async(req,res)=>{
     try{
         if(req.body.chackboxDelet!= null ){
             if(Array.isArray(req.body.chackboxDelet)){
@@ -57,7 +57,7 @@ router.delete('/',ensureAuthenticated,async(req,res)=>{
   
 })
 
-router.get('/settings',ensureAuthenticated,async (req,res)=>{
+router.get('/settings',ensureAuthenticatedAdmin,async (req,res)=>{
     try{
         let admin = await User.findById(req.user.id)
         res.render('admin/settings',{
@@ -76,7 +76,7 @@ router.put('/settings/change-password', async(req, res)=>{
          admin = await User.findById(req.user.id)
         if(req.body.newPassword == ''|| req.body.confirmNewPassword == ''){
 
-            req.flash('error','Wypełnij wszystkie pola ')
+            req.flash('error','Wypełnij wszystkie pola potrzebne do zmiany hasła ')
             req.flash('danger','info')
             res.redirect('/admin/settings')
             return
@@ -170,6 +170,21 @@ router.put('/settings/change-email',async (req, res)=>{
             layout: "layouts/layoutAdmin",
             admin:admin
         })
+    }
+})
+
+router.delete('/settings/delete-account', async(req, res) => {
+  
+    try{
+        const user = await User.findById(req.user.id);
+        user.remove();
+        req.flash('logged', 'Użytkownik został usunięty z bazy danych');
+        req.flash('success', 'success')
+        res.redirect('/admin-login')
+
+    }catch(err){
+        console.log(err)
+        res.redirect('/admin/settings')
     }
 })
 module.exports = router

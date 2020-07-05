@@ -4,6 +4,7 @@ const ShoppingList = require('../models/shoppingList')
 const Treatment = require('../models/treatment');
 const FutureVisit = require('../models/clientFutureVisit')
 const Client = require('../models/clients')
+const User = require('../models/user')
 const {ensureAuthenticated} = require('../config/auth')
 //Show Calendar Page
 router.get('/',ensureAuthenticated,async (req,res)=>{
@@ -22,6 +23,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
     //Two Days From Now Date
     //shoppingTwoDays = shoppingTwoDays.lte('transactionDate',todayDate.toISOString().split('T')[0])
     try{
+        const user = await User.findById(req.user.id);
         const perchuse = await shopping.exec()
         const shoppingTwoDaysFromNow = await shoppingTwoDays.exec();
         const treatment = await Treatment.find({user:req.user.id});
