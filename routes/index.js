@@ -14,45 +14,61 @@ const {
 //Regular User
 //Passport Config
 router.get('/',async (req, res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/index.css");
     try{ 
         if(req.user.role === 'user'){
             return res.redirect('/calendar')
         }else if(req.user.role === 'admin'){
             return res.redirect('/admin')
         }
-        return res.render('users/index')
+        return res.render('users/index',{
+            styles:cssSheets,
+            scripts:''
+        })
      
     }catch{
-        res.render('users/index')
+        res.render('users/index',{
+            styles:cssSheets
+        })
     }
  
 })
 //Registration Page
 router.get('/registration',async (req, res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/registrationUser.css");
     try{ 
         if(req.user){
             return res.redirect('/calendar')
         }
-        res.render('users/register')  
+        res.render('users/register',{
+            styles:cssSheets
+        })  
       
     }catch(err){
         console.log(err)
         res.render('users/register',{
             errorMessage:'Coś poszło nie tak',
             type:'danger',
+            styles:cssSheets
         })
     }
  
 })
 //Register Form
 router.post('/registration',async(req,res)=>{
-    await userRegistry(req.body,'user',res,req,'/login','users/register')
+    let cssSheets = [];
+    cssSheets.push("../../public/css/registrationUser.css");
+    await userRegistry(req.body,'user',res,req,'/login','users/register',cssSheets)
 })
 //Email send
 //Verify Registration
 router.get('/verify',async(req,res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/verify.css");
     try{
-        res.render('users/verify');
+        res.render('users/verify',{styles:cssSheets});
     }catch{
         res.redirect('/')
     }
@@ -62,11 +78,17 @@ router.put('/verify',async(req,res)=>{
 })
 //Front Page
 router.get('/login',async (req, res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/login.css");
+
     try{
+
         if(req.user){
             return res.redirect('/calendar')
         }
-        res.render('users/login')
+        res.render('users/login',{
+            styles:cssSheets
+        })
 
         
     }catch{
@@ -76,9 +98,11 @@ router.get('/login',async (req, res)=>{
 })
 // Login Process
 router.post('/login', function(req, res, next){
+    let cssSheets = [];
+    cssSheets.push("../../public/css/login.css");
     if(req.body.email=='' || req.body.password ==''){
         req.flash('error','Uzupełnij wszystkie pola')
-        res.render('users/login')
+        res.render('users/login',{styles:cssSheets})
       }else{
         passport.authenticate('local',{
             successRedirect:'/calendar',
@@ -96,12 +120,16 @@ router.get('/logout',ensureAuthenticated, (req,res)=>{
 })
 //Reset Email Password
 router.get('/forgot' ,async(req,res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/forgot.css");
     try{
-        res.render('users/forgot')
+
+        res.render('users/forgot',{styles:cssSheets})
     }catch{
+        req.flash('mess','Coś poszło nie tak');
+        req.flash('type','danger',)
         res.render('users/forgot',{
-            type:'danger',
-            errorMessage: 'Coś poszło nie tak '
+            styles:cssSheets
         })
     }
 })
@@ -110,12 +138,15 @@ router.post('/forgot',async(req,res)=>{
 })
 //Reset Password Verification
 router.get('/change-password' ,async(req,res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/newPassword.css");
     try{
-        res.render('users/changePassword')
+        res.render('users/changePassword',{styles:cssSheets})
     }catch{
+        req.flash('error','Coś poszło nie tak ')
+        req.flash('danger','danger ')
         res.render('users/changePassword',{
-            type:'danger',
-            errorMessage: 'Coś poszło nie tak '
+            styles:cssSheets
         })
     }
   
@@ -127,44 +158,53 @@ router.post('/change-password' ,async(req,res)=>{
 ////////ADMIN
 //Registration Page
 router.get('/admin-register',async (req, res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/admin/register.css");
     try{ 
         if(req.user){
             req.logOut();
             res.redirect('/admin-register')
         }
-        res.render('admin/register')
+        res.render('admin/register',{styles:cssSheets})
     }catch(err){
+        req.flash('error','Coś poszło nie tak')
         res.render('admin/register',{
             errorMessage:'Coś poszło nie tak',
-            type:'danger',
+            styles:cssSheets,
         })
     }
  
 })
 //Register Form
 router.post('/admin-register',async(req,res)=>{
-    await userRegistry(req.body,'admin',res,req,'/admin-login','admin/register')
+    let cssSheets = [];
+    cssSheets.push("../../public/css/admin/register.css");
+    await userRegistry(req.body,'admin',res,req,'/admin-login','admin/register',cssSheets)
 })
 //Front Page
 router.get('/admin-login',async (req, res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/login.css");
     try{
         if(req.user){
             req.logOut();
             res.redirect('/admin-login')
         }
-        res.render('admin/login')
+        res.render('admin/login',{styles:cssSheets})
 
     }catch(err){
         console.log(err)
-        res.render('admin/login')
+        res.render('admin/login',{styles:cssSheets})
     }
  
 })
 // Login Process
 router.post('/admin-login', function(req, res, next){
+    let cssSheets = [];
+    cssSheets.push("../../public/css/login.css");
     if(req.body.email=='' || req.body.password ==''){
         req.flash('error','Uzupełnij wszystkie pola')
-        res.render('admin/login')
+        res.render('admin/login',{styles:cssSheets})
       }else{
         passport.authenticate('local',{
             successRedirect:'/admin',
@@ -176,12 +216,14 @@ router.post('/admin-login', function(req, res, next){
 
 //Verify Registration
 router.get('/admin-verify',async(req,res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/verify.css");
     try{
         if(req.user){
             req.logOut();
             res.redirect('/admin-verify')
         }
-        res.render('admin/verify');
+        res.render('admin/verify',{styles:cssSheets});
     }catch{
         res.redirect('/')
     }
@@ -191,16 +233,20 @@ router.put('/admin-verify',async(req,res)=>{
 })
 //Reset Email Password
 router.get('/admin-forgot' ,async(req,res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/forgot.css");
     try{
         if(req.user){
             req.logOut();
             res.redirect('/admin-forgot')
         }
-        res.render('admin/forgot')
+        res.render('admin/forgot',{styles:cssSheets})
     }catch{
+        req.fresh('mess','Coś poszło nie tak');
+        req.flash('type','danger')
         res.render('admin/forgot',{
-            type:'danger',
-            errorMessage: 'Coś poszło nie tak '
+          
+            styles:cssSheets
         })
     }
 })
@@ -209,16 +255,19 @@ router.post('/admin-forgot',async(req,res)=>{
 })
 //Reset Password Verification
 router.get('/admin-change-password' ,async(req,res)=>{
+    let cssSheets = [];
+    cssSheets.push("../../public/css/newPassword.css");
     try{
         if(req.user){
             req.logOut();
             res.redirect('/admin-change-password')
         }
-        res.render('admin/changePassword')
+        res.render('admin/changePassword',{styles:cssSheets})
     }catch{
+        req.flash('mess','Coś poszło nie tak ');
+        req.fresh('type','danger');
         res.render('admin/changePassword',{
-            type:'danger',
-            errorMessage: 'Coś poszło nie tak '
+            styles:cssSheets
         })
     }
   

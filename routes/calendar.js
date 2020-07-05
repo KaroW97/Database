@@ -8,7 +8,9 @@ const User = require('../models/user')
 const {ensureAuthenticated} = require('../config/auth')
 //Show Calendar Page
 router.get('/',ensureAuthenticated,async (req,res)=>{
- 
+    let cssSheets = [];
+    cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
+   
     let todayDate = new Date();
     let shopping =  ShoppingList.find({user:req.user.id}).populate('listName')
     let shoppingTwoDays =  ShoppingList.find({user:req.user.id}).populate('listName')
@@ -29,6 +31,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
         const treatment = await Treatment.find({user:req.user.id});
         const clients =  await Client.find({user:req.user.id});
         const futureVisit = await FutureVisit.find({user:req.user.id}).populate('client').populate('treatment')
+        
         if(req.user.isUser())
             res.render('calendar/index',{
                 //perchuseStandard:perchuseStandardC,
@@ -37,7 +40,10 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
                 searchOptions:req.query || '',
                 newVisit:futureVisit,
                 treatments:treatment,
-                clients:clients
+                clients:clients,
+                user:user,
+                styles:cssSheets,
+                
             });
         else{
             req.logOut();

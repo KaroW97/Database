@@ -28,7 +28,7 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
             clientt =await clientLastName.find({user:req.user.id}).exec();
         const clientVisits = await cliantStats.exec();
         res.render('stats/index',{
-            user:req.user.id,
+            user:req.user,
             clients:clientt,
             sum:sum,
             addedVisist:clientVisits ,
@@ -66,7 +66,7 @@ router.get('/treatment', async(req,res)=>{
             treatmentExists: false,
             treatments:treatments,
             clientVisits:clientVisits,
-            user:req.user.id,
+            user:req.user,
             searchOptions:req.query,
             sum:sum,
             moneySpent:moneySpent,

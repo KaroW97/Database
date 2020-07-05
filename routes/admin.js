@@ -6,15 +6,19 @@ const bcrypt = require('bcryptjs')
 const mailer  = require('../misc/mailer')
 const emailLook = require('../misc/emailLayout')
 ////////////////////////////////////////////////////////////////
-
+let cssSheetsSettings = [];
+cssSheetsSettings.push(" ../../public/css/admin/settings.css");
 const {adminDeleteUsers} = require('../config/authentication')
 router.get('/',ensureAuthenticatedAdmin, async(req, res) => {
+    let cssSheets = [];
+    cssSheets.push("../../public/css/admin/index.css");
     try{
         let user =await User.find({role:'user'});
         if(req.user.isAdmin())
             res.render('admin/index', {
                 layout: "layouts/layoutAdmin",
-                user: user
+                user: user,
+                styles:cssSheets
             })
         else{
             req.logOut();
@@ -23,7 +27,7 @@ router.get('/',ensureAuthenticatedAdmin, async(req, res) => {
           
     }catch(err){
         console.log(err)
-        res.render('admin/login')
+        res.render('admin/login',{styles:cssSheets})
     }
 })
 //Delete admin
@@ -58,11 +62,14 @@ router.delete('/',ensureAuthenticatedAdmin,async(req,res)=>{
 })
 
 router.get('/settings',ensureAuthenticatedAdmin,async (req,res)=>{
+   
+   
     try{
         let admin = await User.findById(req.user.id)
         res.render('admin/settings',{
             layout: "layouts/layoutAdmin",
-            admin:admin
+            admin:admin,
+            styles:cssSheetsSettings
         })
     }catch(err){
         console.log(err);
@@ -113,7 +120,8 @@ router.put('/settings/change-password', async(req, res)=>{
             req.flash('danger','danger')
             res.render('admin/settings',{
                 layout: "layouts/layoutAdmin",
-                admin:admin
+                admin:admin,
+                styles:cssSheetsSettings
             })
             return;
         }
@@ -159,7 +167,8 @@ router.put('/settings/change-email',async (req, res)=>{
             req.flash('danger','danger')
             res.render('admin/settings',{
                 layout: "layouts/layoutAdmin",
-                admin:admin
+                admin:admin,
+                styles:cssSheetsSettings
             })
             return;
         }
@@ -168,7 +177,8 @@ router.put('/settings/change-email',async (req, res)=>{
         let admin = await User.findById(req.user.id);
         res.render('admin/settings',{
             layout: "layouts/layoutAdmin",
-            admin:admin
+            admin:admin,
+            styles:cssSheetsSettings
         })
     }
 })

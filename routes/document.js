@@ -4,6 +4,7 @@ const multer = require('multer');
 const crypto = require('crypto');
 const path = require('path');
 const ObjectId = require('mongodb').ObjectId;
+
 const GridFsStorage = require('multer-gridfs-storage');
 const {ensureAuthenticated} = require('../config/auth')
 
@@ -33,11 +34,13 @@ const upload = multer({ storage });
 //Document Main Page
 router.get('/', ensureAuthenticated,async(req, res) => {
     try{
+       
+      
         req.app.locals.gfs.files.find().toArray( (err, files)=> {
             if (err) throw err
-            if(!files|| files.length === 0){  res.render('documents/index',{files:false,  user:req.user.id})}
+            if(!files|| files.length === 0){  res.render('documents/index',{files:false,  user:req.user})}
             else{
-                res.render('documents/index',{files:files, user:req.user.id})
+                res.render('documents/index',{files:files, user:req.user})
             }
         })
     }catch(err){

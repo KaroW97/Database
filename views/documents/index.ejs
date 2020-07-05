@@ -10,7 +10,7 @@
         <form action="/document?_method=DELETE" method="POST"  >
             <input type="submit" value="Usuń">
             <%files.forEach(file =>{%>
-                <% if(file.metadata.user == user){%>
+                <% if(file.metadata.user == user.id){%>
                   
                   
                         <p name="fileDelete" value="<%=file._id%>">

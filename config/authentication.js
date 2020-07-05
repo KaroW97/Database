@@ -15,7 +15,7 @@ const Treatment = require('../models/treatment')
 const FutureVisit = require('../models/clientFutureVisit')
 const ClientVisits = require('../models/clientsVisits')
 
-const userRegistry = async (userDetails,role,res,req,registerSuccess, registerFailed) => {
+const userRegistry = async (userDetails,role,res,req,registerSuccess, registerFailed, cssStyles) => {
  
     try{
         const findUser = await User.findOne({email:userDetails.email})
@@ -35,7 +35,7 @@ const userRegistry = async (userDetails,role,res,req,registerSuccess, registerFa
            req.flash('err', 'Email istnieje w bazie danych');
         }
         if(findUser || userDetails.password.length < 3 || userDetails.password !=userDetails.ConfirmPassword){
-            res.render(registerFailed)
+            res.render(registerFailed, {styles:cssStyles})
             return;
         }
         else {
@@ -80,9 +80,9 @@ const userRegistry = async (userDetails,role,res,req,registerSuccess, registerFa
        
     }catch(err){
         console.log(err)
+        req.flash('err', 'Spróbuj ponownie');
         res.render(registerFailed,{
-            errorMessage:'Spróbuj ponownie',
-            type:'error'
+            styles:cssStyles
         })
     }  
 }
@@ -94,7 +94,7 @@ const userVerify = async (userDetails,res,req,redirectSuccess, redirectFailure)=
         user = await User.findOne({secretToken:secretTokenn})
         if(!user){
            
-            req.flash('error','Nie znaleziono takiego użytkownika.')
+            req.flash('error','Nie znaleźliśmy użytkownika o podanym kluczu.')
             req.flash('danger','danger')
             res.redirect(redirectFailure);
             return;
@@ -113,7 +113,8 @@ const userVerify = async (userDetails,res,req,redirectSuccess, redirectFailure)=
 }
 const userChangePassword =async(verify,res,req,role,redirectSuccess,redirectFailure)=>{
     let searchUser
-    console.log('kestem')
+    let cssSheets = [];
+    cssSheets.push("../../public/css/forgot.css");
     try{
         searchUser = await User.findOne({email:verify.forgotPassword})
         if(searchUser!=null && searchUser!='' ){
@@ -162,9 +163,11 @@ const userChangePassword =async(verify,res,req,role,redirectSuccess,redirectFail
             res.redirect(redirectSuccess)
         }
         else{
+            req.flash('mess','Nie znaleźliśmy twojego emaila w bazie danych. Sprawdź czy wprowadziłeś poprawny email')
+            req.flash('type','danger')
             res.render(redirectFailure,{
-                type:'danger',
-                errorMessage:'Nie znaleźliśmy twojego emaila w bazie danych. Spróbuj jeszcze raz.'
+                styles:cssSheets,
+               
             })
         }
     }catch(err){
@@ -174,6 +177,8 @@ const userChangePassword =async(verify,res,req,role,redirectSuccess,redirectFail
 }
 const changePassword = async (verify,res,req,redirectSuccess,redirectFailure)=>{
     let searchUser
+    let cssSheets = [];
+    cssSheets.push("../../public/css/newPassword.css");
     try{
         searchUser  = await User.findOne({secretToken:verify.secretToken})
         if(searchUser!=null && searchUser!='' && verify.password == verify.passwordConfirm){
@@ -182,25 +187,31 @@ const changePassword = async (verify,res,req,redirectSuccess,redirectFailure)=>{
             searchUser.secretToken ='';
             searchUser.active = true;
             await searchUser.save();
-            req.flash('success','success');
-            req.flash('logged', 'Zmieniono hasło możesz się zalogować!')
+            req.flash('type','success');
+            req.flash('mess', 'Zmieniono hasło możesz się zalogować!')
             res.redirect(redirectSuccess)
         }else if(verify.password != verify.passwordConfirm){
+           
+            req.flash('mess', 'Wprowadź takie same hasła')
+            req.flash('type','danger')
+           
+
             res.render(redirectFailure,{
-                type:'danger',
-                errorMessage: 'Wprowadź takie same hasła.'
+                styles:cssSheets,
             })
         }else{
+            req.flash('mess', 'Nie znaleziono użytkownika')
+            req.flash('type','danger')
             res.render(redirectFailure,{
-                type:'danger',
-                errorMessage: 'Błędny token'
+                styles:cssSheets,
             })
         }
     }catch(err){
         console.log(err)
+        req.flash('mess', 'Nie znaleziono użytkownika')
+        req.flash('type','danger')
         res.render(redirectFailure,{
-            type:'danger',
-            errorMessage: 'Coś poszło nie tak'
+            styles:cssSheets,
         })
     }
 }
