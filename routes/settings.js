@@ -19,9 +19,12 @@ const {ensureAuthenticated} = require('../config/auth')
 //Show current options
 router.get('/',ensureAuthenticated, async(req,res)=>{
     try{
+        const cssSheets =[]
+
         const user   = await User.findById(req.user.id);
         res.render('settings/index',{
-            user:user
+            user:user,
+            styles:cssSheets
         });
     }catch(err){
         console.log(err)
@@ -70,20 +73,24 @@ router.put('/change-password',ensureAuthenticated, async(req,res)=>{
             res.redirect('/settings')
             return
         }else{
+            const cssSheets =[]
+
             req.flash('error','Hasła się różnią.')
             req.flash('danger','danger')
             res.render('settings/index',{
-            
+                styles:cssSheets
             })
             return;
         }
         
     }catch(err){
         console.log(err)
+        const cssSheets =[]
+
         res.render('settings/index',{
             errorMessage:'Coś poszło nie tak.',
             type:'danger',
-            
+            styles:cssSheets
         })
     }
 })
@@ -117,19 +124,22 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
             req.flash('danger','success')
             res.redirect('/settings')
         }else{
+            const cssSheets =[]
+
             req.flash('error',"Podano różne email'e")
             req.flash('danger','danger')
             res.render('settings/index',{
-                
+                styles:cssSheets
             })
             return;
         }
     }catch(err){
         console.log(err)
+        const cssSheets =[]
+
         res.render('settings/index',{
           
-            errorMessage:'Coś poszło nie tak.',
-            type:'danger'
+            styles:cssSheets
         })
     }
 })
@@ -158,9 +168,11 @@ router.put('/change-company-name',ensureAuthenticated, async(req,res)=>{
         req.flash('danger','success')
         res.redirect('/settings')
     }catch{
+        const cssSheets =[]
+
         res.render('settings/index',{
-            errorMessage:'Coś poszło nie tak.',
-            type:'danger',
+        
+            styles:cssSheets
            
         })
     }

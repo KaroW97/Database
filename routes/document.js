@@ -33,12 +33,14 @@ var storage = new GridFsStorage({
 const upload = multer({ storage });
 //Document Main Page
 router.get('/', ensureAuthenticated,async(req, res) => {
+    const cssSheets =[]
+
     try{
        
       
         req.app.locals.gfs.files.find().toArray( (err, files)=> {
             if (err) throw err
-            if(!files|| files.length === 0){  res.render('documents/index',{files:false,  user:req.user})}
+            if(!files|| files.length === 0){  res.render('documents/index',{files:false,  user:req.user,styles:cssSheets})}
             else{
                 res.render('documents/index',{files:files, user:req.user})
             }

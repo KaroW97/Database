@@ -8,13 +8,6 @@ function showFormm(){
             input.focus(); 
     }
 }
-function showClientt(){
-    let showClient = document.getElementById('showClient')
-    let clientSelect = document.getElementById('clientSelect')
-    if(showClient) {
-        clientSelect.style.display = 'block'
-    }
-}
  function closeForm (){
     let comapnyForm = document.getElementById('comapnyForm');
     if(comapnyForm){
@@ -50,3 +43,44 @@ function checkIfNull(){
 $( document ).ready(function() {
     $(".alert" ).fadeOut(3000); 
 });
+$(document).ready(function(){
+    if( $("#myInputTreatment").val()=='')  $('#listTreatment li').hide()
+    if( $("#myInput").val()=='')  $('#list li').hide()
+
+    $("#myInput").on('keyup', function(){
+        let value = $(this).val().toLowerCase()
+        if (value.length == 0) 
+            $('#list').hide();
+        else
+            $('#list').show();
+        $('#list li').filter(function(){
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+             
+            $(this).click(function(){
+                $('#myInput').val($(this).text())
+                $("#hiddenInput").val( $(this).attr('value'));
+            })
+        })
+    })
+    $("#myInputTreatment").on('keyup', function(){
+      
+        console.log($(this).val())
+        let value = $(this).val().toLowerCase()
+        if(value=='') $('#listTreatment li').css('display','none')
+        if (value.length == 0) 
+            $('#listTreatment').hide();
+        else
+            $('#listTreatment').show();
+        
+
+        $('#listTreatment li').filter(function(){
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+             
+            $(this).click(function(){
+                $('#myInputTreatment').val($(this).text())
+                $("#hiddenInputTreatment").val( $(this).attr('value'));
+            })
+        })
+    })
+    
+})

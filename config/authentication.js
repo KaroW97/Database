@@ -163,7 +163,7 @@ const userChangePassword =async(verify,res,req,role,redirectSuccess,redirectFail
             res.redirect(redirectSuccess)
         }
         else{
-            req.flash('mess','Nie znaleźliśmy twojego emaila w bazie danych. Sprawdź czy wprowadziłeś poprawny email')
+            req.flash('mess','Nie znaleźliśmy konta z podanym kluczem weryfikacujnym')
             req.flash('type','danger')
             res.render(redirectFailure,{
                 styles:cssSheets,

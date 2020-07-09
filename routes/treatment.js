@@ -6,13 +6,15 @@ const {ensureAuthenticated} = require('../config/auth')
 //All Treatments
 router.get('/',ensureAuthenticated,async(req,res)=>{
    var searchOptions={};
+   const cssSheets =[]
    if(req.query.treatmentName !=null && req.query.treatmentName !=='')
         searchOptions.treatmentName = new RegExp(req.query.treatmentName,'i');
     try{
         const treatment = await Treatment.find(searchOptions).find({user:req.user.id});
         res.render('treatment/index',{
             treatment:treatment,
-            searchOptions:searchOptions
+            searchOptions:searchOptions,
+            styles:cssSheets
         })
     }catch(err){
         console.log(err)
@@ -32,10 +34,12 @@ router.post('/',ensureAuthenticated, async(req,res)=>{
         req.flash('type','success')
         res.redirect( `treatment`);
     }catch{
+        const cssSheets =[]
         req.flash('mess','Nie udało się dodać nowego zabiegu')
         req.flash('type','success')
         res.render('treatment',{
             treatment:treatment,
+            styles:cssSheets
         });
     } 
    
@@ -44,7 +48,6 @@ router.post('/',ensureAuthenticated, async(req,res)=>{
 //Delete Treatment
 router.delete('/',ensureAuthenticated, async(req,res)=>{
     var treatment;
-  //  console.log(req.body.chackboxDelete)
     try{
         if(req.body.chackboxDelete!= null){
             if(Array.isArray(req.body.chackboxDelete)){
@@ -64,8 +67,6 @@ router.delete('/',ensureAuthenticated, async(req,res)=>{
             req.flash('mess','Nie podano zabiegu do usunącia')
             req.flash('type','info')
         }
-    
-   
         res.redirect('/treatment');
     }catch{
         req.flash('mess','Nie udało się usunąć rekordu')
@@ -86,10 +87,13 @@ router.put('/edit/:id',ensureAuthenticated, async(req,res)=>{
         req.flash('type','success')
         res.redirect('/treatment')
     }catch(err){
+        const cssSheets =[]
+
         req.flash('mess','Nie udało się zedytować zabiegu')
         req.flash('type','danger')
-        res.redirect('/treatment',{
-            treatment:treatment
+        res.render('/treatment',{
+            treatment:treatment,
+            styles:cssSheets
         })
     }
 })

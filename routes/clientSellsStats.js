@@ -7,6 +7,8 @@ const CompanyShopping = require('../models/stats/companyShoppingStats')
 const {ensureAuthenticated} = require('../config/auth')
 //Clients Statistics Main Page
 router.get('/' ,ensureAuthenticated, async(req,res)=>{
+    const cssSheets =[]
+
     let cliantStats = ClientVisits.find().populate('treatment');
     let searchClient = {}
     let searchClientLastName = {}
@@ -33,6 +35,7 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
             sum:sum,
             addedVisist:clientVisits ,
             searchOptions:req.query,
+            styles:cssSheets
             
         })
     }catch(err){
@@ -45,6 +48,8 @@ router.get('/treatment', async(req,res)=>{
     let searchTreatment = {};
     let sum=0;
     let moneySpent = 0;
+    const cssSheets =[]
+
     let cliantStats =  ClientVisits.find().populate('treatment')/*.find({user:req.user.id})*/
     if(req.query.treatment != null &&req.query.treatment !='')
         searchTreatment.treatmentName = new RegExp(req.query.treatment,'i');
@@ -71,7 +76,8 @@ router.get('/treatment', async(req,res)=>{
             sum:sum,
             moneySpent:moneySpent,
             totalAmountOfTreatments:totalAmountOfTreatments,
-            totalAmountOfSpent:totalAmountOfSpent
+            totalAmountOfSpent:totalAmountOfSpent,
+            styles:cssSheets
         })
     }catch(err){
         console.log(err)
@@ -83,6 +89,8 @@ router.get('/treatment', async(req,res)=>{
 router.get('/shopping', async(req,res)=>{
     var countAmountOfBoughtProducts =0;
     var countPriceOfBoughtProducts = 0;
+    const cssSheets =[]
+
     //let searchOptions = {}
     let searchOptions = CompanyShopping.find({user:req.user.id})
    // let companyDistinct=   CompanyShopping.find({user:req.user.id}).distinct("productName")
@@ -108,7 +116,8 @@ router.get('/shopping', async(req,res)=>{
             countPriceOfBoughtProducts:countPriceOfBoughtProducts,
             totalPrice:price,
             amount:amount,
-            searchOptions:req.query
+            searchOptions:req.query,
+            styles:cssSheets
         })
     }catch(err){
         console.log(err)
@@ -116,29 +125,7 @@ router.get('/shopping', async(req,res)=>{
     }
    
 })
-/*router.delete('/shopping/:id', async(req,res)=>{
-    try{
-        let shopping = await CompanyShopping.find({productName:req.params.id});
-        for(var i=0;i<shopping.length ; i++)
-            await shopping[i].remove()
-        res.redirect('/statistics/shopping')
-    }catch{
-        var countAmountOfBoughtProducts =0;
-        var countPriceOfBoughtProducts = 0;
-        let companyDistinctShopping =  await CompanyShopping.find({user:req.user.id}).distinct("productName");
-        let companyShopping = await CompanyShopping.find({user:req.user.id})
-        let price = totalShoppingPrice(companyShopping)
-        res.render('stats/shoppingStats',{
-            companyShopping:companyShopping,
-            companyDistinctShopping:companyDistinctShopping,
-            totalPrice:price,
-            countAmountOfBoughtProducts:countAmountOfBoughtProducts,
-            countPriceOfBoughtProducts:countPriceOfBoughtProducts,
-            type:'danger',
-            errorMessage:'Nie udało się usunąć'
-        })
-    }
-})*/
+
 router.delete('/shopping', async(req,res)=>{
    
     var shopping;
@@ -171,6 +158,8 @@ router.delete('/shopping', async(req,res)=>{
 })
 //Client Statistics
 router.get('/:id', ensureAuthenticated,async(req,res)=>{
+    const cssSheets =[]
+
     let clientVisitDate =  ClientVisits.find({client:req.params.id}).populate('treatment').populate('client')
     if(req.query.dateFrom != null &&  req.query.dateFrom !=''){
         clientVisitDate = clientVisitDate.gte('clientVisitDate', req.query.dateFrom)
@@ -190,7 +179,8 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
             clientVisits:clientVisit,
             treatments:treatment,
             totalPrice:totalPrcie,
-            searchOptions:req.query|| ''
+            searchOptions:req.query|| '',
+            styles:cssSheets
 
         })
     }catch(err){

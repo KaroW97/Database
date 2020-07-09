@@ -1,3 +1,4 @@
+// TODO: Add Delete Visit
 const express = require('express');
 const router = express.Router();
 const ShoppingList = require('../models/shoppingList')
@@ -9,6 +10,7 @@ const {ensureAuthenticated} = require('../config/auth')
 //Show Calendar Page
 router.get('/',ensureAuthenticated,async (req,res)=>{
     let cssSheets = [];
+    //'../../public/dataTimePicker.css'
     cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
    
     let todayDate = new Date();
@@ -31,7 +33,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
         const treatment = await Treatment.find({user:req.user.id});
         const clients =  await Client.find({user:req.user.id});
         const futureVisit = await FutureVisit.find({user:req.user.id}).populate('client').populate('treatment')
-        
+      
         if(req.user.isUser())
             res.render('calendar/index',{
                 //perchuseStandard:perchuseStandardC,
@@ -43,6 +45,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
                 clients:clients,
                 user:user,
                 styles:cssSheets,
+                
                 
             });
         else{
@@ -60,28 +63,19 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
 })
 //Create New Visit
 router.post('/visit', async(req,res)=>{
-    let futureVisit
-    if(req.body.clientName=='' ||req.body.clientLastName==''){
-        futureVisit  = new FutureVisit({
-            user:req.user.id,
-            client:req.body.clients,
-            visitDate :Date.parse(req.body.visitDate)|| new Date(req.body.visitDate),
-            timeFrom:req.body.timeFrom,
-            timeTo:req.body.timeTo,
-            treatment:req.body.treatment
-        });  
-    }else{
-        futureVisit  = new FutureVisit({
-            user:req.user.id,
-            clientName:req.body.clientName,
-            clientLastName:req.body.clientLastName ,
-            visitDate :Date.parse(req.body.visitDate)|| new Date(req.body.visitDate),
-            timeFrom:req.body.timeFrom,
-            timeTo:req.body.timeTo,
-            treatment:req.body.treatment
-        });  
-    }
-    
+    let futureVisit,date = new Date();
+    date.setDate(date.getDate() + 2)
+    const cssSheets =[];
+    cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
+    futureVisit  = new FutureVisit({
+        user:req.user.id,
+        client:req.body.clients,
+        visitDate :Date.parse(req.body.visitDate)|| new Date(req.body.visitDate),
+        timeFrom:req.body.timeFrom,
+        timeTo:req.body.timeTo,
+        treatment:req.body.treatment
+    });  
+
     try{
         await futureVisit.save();
         req.flash('created', 'Dodano wyzyte!');
@@ -107,7 +101,8 @@ router.post('/visit', async(req,res)=>{
             treatments:treatment,
             errorMessage:'Nie udało się utworzyć wizyty.',
             type:'danger',
-            searchOptions:''
+            searchOptions:'',
+            styles:cssSheets
         })
     }
 })

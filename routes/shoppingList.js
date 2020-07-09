@@ -10,12 +10,14 @@ const {ensureAuthenticated} = require('../config/auth')
 //Main Page Shopping List
 //TODO DODAC OBSLUGE BLEDOW
 router.get('/',ensureAuthenticated,async(req,res)=>{
+    const cssSheets =[]
     try{
         const shoppingList = await ShoppingList.find({user:req.user.id}).populate('listName').exec();
         const brandName = await BrandName.find({user:req.user.id})
         res.render('shoppingList/index',{
             shopping:shoppingList,
-            brandName:brandName
+            brandName:brandName,
+            styles:cssSheets
         });
     }catch{
         res.redirect('/clients');
@@ -56,12 +58,14 @@ router.post('/brand-name',async(req,res)=>{
 })
 //List View Router
 router.get('/list-view/:id',ensureAuthenticated,async(req,res)=>{
+    const cssSheets =[]
     try{
         const shoppingList = await ShoppingList.findById(req.params.id)
         .populate('listName')
         .exec();
         res.render('shoppingList/listView',{
-            list:shoppingList
+            list:shoppingList,
+            styles:cssSheets
         })
 
     }catch{
@@ -98,22 +102,22 @@ router.put('/list-view/:id',ensureAuthenticated,async(req,res)=>{
  
 
     }catch(err){
-        console.log(err)
+        const cssSheets =[]
         const shopping  = await ShoppingList.findById(req.params.id)
         const addedShoping = await ShoppingList.find({_id:shopping.id});
         req.flash('mess','Coś poszło nie tak.')
         req.flash('type','succesdangers')
         res.render('shoppingList/list-view',{
             list:shopping,
-            addedShoping:addedShoping
+            addedShoping:addedShoping,
+            styles:cssSheets
         })
     }
 })
 
 //Delete Shopping List Router
 router.delete('/',ensureAuthenticated,async(req,res)=>{
-    console.log(req.body.chackboxDelete)
-    var list
+        var list
     try{
         if(req.body.chackboxDelete!= null){
             if(Array.isArray(req.body.chackboxDelete)){
@@ -143,10 +147,13 @@ router.delete('/',ensureAuthenticated,async(req,res)=>{
 })
 //Edit List Router
 router.get('/list-view/:id/edit',ensureAuthenticated, async(req,res)=>{
+    const cssSheets =[]
+
     try{
         const list = await ShoppingList.findById(req.params.id).populate('listName').exec();
         res.render('shoppingList/edit',{
-            list:list
+            list:list,
+            styles:cssSheets
         })
     }catch{
         res.redirect(`/shopping-list/list-view/${list.id}`)

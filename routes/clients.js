@@ -13,6 +13,7 @@ const {ensureAuthenticated} = require('../config/auth')
 router.get('/', ensureAuthenticated,async(req,res)=>{
     let searchOptions ={};
     let searchClientLastName ={};
+    const cssSheets=[]
     if(req.query.name!= null && req.query.name !==''){
         searchOptions.name = new RegExp(req.query.name, 'i')
         searchClientLastName.lastName =  new RegExp(req.query.name, 'i')
@@ -27,7 +28,8 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
         res.render('clients/index',{
             clients:clientFind,
             treatments:treatments, //to raczej zbedne
-            searchOptions:req.query
+            searchOptions:req.query,
+            styles:cssSheets
         });
     }catch(err){
         console.log(err)
@@ -38,8 +40,9 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
 
 //New Client Route Displaing form
 router.get('/new',ensureAuthenticated,async (req,res)=>{
+    const cssSheets=[];
    try{
-    res.render('clients/new',{ clients: new Client(),})
+    res.render('clients/new',{ clients: new Client(), styles:cssSheets})
    }catch{
        res.redirect('/clients')
    }
@@ -140,19 +143,20 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         
        
     }catch(err){
-        console.log(err)
+        const cssSheets=[]
         req.flash('mess','Nie udało się dodać klienta do bazy.');
         req.flash('type','danger')
         res.render('clients/new',{
           
             clients:clients,
+            styles:cssSheets
         });
     }
 })
 
 //Show Client
 router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
-
+    const cssSheets=[];
     try{
         const visit = new ClientVisits()
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product').exec()
@@ -166,6 +170,7 @@ router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
             newVisit:visit,
             curentClient:req.params.id,
             clientInfo:clientt,
+            styles:cssSheets
         })
     }catch{
         res.redirect('/clients')
@@ -193,6 +198,8 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
         req.flash('type','success')
         res.redirect( `/clients/client-view/${req.params.id}`)
     }catch(err){
+        const cssSheets=[];
+
         const treatments = await Treatment.find({user:req.user.id});
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product')
         const clientt  = await Client.findById(req.params.id);
@@ -204,6 +211,7 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
             treatments:treatments,
             curentClient:req.params.id,
             clientInfo:clientt,
+            styles:cssSheets
         })
     }
 })
@@ -242,7 +250,7 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
 })
 //edit Visit/Post
 router.get('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
-    
+    const cssSheets =[]
     try{
         const addedVisit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').populate( 'product').exec()
 
@@ -251,6 +259,7 @@ router.get('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
             treatments:treatments,
             curentVisit:req.params.id,
             newVisit:addedVisit,
+            styles:cssSheets
         })
       
     }catch(err){
@@ -276,6 +285,8 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
          return res.redirect(`/clients/client-view/${visit.client.id}`)
     }catch(err){
         console.log(err)
+        const cssSheets =[]
+
         const addedVisit = await ClientVisits.findById(req.params.id)
         const treatments = await Treatment.find({});
         res.render('clients/editPost',{
@@ -283,6 +294,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
             curentVisit:req.params.id,
             clientId:addedVisit.client,
             newVisit:addedVisit,
+            styles:cssSheets
         })
     }
    
@@ -290,10 +302,13 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
 
 //edit
 router.get('/client-view/:id/edit',ensureAuthenticated, async(req,res)=>{
+    const cssSheets =[]
+
     try{
         const clietnEdit = await Client.findById(req.params.id)
         res.render('clients/edit',{
-            clients:clietnEdit
+            clients:clietnEdit,
+            styles:cssSheets
         })
     }catch{
         res.redirect(`/clients/${clietnEdit.id}`)
@@ -386,10 +401,13 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
         if(clients == null){
             res.redirect('/')
         }else{
+            const cssSheets =[]
+
             req.flash('mess','Nie udało się edytować klienta.');
             req.flash('type','danger')
             res.render('clients/edit',{
-                clients:clients
+                clients:clients,
+                styles:cssSheets
             });
         }
        
