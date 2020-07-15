@@ -21,7 +21,6 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
     try{
        
         const user = await User.findById(req.user.id);
-        const perchuse = await shopping.exec()
         const shoppingAll = await ShoppingList.find({user:req.user.id}).populate('listName')
         const treatment = await Treatment.find({user:req.user.id});
         const clients =  await Client.find({user:req.user.id});
@@ -30,7 +29,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
       // const futureVisit = await shopping.exec();
         if(req.user.isUser())
             res.render('calendar/index',{
-                list:perchuse,
+                
                 shoppingAll:shoppingAll,
                 searchOptions:req.query,
                 newVisit:futureVisit,
