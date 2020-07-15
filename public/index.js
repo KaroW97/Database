@@ -1,5 +1,5 @@
 
-/*function showFormm(){
+function showFormm(){
     let comapnyForm = document.getElementById('comapnyForm');
     let visitForm = document.getElementById('visitForm');
     let input = document.getElementById('input')
@@ -21,7 +21,7 @@
        // editForm.style.display = 'none'
 
     }
-}*/
+}
 //Edit form
 function showEditForm( productName=null, productPrice=null, productCapacity=null, action,date=null){
    document.getElementById('editForm').action = action;

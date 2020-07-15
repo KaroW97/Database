@@ -19,9 +19,8 @@
         </div>
     </div>
 </div>
-<div class="create-visit-form" id="visitForm">
+<div class="create-visit-form toggleListHide " id="visitForm">
     <form method="POST" action="/calendar/visit" class="center-form">
-      
         <div  id ="comapnyForm" class="form">
             <!--onclick="closeForm()"-->
             <span id ="close"class="close" >&times;</span>
@@ -89,33 +88,26 @@
     <br>
 <%}); %> 
 
-<form method="POST" class="formEdit" action="" >
-    <div style="display: none;width: 400px;" class ="openForm"  >
-        <span class="close closeEdit" onclick="closeForm()">&times;</span>
-        <%-include('./newVisit-editVisit.ejs')%>
-        <input placeholder="Od"  class="visitDate"  id="datapickerAddEdit" name="visitDateEdit"   autocomplete="off"   />
+<div class="toggleListHide">
+    <form method="POST" class="formEdit " action="" >
+        <div style="display: none;width: 400px;" class ="openForm "  >
+            <span class="close closeEdit" onclick="closeForm()">&times;</span>
+            <%-include('./newVisit-editVisit.ejs')%>
+            <input placeholder="Od"  class="visitDate"  id="datapickerAddEdit" name="visitDateEdit"   autocomplete="off"   />
+    
+            <input id="timepickerFromEdit" class="timeFrom"onclick="$timepickerFromEdit.open()" name="timeFromEdit"  width="276" placeholder="Czas rozpoczęcia"  autocomplete="off" /><br>
+            <input id="timepickerToEdit"class="timeTo" onclick="$timepickerToEdit.open()"name="timeToEdit" width="276" placeholder="Czas zakończenia" autocomplete="off" />
+            <button class="button"type="submit">Edituj</button>
+            <%-include('./toogleList.ejs')%>
+        </div>
+    </form>
+</div>
 
-        <input id="timepickerFromEdit" class="timeFrom"onclick="$timepickerFromEdit.open()" name="timeFromEdit"  width="276" placeholder="Czas rozpoczęcia"  autocomplete="off" /><br>
-        <input id="timepickerToEdit"class="timeTo" onclick="$timepickerToEdit.open()"name="timeToEdit" width="276" placeholder="Czas zakończenia" autocomplete="off" />
-        <button class="button"type="submit">Edituj</button>
-        <%-include('./toogleList.ejs')%>
-    </div>
-</form>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="../../public/dataTimePicker.js"></script>
 <script>
  $(document).ready(function(){
-     $('.list li').filter(function(){
-        let value = $(".myInput").val().toLowerCase()
-        console.log(value)
-        let valueTreatement = $(".myInputTreatment").val().toLowerCase()
-        if( $(".myInputTreatment").val()=='' ||$(this).text().toLowerCase().indexOf(valueTreatement) == -1) 
-            $('.listTreatment li').hide()
-        
-        if( $(".myInput").val()==''|$(this).text().toLowerCase().indexOf(value) >= -1)  
-            $('.list li').hide()
-    })
     $(".visit-edit").click(function(){
       $('.button').click(function(){
         $('.formEdit').attr('action',`/calendar/edit/${$('.visit-edit').attr('visitId')}?_method=PUT` )
@@ -156,22 +148,20 @@
         })
     })
     $(".myInputTreatment").on('keyup', function(){
+        $('.treatments-list').show()
         let value = $(this).val().toLowerCase()
-        if (value.length == 0) 
-            $('.listTreatment').hide();
-        else
-            $('.listTreatment').show();
+        if (value.length == 0 ||$('.treatments-list li').text().toLowerCase().indexOf(value) == -1) {
+            $('.treatments-list').hide();
+        }
             $(".hiddenInputTreatment").attr('name','newTreatment')
             $(".treatmentState").val('newTreatment')
             $(".hiddenInputTreatment").val( $('.myInputTreatment').val());
 
         $('.listTreatment li').filter(function(){
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        
             $(this).click(function(){
                 $('.myInputTreatment').val($(this).text())
                 $(".treatmentState").val('treatment')
-
                 $(".hiddenInputTreatment").attr('name','treatment')
                 $(".hiddenInputTreatment").val( $('.myInputTreatment').val());
                 $(".hiddenInputTreatment").val( $(this).attr('value'));
@@ -181,26 +171,20 @@
         })
     
     })
+    
     $(".myInput").on('keyup', function(){
         $('.clients-list').show()
-       
-        let size =($(".clients-list .list  li").length)/2;
-        console.log(size)
-        if(size > '3'){
-            
-           
-        }
-        let value = $(this).val().toLowerCase()
-        if (value.length == 0) 
+    let value = $(this).val().toLowerCase()
+        if (value.length == 0 || $('.list-client li').text().toLowerCase().indexOf(value) == -1) 
             $('.clients-list').hide()
-            
-            $(".clientState").val('newClient')
-            $(".hiddenInput").attr('name','newClient')
-            $(".hiddenInput").val( $('.myInput').val());
-     
-        $('.list li').filter(function(){
-            $(`.clients-list .list ul`).css('overflow','hidden')
+
+        $(".clientState").val('newClient')
+        $(".hiddenInput").attr('name','newClient')
+        $(".hiddenInput").val( $('.myInput').val());
+         
+        $('.list-client li').filter(function(){
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        
             $(this).click(function(){
                 $('.phone').val($(this).attr('phone'))
                 $('.myInput').val($(this).text())
@@ -217,31 +201,35 @@
         $('#visitForm').show();
     })
     $('#close').click(function(){
+        $('.openForm').closest('form').find("input").val('')
+        $('#comapnyForm').closest('form').find("input").val('')
         $('#visitForm').hide();
+    })
+
+    $(window).click(function(event){
+        var target = $( event.target );
+        if(target.is('.create-visit-form') || target.is('.center-form')){
+            $('.create-visit-form').hide();
+        }
+        if(!target.is('.myInput'))
+            $('.clients-list').hide()
+        else{
+            let value = $('.myInput').val().toLowerCase()
+            if($('.clients-list li').text().toLowerCase().indexOf(value) != -1)
+                $('.clients-list').show()     
+        }
+          
+        if(!target.is('.myInputTreatment'))
+            $('.treatments-list').hide()
+        else{
+            let value = $('.myInputTreatment').val().toLowerCase()
+            if($('.treatments-list li').text().toLowerCase().indexOf(value) != -1 || value.length == 0)
+                $('.treatments-list').show()      
+        }
+          
+     
+        
     })
   })
 
-  /*function showFormm(){
-    let comapnyForm = document.getElementById('comapnyForm');
-    let visitForm = document.getElementById('visitForm');
-    let input = document.getElementById('input')
-    if(comapnyForm){
-        comapnyForm.style.display = 'block';
-        visitForm.style.display = 'block'
-       // editForm.style.display = 'block'
-        console.log('jestem')
-        if(input)
-            input.focus(); 
-    }
-}
- function closeForm (){
-    let comapnyForm = document.getElementById('comapnyForm') ;
-    let visitForm = document.getElementById('visitForm');
-    if(comapnyForm){
-        comapnyForm.style.display = 'none'
-        visitForm.style.display = 'none'
-       // editForm.style.display = 'none'
-
-    }
-}*/
 </script>

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-//const ttl  =require('mongoose-ttl');
-//const ms = require('ms');
+const ttl  =require('mongoose-ttl');
+const ms = require('ms');
 
 const futureVisit = mongoose.Schema({
     user:{
@@ -55,8 +55,8 @@ const futureVisit = mongoose.Schema({
 })
 
 
-//futureVisit.plugin(ttl,{ttl:ms('90 days')})
+futureVisit.plugin(ttl,{ttl:ms('2 days')})
 const FutureVisit = mongoose.model('FutureVisit',futureVisit)
-//FutureVisit.startTTLReaper()
+FutureVisit.startTTLReaper()
 
 module.exports = FutureVisit
