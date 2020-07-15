@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const ttl  =require('mongoose-ttl');
-const ms = require('ms');
+//const ttl  =require('mongoose-ttl');
+//const ms = require('ms');
 
 const futureVisit = mongoose.Schema({
     user:{
@@ -14,21 +14,17 @@ const futureVisit = mongoose.Schema({
         ref:'Client',
     },
     //If Not
-    clientName:{
-        type:String,
-        require:false
-    },
-    clientLastName:{
+    newClient:{
         type:String,
         require:false
     },
     visitDate:{
         type:Date,
-        require:true
+        require:false
     },
     timeFrom:{
         type:String,
-        require:true,
+        require:false,
     },
     timeTo:{
         type:String,
@@ -39,13 +35,28 @@ const futureVisit = mongoose.Schema({
         required:false,
         ref:'Treatment' //do czego sie odnosi
     },
-   
-})
-//,{timestamps: true}
-//futureVisit.index({createdAt: 1},{expireAfterSeconds: 30})
-futureVisit.plugin(ttl,{ttl:ms('120 days')})
-const FutureVisit = mongoose.model('FutureVisit',futureVisit)
+    newTreatment:{
+        type:String,
+        require:false
+    },
+    phoneNumber:{
+        type:Number,
+        required:true
+    },
+    clientState:{
+        type:String,
+        required:false
+    },
+    treatmentState:{
+        type:String,
+        required:false
+    }
 
-FutureVisit.startTTLReaper()
+})
+
+
+//futureVisit.plugin(ttl,{ttl:ms('90 days')})
+const FutureVisit = mongoose.model('FutureVisit',futureVisit)
+//FutureVisit.startTTLReaper()
 
 module.exports = FutureVisit

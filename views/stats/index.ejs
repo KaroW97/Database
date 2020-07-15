@@ -17,7 +17,7 @@
     </thead>
     <tbody>
     <% clients.forEach(client => {%> 
-        <% if(client.user == user ){ %> 
+        <% if(client.user == user.id ){ %> 
             <tr onclick="window.location='/statistics/<%=client.id%>'" >
                 <% sum=0 %> 
                 <%addedVisist.forEach(element => { %> 

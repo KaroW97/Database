@@ -1,0 +1,20 @@
+<div class="clients-list">
+    <input   class="hiddenInput" type="text" style="display: none;">
+    <ul class="list"  >
+        <% clients.forEach(client => { %>
+            <li value="<%=client.id%>" phone="<%=client.phoneNumber%>" ><%=client.name%> <%=client.lastName%></li>
+        <%}); %>
+    </ul>
+</div>
+
+
+
+<input  class="hiddenInputTreatment" type="text" style="display: none;" >
+<ul class="listTreatment"  >
+    <% treatments.forEach(treatment => { %>
+        <li value="<%=treatment._id%>"><%=treatment.treatmentName%></li>
+    <%}); %>
+</ul>
+
+<input type="text" class="clientState"name="clientState" style="display: none;">
+<input  type="text" class="treatmentState"name="treatmentState" style="display: none;">

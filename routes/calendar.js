@@ -6,105 +6,132 @@ const Treatment = require('../models/treatment');
 const FutureVisit = require('../models/clientFutureVisit')
 const Client = require('../models/clients')
 const User = require('../models/user')
+const ObjectId = require('mongodb').ObjectId;
 const {ensureAuthenticated} = require('../config/auth')
 //Show Calendar Page
 router.get('/',ensureAuthenticated,async (req,res)=>{
     let cssSheets = [];
-    //'../../public/dataTimePicker.css'
     cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
-   
-    let todayDate = new Date();
-    let shopping =  ShoppingList.find({user:req.user.id}).populate('listName')
-    let shoppingTwoDays =  ShoppingList.find({user:req.user.id}).populate('listName')
-    if(req.query.dateTime != null &&  req.query.dateTime !='')
-        shopping = shopping.gte('transactionDate', req.query.dateTime)
-    else
-        shopping = shopping.gte('transactionDate',todayDate.toISOString().split('T')[0])
-
-    //For Two Days From Now //Todays Date Or Only Shopping To Figure Out
-    shoppingTwoDays = shoppingTwoDays.gte('transactionDate',todayDate.toISOString().split('T')[0])
-   // todayDate.setDate(todayDate.getDate() + 2)
-    //Two Days From Now Date
-    //shoppingTwoDays = shoppingTwoDays.lte('transactionDate',todayDate.toISOString().split('T')[0])
+    let shopping = FutureVisit.find({user:req.user.id}).populate('client').populate('treatment')
+    if(req.query.visitAfter != null &&  req.query.visitAfter !=''){
+        shopping = shopping.gte('visitDate', req.query.visitAfter)  
+    }
+    if(req.query.visitBefore != null &&  req.query.visitBefore !='')
+        shopping = shopping.lte('visitDate', req.query.visitBefore)
     try{
+       
         const user = await User.findById(req.user.id);
         const perchuse = await shopping.exec()
-        const shoppingTwoDaysFromNow = await shoppingTwoDays.exec();
+        const shoppingAll = await ShoppingList.find({user:req.user.id}).populate('listName')
         const treatment = await Treatment.find({user:req.user.id});
         const clients =  await Client.find({user:req.user.id});
-        const futureVisit = await FutureVisit.find({user:req.user.id}).populate('client').populate('treatment')
-      
+     
+        const futureVisit = await shopping.sort({visitDate:'asc'}).exec();
+      // const futureVisit = await shopping.exec();
         if(req.user.isUser())
             res.render('calendar/index',{
-                //perchuseStandard:perchuseStandardC,
                 list:perchuse,
-                shoppingTwoDaysFromNow:shoppingTwoDaysFromNow,
-                searchOptions:req.query || '',
+                shoppingAll:shoppingAll,
+                searchOptions:req.query,
                 newVisit:futureVisit,
                 treatments:treatment,
                 clients:clients,
                 user:user,
                 styles:cssSheets,
-                
-                
             });
         else{
             req.logOut();
             res.sendStatus(403)
-         
         }
         
-       
     }catch(err){
         console.log(err)
         res.redirect('/login')
     }
     
 })
-//Create New Visit
-router.post('/visit', async(req,res)=>{
-    let futureVisit,date = new Date();
-    date.setDate(date.getDate() + 2)
-    const cssSheets =[];
-    cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
-    futureVisit  = new FutureVisit({
-        user:req.user.id,
-        client:req.body.clients,
-        visitDate :Date.parse(req.body.visitDate)|| new Date(req.body.visitDate),
-        timeFrom:req.body.timeFrom,
-        timeTo:req.body.timeTo,
-        treatment:req.body.treatment
-    });  
-
-    try{
-        await futureVisit.save();
-        req.flash('created', 'Dodano wyzyte!');
-        req.flash('success', 'success')
+//Delete Visito
+router.delete('/:id',ensureAuthenticated, async (req,res)=>{
+    try {
+        let futureVisit= await FutureVisit.findById(req.params.id);
+        await futureVisit.remove();
+        req.flash('mess','Wizyta została usunięta');
+        req.flash('type','success');
         res.redirect('/calendar')
     }catch(err){
         console.log(err)
-        let shoppingTwoDays, todayDate = new Date();
-        let shopping =  await ShoppingList.find({user:req.user.id}).populate('listName')
-       
-        shoppingTwoDays = ShoppingList.find({user:req.user.id}).populate('listName').gte('transactionDate',todayDate.toISOString().split('T')[0])
-        todayDate.setDate(todayDate.getDate() + 2)
-        //Two Days From Now Date
-        shoppingTwoDays = ShoppingList.find({user:req.user.id}).populate('listName').lte('transactionDate',todayDate.toISOString().split('T')[0])
-        const shoppingTwoDaysFromNow = await shoppingTwoDays.exec();
-        const clients =  await Client.find({user:req.user.id});
-        const treatment = await Treatment.find({user:req.user.id});
-        res.render('calendar/index',{
-            list:shopping,
-            shoppingTwoDaysFromNow:shoppingTwoDaysFromNow,
-            clients:clients,
-            newVisit:futureVisit,
-            treatments:treatment,
-            errorMessage:'Nie udało się utworzyć wizyty.',
-            type:'danger',
-            searchOptions:'',
-            styles:cssSheets
-        })
+        req.flash('err','Wizyta została usunięta');
+        res.redirect('/calendar')
     }
 })
+//Create New Visit
+router.post('/visit',ensureAuthenticated, async(req,res)=>{
+    const cssSheets =[];
+    cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
+    let futureVisit  = new FutureVisit({
+        user:req.user.id,
+        client:req.body.clients,
+        newClient:req.body.newClient,
+        visitDate :req.body.visitDate,
+        timeFrom:req.body.timeFrom,
+        timeTo:req.body.timeTo,
+        treatment:req.body.treatment ,
+        newTreatment:req.body.newTreatment,
+        phoneNumber:req.body.phone,
+        clientState:req.body.clientState,
+        treatmentState:req.body.treatmentState
+    });
+   
+    try{
+        await futureVisit.save();
+       
+        req.flash('mess', 'Dodano wyzyte!');
+        req.flash('type', 'success')
+        res.redirect('/calendar')
+    }catch(err){
+        console.log(err)
+        res.redirect('/clients')
+    }
+})
+
+router.put('/edit/:id', async(req,res)=>{
+    let futureVisit;
+      try{
+        futureVisit = await FutureVisit.findById(req.params.id).populate( 'treatment').populate('client').exec()
+
+        if(req.body.clientState == 'newClient'){
+            futureVisit.newClient = req.body.newClient
+            futureVisit.client=null;
+            
+        }else if(req.body.clientState == 'clients'){
+            futureVisit.client = req.body.clients
+            futureVisit.newClient=null;
+          
+        }
+        if(req.body.treatmentState=='newTreatment'){
+            futureVisit.newTreatment = req.body.newTreatment
+            futureVisit.treatment=null;
+           
+        }else{
+            futureVisit.treatment = req.body.treatment
+            futureVisit.newTreatment=null;
+        }
+        futureVisit.clientState = req.body.clientState
+        futureVisit.treatmentState = req.body.treatmentState
+        futureVisit.visitDate =new Date(req.body.visitDateEdit)
+        futureVisit.timeFrom = req.body.timeFromEdit
+        futureVisit.timeTo = req.body.timeToEdit
+        futureVisit.phoneNumber = req.body.phone
+
+        await futureVisit.save();
+        req.flash('mess', 'Edytowano wizyte!');
+        req.flash('type', 'success')
+        res.redirect('/calendar')
+    }catch(err){
+        console.log(err)
+        res.redirect('/calendar')
+    }
+})
+
 
 module.exports =router;

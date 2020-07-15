@@ -28,13 +28,15 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
         let clientt =await clients.find({user:req.user.id}).exec();
         if(clientt =='')
             clientt =await clientLastName.find({user:req.user.id}).exec();
+      
         const clientVisits = await cliantStats.exec();
+    
         res.render('stats/index',{
             user:req.user,
             clients:clientt,
             sum:sum,
             addedVisist:clientVisits ,
-            searchOptions:req.query,
+            searchOptions:req.query ,
             styles:cssSheets
             
         })
@@ -63,10 +65,8 @@ router.get('/treatment', async(req,res)=>{
         const treatment =  Treatment.find(searchTreatment)//.find({user:req.user.id});
         let treatments = await treatment.find({user:req.user.id}).exec();
         const clientVisits = await cliantStats.find({user:req.user.id}).exec()
-        if(clientVisits.treatment != null){
-            var totalAmountOfTreatments =  calculateAmountOfTreatments(treatments,clientVisits )
-            var totalAmountOfSpent = calculateTotalAmountSpent(clientVisits);
-        }
+        var totalAmountOfTreatments =  calculateAmountOfTreatments(treatments,clientVisits )
+        var totalAmountOfSpent = calculateTotalAmountSpent(clientVisits);
         res.render('stats/treatmentStats',{
             treatmentExists: false,
             treatments:treatments,
@@ -207,16 +207,24 @@ function totalShoppingAmount(companyShopping){
 ///////////////
 function calculateAmountOfTreatments(treatments,clientVisits ){
     var countAmount = 0;
-    for(var i = 0 ; i< treatments.length ; i++  )
-        for(var j = 0; j < clientVisits.length ; j++)
+    for(var i = 0 ; i< treatments.length ; i++  ){
+        for(var j = 0; j < clientVisits.length ; j++){
+            if(clientVisits[j].treatment != null)
             if(treatments[i].id == clientVisits[j].treatment._id)
                 countAmount++;
+        }
+    }
+       
+     
     return countAmount;
 }
 function calculateTotalAmountSpent(clientVisits){
     let price= 0;
-    for(var j = 0; j < clientVisits.length ; j++)
-        price+= clientVisits[j].treatment.treatmentPrice;
+    for(var j = 0; j < clientVisits.length ; j++){
+        if(clientVisits[j].treatment)
+            price+= clientVisits[j].treatment.treatmentPrice;
+
+    }
     return price;
 }
 function calculateTotalPrice(clientVisits){

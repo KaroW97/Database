@@ -1,19 +1,27 @@
 
-function showFormm(){
+/*function showFormm(){
     let comapnyForm = document.getElementById('comapnyForm');
+    let visitForm = document.getElementById('visitForm');
     let input = document.getElementById('input')
     if(comapnyForm){
-        comapnyForm.style.display = 'block'
+        comapnyForm.style.display = 'block';
+        visitForm.style.display = 'block'
+       // editForm.style.display = 'block'
+
         if(input)
             input.focus(); 
     }
 }
  function closeForm (){
-    let comapnyForm = document.getElementById('comapnyForm');
+    let comapnyForm = document.getElementById('comapnyForm') ;
+    let visitForm = document.getElementById('visitForm');
     if(comapnyForm){
         comapnyForm.style.display = 'none'
+        visitForm.style.display = 'none'
+       // editForm.style.display = 'none'
+
     }
-}
+}*/
 //Edit form
 function showEditForm( productName=null, productPrice=null, productCapacity=null, action,date=null){
    document.getElementById('editForm').action = action;
@@ -40,47 +48,9 @@ function checkIfNull(){
         myForm.style.display="block"    
 }
 
-$( document ).ready(function() {
-    $(".alert" ).fadeOut(3000); 
-});
+
 $(document).ready(function(){
-    if( $("#myInputTreatment").val()=='')  $('#listTreatment li').hide()
-    if( $("#myInput").val()=='')  $('#list li').hide()
+    $(".alert" ).fadeOut(3000); 
 
-    $("#myInput").on('keyup', function(){
-        let value = $(this).val().toLowerCase()
-        if (value.length == 0) 
-            $('#list').hide();
-        else
-            $('#list').show();
-        $('#list li').filter(function(){
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-             
-            $(this).click(function(){
-                $('#myInput').val($(this).text())
-                $("#hiddenInput").val( $(this).attr('value'));
-            })
-        })
-    })
-    $("#myInputTreatment").on('keyup', function(){
-      
-        console.log($(this).val())
-        let value = $(this).val().toLowerCase()
-        if(value=='') $('#listTreatment li').css('display','none')
-        if (value.length == 0) 
-            $('#listTreatment').hide();
-        else
-            $('#listTreatment').show();
-        
-
-        $('#listTreatment li').filter(function(){
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-             
-            $(this).click(function(){
-                $('#myInputTreatment').val($(this).text())
-                $("#hiddenInputTreatment").val( $(this).attr('value'));
-            })
-        })
-    })
-    
+  
 })

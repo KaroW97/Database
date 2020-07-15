@@ -1,9 +1,0 @@
-<select name="treatment">
-    <% treatments.forEach(treatment => { %>
-        <% if(treatment.id === newVisit.treatment ){ %>
-            <option selected label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=newVisit.treatment.treatmentName%></option>
-        <% }else{ %>
-            <option  label="<%=treatment.treatmentName%>" value="<%=treatment.id%>"><%=treatment.treatmentName%></option>
-        <% } %>
-    <%}); %>
-</select>
