@@ -5,15 +5,16 @@ const Treatment = require('../models/treatment')
 const ClientVisits = require('../models/clientsVisits')
 const ObjectId = require('mongodb').ObjectId;
 const User = require('../models/user')
-
+const ShoppingList = require('../models/shoppingList')
 const {ensureAuthenticated} = require('../config/auth')
 ///
 
 //All Clients Route
 router.get('/', ensureAuthenticated,async(req,res)=>{
-    let searchOptions ={};
-    let searchClientLastName ={};
+    let searchOptions ={},searchClientLastName ={}, todayDate = new Date(),weekDate=new Date();
+    let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
     const cssSheets=[]
+    cssSheets.push('../../public/css/user/clients/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     if(req.query.name!= null && req.query.name !==''){
         searchOptions.name = new RegExp(req.query.name, 'i')
         searchClientLastName.lastName =  new RegExp(req.query.name, 'i')
@@ -25,11 +26,19 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
         let clientFind =await clients.find({user:req.user.id}).exec();
         if(clientFind =='')
             clientFind = await clientLastName.find({user:req.user.id}).exec(); 
+        todayDate.setDate(todayDate.getDate() - 1)
+        weekDate.setDate(todayDate.getDate() + 8)
+        const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
+            $gt:todayDate,
+            $lt:weekDate
+        }}).populate('listName').sort({transactionDate:'asc'})
         res.render('clients/index',{
+            shoppingAll:shoppingList,
             clients:clientFind,
             treatments:treatments, //to raczej zbedne
             searchOptions:req.query,
-            styles:cssSheets
+            styles:cssSheets,
+            weekdays:weekdays
         });
     }catch(err){
         console.log(err)
@@ -414,33 +423,19 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
     }
 })
 //Delete Client
-router.delete('/', ensureAuthenticated,async(req,res)=>{
+router.delete('/:id', ensureAuthenticated,async(req,res)=>{
     try{
-        if(req.body.chackboxDelet!= null ){
-            if(Array.isArray(req.body.chackboxDelet)){
-              for(var i = 0; i < (req.body.chackboxDelet).length; i++){
-                client =  await Client.findById(ObjectId(req.body.chackboxDelet[i]));
-                await client.remove(); 
-              } 
-              req.flash('mess','Udało się usunąć klientów')
-              req.flash('type','success') 
-             
-            }else{
-                client =  await Client.findById(ObjectId(req.body.chackboxDelet));
-                await client.remove();  
-                req.flash('mess','Udało się usunąć klienta')
-                req.flash('type','success') 
-            }
-          }else{
-            req.flash('mess','Nie wybrano klientów do usunięcia')
-            req.flash('type','info') 
-          }
-          res.redirect('/clients') 
+        let client =  await Client.findById(req.params.id);
+        await client.remove();
+        req.flash('mess','Udało się usunąć klienta')
+        req.flash('type','success') 
+        res.redirect('/clients') 
+
     }catch(err){
         console.log(err);
         req.flash('mess','Nie udało się usunąć klienta')
         req.flash('type','danger') 
-        res.redirect('/calendar')       
+        res.redirect('/clients')       
     }
   
 })

@@ -1,12 +1,3 @@
-<div class="clients-list">
-    <input   class="hiddenInput" type="text" style="display: none;">
-    <ul class="list-client list"  >
-        <% clients.forEach(client => { %>
-            <li value="<%=client.id%>" phone="<%=client.phoneNumber%>" ><%=client.name%> <%=client.lastName%></li>
-        <%}); %>
-    </ul>
-</div>
-
 
 <div class="treatments-list">
     <input  class="hiddenInputTreatment" type="text" style="display: none;" >
@@ -19,4 +10,3 @@
     <input type="text" class="clientState"name="clientState" style="display: none;">
     <input  type="text" class="treatmentState"name="treatmentState" style="display: none;">
 </div>
-

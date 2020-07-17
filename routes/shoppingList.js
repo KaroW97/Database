@@ -135,10 +135,11 @@ router.delete('/',ensureAuthenticated,async(req,res)=>{
             }
         
         }else{
+            console.log('jestem')
             req.flash('mess','Nie podano zabiegu do usunącia')
             req.flash('type','info')
         }
-        res.redirect('/shoppingList');
+        res.redirect('/shopping-list');
     }catch{
         req.flash('mess','Nie udało się usunąć rekordu.')
         req.flash('type','danger')

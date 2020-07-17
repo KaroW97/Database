@@ -11,32 +11,47 @@ const {ensureAuthenticated} = require('../config/auth')
 //Show Calendar Page
 router.get('/',ensureAuthenticated,async (req,res)=>{
     let cssSheets = [];
+    let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
     cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
-    let shopping = FutureVisit.find({user:req.user.id}).populate('client').populate('treatment')
-    if(req.query.visitAfter != null &&  req.query.visitAfter !=''){
-        shopping = shopping.gte('visitDate', req.query.visitAfter)  
-    }
+    let visit = FutureVisit.find({user:req.user.id}).populate('client').populate('treatment')
+    let todayDate = new Date(),weekDate=new Date();
+   
+    //let shoppingForWeek =  ShoppingList.find({user:req.user.id}).populate('listName')
+    if(req.query.visitAfter != null &&  req.query.visitAfter !='')
+        visit = visit.gte('visitDate', req.query.visitAfter)  
+    else
+        visit = visit.find({visitDate:{ $gt:todayDate}}).sort({visitDate:'asc',timeFrom:'asc'})
     if(req.query.visitBefore != null &&  req.query.visitBefore !='')
-        shopping = shopping.lte('visitDate', req.query.visitBefore)
+        visit = visit.lte('visitDate', req.query.visitBefore)
+  
+  
+    
     try{
-       
         const user = await User.findById(req.user.id);
-        const shoppingAll = await ShoppingList.find({user:req.user.id}).populate('listName')
+        todayDate.setDate(todayDate.getDate() - 1)
+        weekDate.setDate(todayDate.getDate() + 8)
+        const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
+            $gt:todayDate,
+            $lt:weekDate
+        }}).populate('listName').sort({transactionDate:'asc'})
+        
         const treatment = await Treatment.find({user:req.user.id});
         const clients =  await Client.find({user:req.user.id});
-     
-        const futureVisit = await shopping.sort({visitDate:'asc'}).exec();
-      // const futureVisit = await shopping.exec();
+ 
+        const futureVisit = await visit.sort({visitDate:'asc'}).exec();
+      
+        
         if(req.user.isUser())
             res.render('calendar/index',{
                 
-                shoppingAll:shoppingAll,
+                shoppingAll:shoppingList,
                 searchOptions:req.query,
                 newVisit:futureVisit,
                 treatments:treatment,
                 clients:clients,
                 user:user,
                 styles:cssSheets,
+                weekdays:weekdays
             });
         else{
             req.logOut();
@@ -95,9 +110,11 @@ router.post('/visit',ensureAuthenticated, async(req,res)=>{
 
 router.put('/edit/:id', async(req,res)=>{
     let futureVisit;
+  
       try{
-        futureVisit = await FutureVisit.findById(req.params.id).populate( 'treatment').populate('client').exec()
-
+        futureVisit = await FutureVisit.findById(Object(req.params.id)).populate( 'treatment').populate('client').exec()
+        console.log(req.params.id)
+   
         if(req.body.clientState == 'newClient'){
             futureVisit.newClient = req.body.newClient
             futureVisit.client=null;
@@ -121,8 +138,9 @@ router.put('/edit/:id', async(req,res)=>{
         futureVisit.timeFrom = req.body.timeFromEdit
         futureVisit.timeTo = req.body.timeToEdit
         futureVisit.phoneNumber = req.body.phone
-
+    
         await futureVisit.save();
+        console.log(futureVisit)
         req.flash('mess', 'Edytowano wizyte!');
         req.flash('type', 'success')
         res.redirect('/calendar')
