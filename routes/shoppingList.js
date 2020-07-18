@@ -9,12 +9,23 @@ const {ensureAuthenticated} = require('../config/auth')
 
 //Main Page Shopping List
 //TODO DODAC OBSLUGE BLEDOW
+//TODO: Change Way Of Creating Company Name 
 router.get('/',ensureAuthenticated,async(req,res)=>{
-    const cssSheets =[]
+    const cssSheets=[]
+    let todayDate = new Date(),weekDate=new Date();
+    cssSheets.push('../../public/css/user/shopping_list/index.css');
     try{
         const shoppingList = await ShoppingList.find({user:req.user.id}).populate('listName').exec();
         const brandName = await BrandName.find({user:req.user.id})
+      
+        todayDate.setDate(todayDate.getDate() - 1)
+        weekDate.setDate(todayDate.getDate() + 8)
+        const shoppingListShort = await ShoppingList.find({user:req.user.id, transactionDate:{
+            $gt:todayDate,
+            $lt:weekDate
+        }}).populate('listName').sort({transactionDate:'asc'})
         res.render('shoppingList/index',{
+            shoppingAll:shoppingListShort,
             shopping:shoppingList,
             brandName:brandName,
             styles:cssSheets
@@ -116,29 +127,15 @@ router.put('/list-view/:id',ensureAuthenticated,async(req,res)=>{
 })
 
 //Delete Shopping List Router
-router.delete('/',ensureAuthenticated,async(req,res)=>{
+router.delete('/:id',ensureAuthenticated,async(req,res)=>{
         var list
     try{
-        if(req.body.chackboxDelete!= null){
-            if(Array.isArray(req.body.chackboxDelete)){
-                for(var i=0;i<req.body.chackboxDelete.length; i++){
-                    list = await ShoppingList.findById(req.body.chackboxDelete[i]);
-                    await list.remove();
-                }
-                req.flash('mess','Usunięto listy zakupów.')
-                req.flash('type','success')
-            }else{
-                list = await ShoppingList.findById(req.body.chackboxDelete);
-                await list.remove();
-                req.flash('mess','Usunięto liste zakupów.')
-                req.flash('type','success')
-            }
+   
+        list = await ShoppingList.findById(req.params.id);
+        await list.remove();
+        req.flash('mess','Usunięto liste zakupów.')
+        req.flash('type','success')
         
-        }else{
-            console.log('jestem')
-            req.flash('mess','Nie podano zabiegu do usunącia')
-            req.flash('type','info')
-        }
         res.redirect('/shopping-list');
     }catch{
         req.flash('mess','Nie udało się usunąć rekordu.')

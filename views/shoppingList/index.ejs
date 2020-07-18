@@ -1,6 +1,6 @@
  <%- include('../partials/infoMessages.ejs') %> 
 
-
+ 
 <button href="#" id ="showForm" onclick="showFormm()">Dodaj firme</button>
 <form id="myForm" method="POST"  action="/shopping-list" style="display: none;">
     <select id ="select"name="brandName" >
@@ -15,32 +15,69 @@
         <button type="submit">Dodaj</button>
 </form>
 
-<form method="POST" action="/shopping-list?_method=DELETE">
-    <input type="submit" value="Usuń">
-    <table>
-        <thead>
-            <tr>
-                <td>Nazwa Listy</td>
-                <td>Cena</td>
-                <td>Data</td>
-            </tr>
-        </thead>
-        <tbody>
-            
-            <% shopping.forEach(items => {%>
-                <tr>
-                   
 
-                    
-                    <td  onclick="window.location='/shopping-list/list-view/<%=items.id%>'"><%=items.listName.name  == null? '':items.listName.name %></td>
-                    <td  onclick="window.location='/shopping-list/list-view/<%=items.id%>'"><%=items.totalPrice %></td>
-                    <td  onclick="window.location='/shopping-list/list-view/<%=items.id%>'"><%= items.transactionDate == null ? '' : items.transactionDate.toISOString().split('T')[0] %> </td>
-                    <td><input type="checkbox" name="chackboxDelete" value="<%=items.id%>"></td>
-                </tr>
-           <% }); %> 
-        </tbody>
-    </table>
-</form>
+
+
+<div class="main-div-full-content">
+    <div class="main-div-center  ">
+        <div class="content-div">
+            <% for(var i = 0 ; i< shopping.length ; i++){%>
+                <div class="visit">
+                    <form method="post" action='/shopping-list/<%=shopping[i]._id%>?_method=DELETE'>
+                        <button type="submit" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </form>  
+                    <div class="div-element" onclick="window.location='/shopping-list/list-view/<%=shopping[i].id%>'"  >
+
+                        <p ><%=shopping[i].listName.name  == null? '-':shopping[i].listName.name %> </p> 
+                        <p class="headerVisit">Kwota</p>
+                        <p ><%=shopping[i].totalPrice== null?'-':shopping[i].totalPrice+'zł' %></p>
+                        <p class="headerVisit">Transakcja</p>
+                        <p><%= shopping[i].transactionDate == null ? '-' : shopping[i].transactionDate.toISOString().split('T')[0] %></p> 
+
+                                         
+                    </div>
+                </div>   
+            <%} %> 
+        </div>
+      
+    </div>
+
+    <div class="company-square"><p class="p-color">Zakupy</p></div>
+    <div class="square-shadow"></div>
+    <div class="center-shopping-list">
+        <div class="shopping-list">
+            <%shoppingAll.forEach(element => {%>
+                <div onclick="location.href='/shopping-list/list-view/<%=element._id%>'" class="list-content">
+                    <div class="date">
+                        <p><%= element.transactionDate == null ? '' : element.transactionDate.toISOString().split('T')[0] %> </p> 
+                    </div>
+                    <div class="shopping-price-name">
+                        <div class="list-name">
+                            <p class="headerVisit">Nazwa</p>
+                            <p><%= element.listName.name == null ? '' :element.listName.name %> </p> 
+                        </div>
+                        <div  class="list-price">
+                            <p class="headerVisit">Cena</p>
+                            <p class="last"><%= element.totalPrice %>zł </p>
+                        </div>
+                       
+                    </div> 
+                </div>
+              
+            
+            <%}); %>
+        </div>
+    
+    </div>
+</div>
+
+
+
+<footer class='footer'>
+    <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
+</footer>
 
 
 

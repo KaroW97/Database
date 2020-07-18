@@ -119,7 +119,6 @@ $(document).ready(function(){
         $(".hiddenInputTreatment").attr('name','newTreatment')
         $(".treatmentState").val('newTreatment')
         $(".hiddenInputTreatment").val( $('.myInputTreatment').val());
-        console.log( $(".hiddenInputTreatment").val())
         //filter treatment list
         $('.listTreatment li').filter(function(){
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
@@ -129,7 +128,6 @@ $(document).ready(function(){
                 $(".treatmentState").val('treatment')
                 $(".hiddenInputTreatment").attr('name','treatment')
                 $(".hiddenInputTreatment").val( $('.myInputTreatment').val());
-                console.log( $(this).attr('value'))
                 $(".hiddenInputTreatment").val( $(this).attr('value'));
                 $('.treatments-list').hide();
             

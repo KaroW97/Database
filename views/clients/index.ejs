@@ -9,7 +9,7 @@
                         <input placeholder="Od" id="dataFrom" name="visitAfter"   autocomplete="off" value="<%=searchOptions.visitAfter%>" autocomplete="off" />
                         <button type="submit"><i class="fas fa-search"></i></button>
                         
-                </form>
+            </form>
                   
             <!--onclick="showFormm()"-->
            <button  onclick="window.location='/clients/new'"  class="button_action showForm" >
@@ -23,28 +23,33 @@
 </div>
 <div class="main-div-full-content .main-div-toogle">
     <div class="main-div-center ">
-        <div class="content-div">
-            <% for(var i = 0 ; i< clients.length ; i++){%>
-               
-                <div class="visit">
         
-                    <form method="post" action='/clients/<%=clients[i].id%>?_method=DELETE'>
-                        <button type="submit" class="close" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                   
+            <div class="content-div">
+                <% for(var i = 0 ; i< clients.length ; i++){%>
                   
-                    <div   onclick="window.location='/clients/client-view/<%=clients[i].id%>'" >
-                        <p client="<%=clients[i].name%> <%=clients[i].lastName%>">
-                            <%=clients[i].name%> <%=clients[i].lastName%></p>
-                        <p class="headerVisit">Telefon</p>
-                        <p onclick=><%=clients[i].phoneNumber%></p>
-                        <p class="headerVisit">Urodziny</p>                      
-                        <p ><%=clients[i].dateOfBirth !=null ?clients[i].dateOfBirth.toISOString().split('T')[0] :'-'%></p>
-                    </div>
-                </div>   
-            <%} %> 
-        </div>
+                    <div class="visit">
+            
+                        <form method="post" action='/clients/<%=clients[i].id%>?_method=DELETE'>
+                            <button type="submit" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                       
+                      
+                        <div   onclick="window.location='/clients/client-view/<%=clients[i].id%>'" >
+                            <p client="<%=clients[i].name%> <%=clients[i].lastName%>">
+                                <%=clients[i].name%> <%=clients[i].lastName%></p>
+                            <p class="headerVisit">Telefon</p>
+                            <p onclick=><%=clients[i].phoneNumber%></p>
+                            <p class="headerVisit">Urodziny</p>                      
+                            <p ><%=clients[i].dateOfBirth !=null ?clients[i].dateOfBirth.toISOString().split('T')[0] :'-'%></p>
+                        </div>
+                    </div> 
+                   
+                   
+                <%} %> 
+            </div>
+        
+     
     </div>
     <div class="company-square"><p class="p-color">Zakupy</p></div>
     <div class="square-shadow"></div>
