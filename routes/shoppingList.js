@@ -13,9 +13,16 @@ const {ensureAuthenticated} = require('../config/auth')
 router.get('/',ensureAuthenticated,async(req,res)=>{
     const cssSheets=[]
     let todayDate = new Date(),weekDate=new Date();
-    cssSheets.push('../../public/css/user/shopping_list/index.css');
+    let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
+    cssSheets.push('../../public/css/user/shopping_list/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
+    let shoppingList =  ShoppingList.find({user:req.user.id}).populate('listName')
+   
+    if(req.query.visitAfter != null && req.query.visitAfter !='')
+        shoppingList = shoppingList.gte('transactionDate',req.query.visitAfter);
+    else
+        shoppingList = shoppingList.find({transactionDate:{ $gt:todayDate}}).sort({transactionDate:'asc'})
     try{
-        const shoppingList = await ShoppingList.find({user:req.user.id}).populate('listName').exec();
+       
         const brandName = await BrandName.find({user:req.user.id})
       
         todayDate.setDate(todayDate.getDate() - 1)
@@ -24,11 +31,14 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
             $gt:todayDate,
             $lt:weekDate
         }}).populate('listName').sort({transactionDate:'asc'})
+        const shopping =  await shoppingList.sort({transactionDate:'asc'}).exec();
         res.render('shoppingList/index',{
             shoppingAll:shoppingListShort,
-            shopping:shoppingList,
+            shopping:shopping,
             brandName:brandName,
-            styles:cssSheets
+            styles:cssSheets,
+            weekdays:weekdays,
+            searchOptions:req.query,
         });
     }catch{
         res.redirect('/clients');

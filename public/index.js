@@ -163,6 +163,7 @@ $(document).ready(function(){
 
     $(".showForm").click(function(){
         $('#visitForm').show();
+        console.log('sss')
     })
     $('.closeEdit').click(function(){
             $('.openForm').closest('form').find("input").val('')

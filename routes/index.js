@@ -15,7 +15,7 @@ const {
 //Passport Config
 router.get('/',async (req, res)=>{
     let cssSheets = [];
-    cssSheets.push("../../public/css/index.css");
+    cssSheets.push("../../public/css/initial-views/index-page.css");
     try{ 
         if(req.user.role === 'user'){
             return res.redirect('/calendar')

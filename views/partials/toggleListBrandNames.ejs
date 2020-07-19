@@ -1,0 +1,11 @@
+
+    <div class="clients-list">
+        <input   class="hiddenInput" type="text" style="display: none;">
+        <ul class="list-client list"  >
+            <% brandName.forEach(brand => { %>
+                <li value="<%=brand.id%>" ><%=brand.name%></li>
+            <%}); %>
+        </ul>
+    </div>
+    
+    

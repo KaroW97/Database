@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+const ttl = require('mongoose-ttl');
+const ms = require('ms')
 const shoppingList = mongoose.Schema ({
     user:{
         type:String,
@@ -7,10 +8,13 @@ const shoppingList = mongoose.Schema ({
     },
     listName:{
         type:mongoose.Schema.Types.ObjectId,
-        require:true,
+        require:false,
         ref:'BrandName'
     },
-    
+    listNameNew:{
+        type:String,
+        require:false
+    },
     productName:{
         type:[String],
         require:false
@@ -28,13 +32,12 @@ const shoppingList = mongoose.Schema ({
         require:false
     },
     
-    /*brandName:{
-        type:mongoose.Schema.Types.ObjectId,
-        require:true,
-        ref:'BrandName'
-    }*/
+
    
  
 })
+////shoppingList.plugin(ttl,{ttl:ms('1d')})
+const ShoppingList = mongoose.model('ShoppingList',shoppingList)
+//ShoppingList.startTTLReaper()
 
-module.exports = mongoose.model('ShoppingList', shoppingList);
+module.exports = ShoppingList
