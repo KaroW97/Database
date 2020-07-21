@@ -60,6 +60,36 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         res.redirect(`/clients`)
     }
 })
+//Delete Brands
+router.delete('/brand-name-delete',async(req,res)=>{
+    console.log('jestem 2')
+    let brand_name;
+    try{
+        if(req.body.chackboxDeleteBrand!= null ){
+            if(Array.isArray(req.body.chackboxDeleteBrand)){
+              for(var i = 0; i < (req.body.chackboxDeleteBrand).length; i++){
+                brand_name = await BrandName.findById(ObjectId(req.body.chackboxDeleteBrand[i]));
+                await brand_name.remove();
+              } 
+              req.flash('mess','Nazwy firm zostały usunięte');
+              req.flash('type','success')
+            }else{
+                brand_name = await BrandName.findById(ObjectId(req.body.chackboxDeleteBrand));
+                await  brand_name.remove();
+                req.flash('mess','Nazwa firmy została usunięta');
+                req.flash('type','success')
+            }
+          }else{
+            req.flash('mess','Nie wybrano nazwy firmy do usunięcia');
+            req.flash('type','info')
+          }
+          res.redirect(`/shopping-list`)
+    }catch(err){
+        console.log(err)
+        res.redirect(`/shopping-list`)
+    }
+
+})
 //Shoping list Create Brand Name
 router.post('/brand-name',async(req,res)=>{
     const brandName = new BrandName({
@@ -147,7 +177,9 @@ router.delete('/:id',ensureAuthenticated,async(req,res)=>{
         req.flash('type','success')
         
         res.redirect('/shopping-list');
-    }catch{
+    }catch(err){
+        console.log(err)
+        console.log('jestem')
         req.flash('mess','Nie udało się usunąć rekordu.')
         req.flash('type','danger')
         res.redirect(`/shopping-list`)   
@@ -240,5 +272,7 @@ router.delete('/list-view/:id',ensureAuthenticated, async(req,res)=>{
          res.redirect('/shopping-list')
  }
 })
+
+
 
 module.exports = router

@@ -14,7 +14,7 @@
               <div class="flex-end">
                 <button class="separate openCreateForm"><i class="fas fa-plus"></i></button><!--create list-->
                 <button class="separate showForm"  href="#" ><i class="fas fa-building"></i></button><!--add new company or assign-->
-                <button class="separate-last"type="submit"><i class="far fa-trash-alt"></i></button><!--delete company-->
+                <button class="separate-last delete-brand"><i class="far fa-trash-alt"></i></button><!--delete company-->
                
               </div>
            
@@ -94,10 +94,39 @@
 </div>
 
 <!--Delete Hidden Form-->
-<form action="/list-view" method="post">
-    <input type="text" name="listName">
- 
-</form>
+<div class=" create-visit-form hide-delete" id="">
+    <form action="/shopping-list/brand-name-delete?_method=DELETE" method="post" class="center-form" >
+        
+        <div class="button">
+            <button type="submit"><i class="far fa-trash-alt"></i></button><!--delete company-->
+        </div>
+   
+        <div  class="form">
+            
+            <span id ="close"class="close" >&times;</span>
+            <div class="scroll">
+                <div class="form-content">
+                    <ul >
+                        <% brandName.forEach((brand,index) => { %>
+                            <div class="flex"  brand-id="<%=brand.id%>">
+                                <li value="<%=brand.id%>" ><%=brand.name%></li>
+                                <div class="checkbox" >
+                                    
+                                    <input type="checkbox" id="checkbox-delete-<%=index%>"name="chackboxDeleteBrand" value="<%=brand.id%>" >
+                                    <label for="checkbox-delete-<%=index%>"></label>
+                                
+                                </div>
+                                
+                            </div>
+                        
+                        <%}); %>
+                    </ul>
+                </div>
+            </div>    
+        </div>
+    </form>
+</div>
+
 <footer class='footer'>
     <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
 </footer>
@@ -125,5 +154,20 @@
            
             })  
         })
+
+        $('.delete-brand').click(function(){
+            $('.hide-delete').show()
+        })
+        $('.close').click(function(){
+            $('.hide-delete').hide()
+        })
+        $('.flex  ').click(function(){
+            console.log($(this).attr('brand-id'))
+           // $('.felx .checkbox input').attr('checked','checked')
+            console.log( $('.flex .checkbox  input').attr('value'))
+           // if($(this).attr('brand-id') == )
+           // console.log( $('.checkbox input[type="checkbox"]').attr('checked',true))
+        })
+     
     })
 </script>

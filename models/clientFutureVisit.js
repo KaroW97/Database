@@ -55,7 +55,7 @@ const futureVisit = mongoose.Schema({
 })
 
 
-futureVisit.plugin(ttl,{ttl:ms('1d')})
+futureVisit.plugin(ttl,{ttl:ms('2m')})
 const FutureVisit = mongoose.model('FutureVisit',futureVisit)
 FutureVisit.startTTLReaper()
 

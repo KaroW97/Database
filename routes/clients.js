@@ -238,7 +238,7 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
                 await visit.remove();
               } 
               req.flash('mess','Wizyty zostały usunięte');
-              req.flash('type','succes')
+              req.flash('type','success')
             }else{
                 visit = await ClientVisits.findById(ObjectId(req.body.chackboxDelet));
                 clientValue= visit.client
