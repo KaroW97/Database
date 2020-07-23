@@ -1,7 +1,5 @@
-<% if(list.transactionDate == null){ %> 
-   <input type="date" name="transactionDate" value="<%=list.transactionDate%>" required autofocus>
-<% } %> 
 
-<input type="text" placeholder="nazwa produktu" name="productName" value="" required autofocus>
-<input type="number" placeholder="cena"  name="price"  value="<%=list.price  %> " >
-<br>
+
+<input type="text" placeholder="Nazwa produktu" name="productName"  required autofocus autocomplete="off">
+<input type="number" placeholder="Cena"  name="price"   autocomplete="off">
+

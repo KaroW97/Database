@@ -4,7 +4,7 @@
     <div class="main-div">
         <div class="content">
             <div class="visit">
-                <input type="text" class="myInput myInputClient" name="name" placeholder="Szukaj Listy" autocomplete="off" >  
+                <input type="text" class="myInputSearch" name="name" placeholder="Szukaj Listy" autocomplete="off" >  
 
                 <form class="find-visit"  action="/shopping-list" method="GET">
                     <input placeholder="Od" id="dataFrom" name="visitAfter" value="<%=searchOptions.visitAfter%>"  autocomplete="off"   />
@@ -12,7 +12,7 @@
                 </form>
 
               <div class="flex-end">
-                <button class="separate openCreateForm"><i class="fas fa-plus"></i></button><!--create list-->
+                <button class="separate create-list"><i class="fas fa-plus"></i></button><!--create list-->
                 <button class="separate showForm"  href="#" ><i class="fas fa-building"></i></button><!--add new company or assign-->
                 <button class="separate-last delete-brand"><i class="far fa-trash-alt"></i></button><!--delete company-->
                
@@ -36,7 +36,7 @@
                     </form>  
                     <div class="div-element" onclick="window.location='/shopping-list/list-view/<%=shopping[i].id%>'"  >
 
-                        <p ><%=shopping[i].listName.name  == null? '-':shopping[i].listName.name %> </p> 
+                        <p ><%=shopping[i].listNameNew != undefined ? shopping[i].listNameNew: shopping[i].listName.name   %> </p> 
                         <p class="headerVisit">Kwota</p>
                         <p ><%=shopping[i].totalPrice== null?'-':shopping[i].totalPrice+'zł' %></p>
                         <p class="headerVisit">Transakcja</p>
@@ -62,7 +62,8 @@
                     <div class="shopping-price-name">
                         <div class="list-name">
                             <p class="headerVisit">Nazwa</p>
-                            <p><%= element.listName.name == null ? '' :element.listName.name %> </p> 
+                            <p><%= element.listNameNew != undefined ? element.listNameNew :element.listName.name %> </p> 
+                          
                         </div>
                         <div  class="list-price">
                             <p class="headerVisit">Cena</p>
@@ -79,7 +80,7 @@
     </div>
 </div>
 
-<div class="create-visit-form  " id="visitForm">
+<div class="create-visit-form brand-form " id="visitForm">
     <form method="POST" action="/shopping-list/brand-name" class="center-form">
         <div  id ="comapnyForm" class="form">
             <!--onclick="closeForm()"-->
@@ -126,48 +127,31 @@
         </div>
     </form>
 </div>
+<!--Create List Hidden Form-->
+<div class="create-visit-form hidden-create-list" id="visitForm">
+    <form method="POST" action="/shopping-list" class="center-form ">
+        <div  id ="comapnyForm" class="form">
+            <!--onclick="closeForm()"-->
+            <span id ="close"class="close" >&times;</span>
+            <div class="form-content">
+                <input  class="my-input-new-list-name"type="text" name="list-name" placeholder="Podaj nazwe listy" value="<%=brandName.name%>"required autofocus autocomplete="off" >
+                <input type="hidden" name="brandName">
+                <input placeholder="Od" id="datapickerAdd" name="transactionDate"  autocomplete="off" required  />
 
-<footer class='footer'>
-    <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
-</footer>
+                <%-include('../partials/toggleListBrandNames.ejs')%>  
+                <button type="submit">Dodaj</button>
+                <input   class="hiddenBrandName" type="text" style="display: none;">
+                <input   class="brandState" type="text" style="display: none;">
+            </div>
+   
+        </div>
+    </form>
+</div>
+
+
 
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="../../public/dataTimePicker.js"></script>
-<script>
-    $(document).ready(function(){
-      $('.myInputClient').on('keyup click', function () {
-            let value = $(this).val().toLowerCase();
-           
-            $('.main-div-full-content .visit ').filter(function(){
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            })
-
-        })
-        //if clients list clicked toggle visits
-        $('.clients-list').on('click',function(){
-            let value = $('.myInputClient').val().toLowerCase();
-           
-            $('.main-div-full-content .visit ').filter(function(){
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-           
-            })  
-        })
-
-        $('.delete-brand').click(function(){
-            $('.hide-delete').show()
-        })
-        $('.close').click(function(){
-            $('.hide-delete').hide()
-        })
-        $('.flex  ').click(function(){
-            console.log($(this).attr('brand-id'))
-           // $('.felx .checkbox input').attr('checked','checked')
-            console.log( $('.flex .checkbox  input').attr('value'))
-           // if($(this).attr('brand-id') == )
-           // console.log( $('.checkbox input[type="checkbox"]').attr('checked',true))
-        })
-     
-    })
-</script>
+<script src="../../public/toggle_main_page_list.js"></script>

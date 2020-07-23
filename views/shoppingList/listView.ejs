@@ -1,53 +1,61 @@
 
 <%-include('../partials/infoMessages.ejs')%>
 
-
-<h1 name="listName" > <%=list.listName.name == '' ? 'Nazwa' :list.listName.name %></h1>
-<% if(list.transactionDate!= null){ %> 
-    <h4 name="transactionDate" value="<%=list.transactionDate%>">Data zamówienia: <%=list.transactionDate == null ? '' : list.transactionDate.toISOString().split('T')[0] %> </h4>
-<% } %> 
-
-<form method="post" action="/shopping-list/list-view/<%=list.id%>?_method=DELETE">
-    <input type="submit" value="Usuń">
-
-    <div style="display:flex;"  >
-        <div style="padding:10px;" onclick="window.location='/shopping-list/list-view/<%=list.id%>/edit'">
-            <%if(list.productName != '' || list.price != '') {%> 
-                <p>Nazwa</p>
-            <% } %> 
-            <% list.productName.forEach(element => { %>
-                <p><%= element %>     </p>
-            <% }); %> 
+<div class="center-element">
+    <div class="element">
+        <div class="go-back">
+            <a href="/shopping-list"><i class="fas fa-arrow-left"></i></a>
         </div>
-        <div style="padding:10px;" onclick="window.location='/shopping-list/list-view/<%=list.id%>/edit'">
-            <%if(list.price != '' || list.productName != '') {%> 
-                <p>Cena</p>
-            <% } %>
-           
-            <% list.price.forEach(element => { %>
-                        <p > <%= element %> </p>       
-            <% }); %> 
-        </div>
-        <div style="margin:50px 10px 0 10px">
-            <% list.price.forEach((element, index) => { %>
-                <div style="padding:6.5px 0;">
-                    <input type="checkbox" name="chackboxDelete" value="<%=index%>">
+        
+            <div class="list-header">
+                <p name="listName" > <%=list.listNameNew !=undefined ? list.listNameNew :list.listName.name%></p>
+                <% if(list.transactionDate!= null){ %> 
+                    <p name="transactionDate"> <%=list.transactionDate.toISOString().split('T')[0] %> </p>
+                <% } %> 
+            </div>
+      
+            
+            <form method="post" action="/shopping-list/list-view/<%=list.id%>?_method=DELETE">
+                <button type="submit" ><i class="far fa-trash-alt"></i></button>       
+                <div class="list-content"   >
+                    
+                        <div class="element-font-size"onclick="window.location='/shopping-list/list-view/<%=list.id%>/edit'" >
+                    
+                            <% list.productName.forEach(element => { %>
+                                <p><%= element %></p>
+                            <% }); %> 
+                        </div>
+                        <div class="element-font-size"  >
+                            <% list.price.forEach((element, index) => { %>
+                                <div class="flex">
+                                    <p onclick="window.location='/shopping-list/list-view/<%=list.id%>/edit'"> <%= element %>zł </p> 
+                                    <input class="checkbox" onclick="window.location='#'" type="checkbox" name="chackboxDelete" value="<%=index%>"> 
+     
+                                </div>
+                                    
+                            <% }); %> 
+                        </div>
                 </div>
-        <% }); %> 
-        </div>
+            </form>
+          
+            <div class="total-price">
+                <%if(list.totalPrice != 0) {%> 
+                    <p >Do zapłaty: <%=list.totalPrice == null ? '0zł':list.totalPrice+'zł'%></p>
+                <% } %>
+            </div>
+           
+            <form method="POST" action="/shopping-list/list-view/<%=list.id%>?_method=PUT">
+                <div class="list-form">
+                    <%- include('./_form_fields_new') %> 
+                </div>
+
+                <button style="display: none;" type="submit">Dodaj</button>
+               
+            </form>
      
     </div>
-</form>
+  
+    
+    
+</div>
 
-
-
-
-<%if(list.totalPrice != 0) {%> 
-    <p style="padding:0 10px 10px 10px;">Do zapłaty: <%=list.totalPrice%></p>
-<% } %>
-<form method="POST" action="/shopping-list/list-view/<%=list.id%>?_method=PUT">
-    <%- include('./_form_fields_new') %> 
-   
-    <button style="display: none;" type="submit">Dodaj</button>
-    <a href="/shopping-list">Zakończ</a>
-</form>

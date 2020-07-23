@@ -15,6 +15,10 @@ const shoppingList = mongoose.Schema ({
         type:String,
         require:false
     },
+    brandState:{
+        type:String,
+        require:false
+    },
     productName:{
         type:[String],
         require:false

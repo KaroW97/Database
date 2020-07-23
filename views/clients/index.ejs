@@ -5,7 +5,7 @@
         <div class="content  ">
             <div class="visit">
                     <form class="find-visit"  method="GET"  id="myform">
-                        <input type="text" class="myInput myInputClient" name="name" value="<%=searchOptions.name%>" placeholder="Szukaj Klienta" autocomplete="off" >  
+                        <input type="text" class="myInputSearch " name="name" value="<%=searchOptions.name%>" placeholder="Szukaj Klienta" autocomplete="off" >  
                         <input placeholder="Od" id="dataFrom" name="visitAfter"   autocomplete="off" value="<%=searchOptions.visitAfter%>" autocomplete="off" />
                         <button type="submit"><i class="fas fa-search"></i></button>
                         
@@ -14,11 +14,9 @@
             <!--onclick="showFormm()"-->
            <button  onclick="window.location='/clients/new'"  class="button_action showForm" >
             <i class="fas fa-user-plus"></i>
-
-</button>
+            </button>
             </div>
            
-      
         </div>
         <%-include('../partials/toogleListClients.ejs')%>
     </div>
@@ -65,7 +63,7 @@
                     <div class="shopping-price-name">
                         <div class="list-name">
                             <p class="headerVisit">Nazwa</p>
-                            <p><%= element.listName.name == null ? '' :element.listName.name %> </p> 
+                            <p><%= element.listNameNew != undefined ? element.listNameNew :element.listName.name %> </p> 
                         </div>
                         <div  class="list-price">
                             <p class="headerVisit">Cena</p>
@@ -84,32 +82,12 @@
 </div>
 
 
-<footer class='footer'>
-    <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
-</footer>
 
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="../../public/dataTimePicker.js"></script>
+<script src="../../public/toggle_main_page_list.js"></script>
 <script>
-    $(document).ready(function(){
-      $('.myInputClient').on('keyup click', function () {
-            let value = $(this).val().toLowerCase();
-           
-            $('.main-div-full-content .visit ').filter(function(){
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            })
-
-        })
-        //if clients list clicked toggle visits
-        $('.clients-list').on('click',function(){
-            let value = $('.myInputClient').val().toLowerCase();
-           
-            $('.main-div-full-content .visit ').filter(function(){
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-           
-            })  
-        })
-    })
+ 
 </script>
