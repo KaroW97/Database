@@ -58,34 +58,63 @@ $(document).ready(function(){
         $('.company-square').addClass('list-content-shine')
         $('.company-square p').removeClass('p-color')
     }
-   //If Click Toggle List
+ 
+
+    $(window).resize(function(){
+        if ($(window).width() <= 1080 &&  $(window).width() > 1077){
+            console.log('ssss')
+            location.reload();  // refresh page 
+        } 
+        if($(window).width() < 1080 ){
+            $(".center-shopping-list").css('display','block')
+        }else{
+            //If button is not clicked close it
+            if($('.company-square').attr('clicked') !='true'){
+                $(".center-shopping-list").css('display','none')
+            }
+        }
+    })
+   
+  //If Click Toggle List
+ 
     $('.company-square').click(function(){
+        
+            $('.company-square').attr('clicked','true')
+            
             $('.company-square').removeClass('list-content-shine')
-            $('.company-square p').addClass('p-color ')
+            $('.company-square p').addClass('p-color')
             $(".center-shopping-list").animate({width:'toggle', queue:false},400)
-            if($('.company-square').css('right') =='350px'){
+           
+           if($('.company-square').css('right') =='350px'){
                 $(".company-square").animate({right:'0px', queue:false})
                 $(".square-shadow").animate({right:'0px', queue:false})
             }else{
                 $(".company-square").animate({right:'350px', queue:false})
                 $(".square-shadow").animate({right:'350px', queue:false})
             }
+        
+        
 
-            $(".shopping-list")
-                .css("box-shadow", "0px 3px 11px 2px rgba(0, 0, 0,1)")
-                .css("-moz-box-shadow", "0px 3px 11px 2px rgba(0, 0, 0,1)")
-                .css("-webkit-box-shadow", "0px 3px 11px 2px rgba(0, 0, 0,1)");
         
         })
     
     //Control Shopping List Height
     var height =  $(window).height();
-    $('.main-div-full-content   .center-shopping-list .shopping-list').css('height',`${height-314}px`)
-    $('.content-div').css('max-height',`${height-314}px`)
+ 
+    if($(window).width() >=1080){
+    
+        $('.content-div').css('max-height',`${height-314}px`)
+      
+    }
+   
+  
    $(window).on('resize onload load',function(){
         var height =  $(window).height();
-        $('.main-div-full-content   .center-shopping-list .shopping-list').css('height',`${height-314}px`)
-        $('.visit-div').css('max-height',`${height-314}px`)
+       
+          
+            $('.visit-div').css('max-height',`${height-314}px`)
+        
+
        
    })
 })

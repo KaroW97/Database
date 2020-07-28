@@ -1,5 +1,6 @@
 <%-include('../partials/infoMessages.ejs')%>
 <%-include('../partials/arrayMessage.ejs')%>
+
 <div class="center-main-div">
     <div class="main-div">
         <div class="content">
@@ -38,9 +39,30 @@
         </div>
     </form>
 </div>
+<div class="create-visit-form toggleListHide openForm ">
+    <form method="POST" class="formEdit center-form" action="" >
+        <div id ="openForm" class="form" >
+            <span class="close closeEdit" onclick="closeForm()">&times;</span>
+            <div class="form-content">
+                <%-include('./newVisit-editVisit.ejs')%>
+                <input placeholder="Data"  class="visitDateEdit"  id="datapickerAddEdit" name="visitDateEdit"   autocomplete="off"   required/>
+                <input id="timepickerFromEdit" class="timeFrom"onclick="$timepickerFromEdit.open()" name="timeFromEdit"  placeholder="Czas rozpoczęcia"  autocomplete="off" required/>
+                <input id="timepickerToEdit" class="timeTo" onclick="$timepickerToEdit.open()"name="timeToEdit"  placeholder="Czas zakończenia" autocomplete="off" />
+                
+                <button class="button"type="submit">Edytuj</button>
+                <%-include('../partials/toogleListClients.ejs')%>       
+                <%-include('../partials/toogleListTreatments.ejs')%>  
+                 </div>
+  
+        </div>
+    </form>
+
+</div>
 <div class="main-div-full-content">
+ 
     <div class="main-div-center  ">
         <div class="content-div">
+            
             <% for(var i = 0 ; i< newVisit.length ; i++){%>
                 <div class="visit">
                     <form method="post" action='/calendar/<%=newVisit[i]._id%>?_method=DELETE'>
@@ -76,11 +98,16 @@
                     </div>
                 </div>   
             <%} %> 
+         
         </div>
-      
     </div>
+  
 
-    <div class="company-square"><p class="p-color">Zakupy</p></div>
+   
+
+</div>
+<div class="shopping-list-out">
+    <div class="company-square" clicked="false"><p class="p-color">Zakupy</p></div>
     <div class="square-shadow"></div>
     <div class="center-shopping-list">
         <div class="shopping-list">
@@ -98,43 +125,19 @@
                             <p class="headerVisit">Cena</p>
                             <p class="last"><%= element.totalPrice %>zł </p>
                         </div>
-                       
+                    
                     </div> 
                 </div>
-              
+            
             
             <%}); %>
         </div>
-    
+
     </div>
 </div>
 
-
-<div class="create-visit-form toggleListHide openForm ">
-    <form method="POST" class="formEdit center-form" action="" >
-        <div id ="openForm" class="form" >
-            <span class="close closeEdit" onclick="closeForm()">&times;</span>
-            <div class="form-content">
-                <%-include('./newVisit-editVisit.ejs')%>
-                <input placeholder="Data"  class="visitDateEdit"  id="datapickerAddEdit" name="visitDateEdit"   autocomplete="off"   required/>
-                <input id="timepickerFromEdit" class="timeFrom"onclick="$timepickerFromEdit.open()" name="timeFromEdit"  placeholder="Czas rozpoczęcia"  autocomplete="off" required/>
-                <input id="timepickerToEdit" class="timeTo" onclick="$timepickerToEdit.open()"name="timeToEdit"  placeholder="Czas zakończenia" autocomplete="off" />
-                
-                <button class="button"type="submit">Edytuj</button>
-                <%-include('../partials/toogleListClients.ejs')%>       
-                <%-include('../partials/toogleListTreatments.ejs')%>  
-                 </div>
-  
-        </div>
-    </form>
-</div>
-
- 
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="../../public/dataTimePicker.js"></script>
 <script src="../../public/js/calendar.js"></script>
-<script>
-
-</script>
