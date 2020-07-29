@@ -17,7 +17,7 @@
     <% } %> 
 </head>
 <body onload="checkIfNull()" >
-
+    <div class="pageContentWrapper">
       <% if(user) { %>
        
             <%-include('../partials/header')%>
@@ -28,11 +28,10 @@
 
  
 
-
-        <%- body %> 
-
     
- 
+        <%- body %> 
+    </div>
+    
     <footer class='footer'>
         <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
     </footer>

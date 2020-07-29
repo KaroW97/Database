@@ -1,21 +1,31 @@
 <%-include('../partials/infoMessages.ejs')%>
 <%-include('../partials/arrayMessage.ejs')%>
 
-<div class="center-main-div">
+
+<div id="top" class="center-main-div">
     <div class="main-div">
         <div class="content">
             <div class="visit">
                     <form class="find-visit"  action="/calendar" method="GET">
-                        <input placeholder="Od" id="dataFrom" name="visitAfter"   autocomplete="off" value="<%=searchOptions.visitAfter%>"  />
-                        <input placeholder="Do" id="dataTo"  name="visitBefore"   autocomplete="off" value="<%=searchOptions.visitBefore%>" />
-                        <button type="submit"><i class="fas fa-search"></i></button>
-                    </form>
-            <!--onclick="showFormm()"-->
-                <button class="button_action showForm" ><i class="fas fa-plus"></i></button>
-            </div>
+                            <div class="data-input-from">
+                                <input placeholder="Od" id="dataFrom" name="visitAfter"   autocomplete="off" value="<%=searchOptions.visitAfter%>"  />
     
-               
-        
+                            </div>
+                            <div class="data-input-to">
+                                <input placeholder="Do" id="dataTo"  name="visitBefore"   autocomplete="off" value="<%=searchOptions.visitBefore%>" />
+                            </div>
+                            <div class="search">
+                                <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
+                            </div>
+
+                       
+
+                    </form>
+                    <div class="add">
+                        <button class="button_action showForm " ><i class="fas fa-plus"></i></button>
+                    </div>
+            <!--onclick="showFormm()"-->
+            </div>
         </div>
     </div>
 </div>
@@ -59,7 +69,6 @@
 
 </div>
 <div class="main-div-full-content">
- 
     <div class="main-div-center  ">
         <div class="content-div">
             
@@ -86,27 +95,36 @@
                     action="/calendar/edit/<%=newVisit[i]._id%>?_method=PUT"
 
                     >
-                        <p ><%= newVisit[i].visitDate == null ? '' : `${weekdays[newVisit[i].visitDate.getDay()] } ${ newVisit[i].visitDate.toISOString().split('T')[0]}` %> </p> 
-                        <p class="headerVisit">Klient</p>
-                        <p ><%= newVisit[i].client != undefined ? newVisit[i].client.name :newVisit[i].newClient %> <%= newVisit[i].client != undefined? newVisit[i].client.lastName :'' %></p>
-                        <p class="headerVisit">Telefon</p>
-                        <p><%= newVisit[i].phoneNumber%></p> 
-                        <p class="headerVisit">Zabieg</p>
-                        <p><%= newVisit[i].treatment== null?newVisit[i].newTreatment:newVisit[i].treatment.treatmentName %> </p>
-                        <p class="headerVisit">Godzina</p> 
-                        <p  ><%= newVisit[i].timeFrom %> - <%=newVisit[i].timeTo%>  </p>                          
+
+                        <p class="header"><%= newVisit[i].visitDate == null ? '' : `${weekdays[newVisit[i].visitDate.getDay()] } ${ newVisit[i].visitDate.toISOString().split('T')[0]}` %> </p> 
+                        <div class="first-p-element">
+                            <p class="headerVisit">Klient</p>
+                            <p ><%= newVisit[i].client != undefined ? newVisit[i].client.name :newVisit[i].newClient %> <%= newVisit[i].client != undefined? newVisit[i].client.lastName :'' %></p>
+                        </div>
+                        <div class="sec-p-element">
+                            <p class="headerVisit">Telefon</p>
+                            <p><%= newVisit[i].phoneNumber%></p> 
+                        </div>
+                        <div class="th-p-element">
+                            <p class="headerVisit">Zabieg</p>
+                            <p><%= newVisit[i].treatment== null?newVisit[i].newTreatment:newVisit[i].treatment.treatmentName %> </p>
+                        </div>
+                        <div class="fourth-p-element">
+                            <p class="headerVisit">Godzina</p> 
+                            <p  ><%= newVisit[i].timeFrom %> - <%=newVisit[i].timeTo%>  </p>  
+                        </div>                        
                     </div>
                 </div>   
             <%} %> 
          
         </div>
     </div>
-  
-
-   
 
 </div>
-<div class="shopping-list-out">
+<div class="anchor" onclick="location.href='#shopping-list'">
+    <a class="anchor-button" ><i class="fas fa-caret-down"></i></a>
+</div>
+<div id="shopping-list" class="shopping-list-out">
     <div class="company-square" clicked="false"><p class="p-color">Zakupy</p></div>
     <div class="square-shadow"></div>
     <div class="center-shopping-list">

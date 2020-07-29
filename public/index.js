@@ -61,11 +61,16 @@ $(document).ready(function(){
  
 
     $(window).resize(function(){
-        if ($(window).width() <= 1080 &&  $(window).width() > 1077){
+        console.log(window.innerHeight)
+        if ($(window).width() <= 1080 &&  $(window).width() > 1000){
             console.log('ssss')
-            location.reload();  // refresh page 
+            //location.reload();  // refresh page 
         } 
-        if($(window).width() < 1080 ){
+        if ($(window).width() <= 575 &&  $(window).width() > 573){
+            console.log('ssss')
+           // location.reload();  // refresh page 
+        } 
+        if($(window).width() <= 1079){
             $(".center-shopping-list").css('display','block')
         }else{
             //If button is not clicked close it
@@ -75,8 +80,26 @@ $(document).ready(function(){
         }
     })
    
-  //If Click Toggle List
  
+  var position = $(window).scrollTop();
+  $(window).scroll(function (event) {
+
+    let scroll = $(window).scrollTop();
+   
+  
+    if(scroll>position){
+        $('.anchor ').attr('onclick','location.href="#top"')
+        $('.anchor .anchor-button i').removeClass('fa-caret-down').addClass('fa-caret-up').css('color','white')
+    }
+    else{
+        $('.anchor ').attr('onclick',"location.href='#shopping-list'")
+        $('.anchor .anchor-button i').removeClass('fa-caret-up').addClass('fa-caret-down').css('color','white')
+    }
+    position =scroll
+
+    // Do something
+});
+    //If Click Toggle List
     $('.company-square').click(function(){
         
             $('.company-square').attr('clicked','true')
@@ -99,13 +122,7 @@ $(document).ready(function(){
         })
     
     //Control Shopping List Height
-    var height =  $(window).height();
- 
-    if($(window).width() >=1080){
-    
-        $('.content-div').css('max-height',`${height-314}px`)
-      
-    }
+  
    
   
    $(window).on('resize onload load',function(){
