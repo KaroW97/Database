@@ -51,25 +51,14 @@ function checkIfNull(){
 
 //TODO: add arrow navigation to toggle menu
 $(document).ready(function(){
-    $(".alert" ).fadeOut(3000); 
-
+    $(".alert" ).fadeOut(3000);
     //If  List Is Not Empty Shine Till Not Clicked
     if($('.list-content').length > 0){
         $('.company-square').addClass('list-content-shine')
         $('.company-square p').removeClass('p-color')
     }
- 
-
+    //If Width Less Then 1079 show list on the bottom if grater then 180 dont display if clicked is not true 
     $(window).resize(function(){
-        console.log(window.innerHeight)
-        if ($(window).width() <= 1080 &&  $(window).width() > 1000){
-            console.log('ssss')
-            //location.reload();  // refresh page 
-        } 
-        if ($(window).width() <= 575 &&  $(window).width() > 573){
-            console.log('ssss')
-           // location.reload();  // refresh page 
-        } 
         if($(window).width() <= 1079){
             $(".center-shopping-list").css('display','block')
         }else{
@@ -79,31 +68,28 @@ $(document).ready(function(){
             }
         }
     })
-   
- 
-  var position = $(window).scrollTop();
-  $(window).scroll(function (event) {
+    //ANCHOR
+    var position = $(window).scrollTop();
+    $(window).scroll(function (event) {
+        let scroll = $(window).scrollTop();
+        if(scroll>position){
+            $('.anchor ').attr('onclick','location.href="#top"')
+            $('.anchor .anchor-button i').removeClass('fa-caret-down').addClass('fa-caret-up').css('color','white')
+            .css('justify-content','center').css('align-items','center')
+        
+        }
+        else{
+            $('.anchor ').attr('onclick',"location.href='#shopping-list'")
+            $('.anchor .anchor-button i').removeClass('fa-caret-up').addClass('fa-caret-down').css('color','white')
+        }
+        position =scroll
 
-    let scroll = $(window).scrollTop();
-   
-  
-    if(scroll>position){
-        $('.anchor ').attr('onclick','location.href="#top"')
-        $('.anchor .anchor-button i').removeClass('fa-caret-down').addClass('fa-caret-up').css('color','white')
-    }
-    else{
-        $('.anchor ').attr('onclick',"location.href='#shopping-list'")
-        $('.anchor .anchor-button i').removeClass('fa-caret-up').addClass('fa-caret-down').css('color','white')
-    }
-    position =scroll
-
-    // Do something
-});
+        // Do something
+    });
     //If Click Toggle List
     $('.company-square').click(function(){
-        
+
             $('.company-square').attr('clicked','true')
-            
             $('.company-square').removeClass('list-content-shine')
             $('.company-square p').addClass('p-color')
             $(".center-shopping-list").animate({width:'toggle', queue:false},400)
@@ -111,6 +97,7 @@ $(document).ready(function(){
            if($('.company-square').css('right') =='350px'){
                 $(".company-square").animate({right:'0px', queue:false})
                 $(".square-shadow").animate({right:'0px', queue:false})
+                $('.company-square').attr('clicked','false')
             }else{
                 $(".company-square").animate({right:'350px', queue:false})
                 $(".square-shadow").animate({right:'350px', queue:false})
@@ -122,17 +109,9 @@ $(document).ready(function(){
         })
     
     //Control Shopping List Height
-  
-   
-  
    $(window).on('resize onload load',function(){
         var height =  $(window).height();
-       
-          
-            $('.visit-div').css('max-height',`${height-314}px`)
-        
-
-       
+        $('.visit-div').css('max-height',`${height-314}px`) 
    })
 })
 

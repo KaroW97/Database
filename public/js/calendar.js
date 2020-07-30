@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+
     //Edit View
     $(".div-element").click(function(){
         //After Click Give Action
@@ -7,71 +8,33 @@ $(document).ready(function(){
         $('.formEdit').attr('action', $(this).attr('action') )
       
         $('.openForm').show();
-        $(".myInput").val( $(this).attr('client'));
-        $(".hiddenInput").val( $(this).attr('clientId'));
+        $(".inputEdit").val( $(this).attr('client'));
+       
         $(".phone").val( $(this).attr('phone'));
 
-        $(".myInputTreatment").val( $(this).attr('treatment'));
-        $(".hiddenInputTreatment").val( $(this).attr('treatmentId'));
-        $(".hiddenInput").attr('name', $(this).attr('clientState'))
-       $(".hiddenInputTreatment").attr('name',$(this).attr('treatmentState'))
-
+        $(".inputEditTreatment").val( $(this).attr('treatment'));
         $(".timeFrom").val( $(this).attr('timeFrom'));
         $(".timeTo").val( $(this).attr('timeTo'));
-     
-        $(".treatmentState").val( $(this).attr('treatmentState'))
-        $(".clientState").val($(this).attr('clientState'))
         $(".visitDateEdit").val($(this).attr('visitDate'))
-        
-        $('.myInput').on('keyup ', function(){
-            $('.myInput').val($(this).val())
-            $(".hiddenInput").val( $('.myInput').val());  
+  
+    })
 
-        })
-        $('.myInputTreatment').on('keyup ', function(){
-            $('.myInputTreatment').val($(this).val())
-            $(".hiddenInputTreatment").val( $('.myInputTreatment').val());
-        })
-    })
-    $(".myInputTreatment").on('keyup click', function(){
-        $('.treatments-list').show()
-        let value = $(this).val().toLowerCase()
-        if (value.length == 0 ||$('.treatments-list li').text().toLowerCase().indexOf(value) == -1) 
-            $('.treatments-list').hide();
-        
-        $(".hiddenInputTreatment").attr('name','newTreatment')
-        $(".treatmentState").val('newTreatment')
-        $(".hiddenInputTreatment").val( $('.myInputTreatment').val());
-        //filter treatment list
-        $('.listTreatment li').filter(function(){
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            $(this).click(function(){
-                $('.myInputTreatment').val($(this).text())
-                //If Exists Name Treatmetn
-                $(".treatmentState").val('treatment')
-                $(".hiddenInputTreatment").attr('name','treatment')
-                $(".hiddenInputTreatment").val( $('.myInputTreatment').val());
-                $(".hiddenInputTreatment").val( $(this).attr('value'));
-                $('.treatments-list').hide();
-            
-            })
-        })
-    
-    })
-    $(".myInput").on('keyup click', function(){
+
+  
+   /* $(".myInput").on('keyup click', function(){
         $('.clients-list').show()
         let value = $(this).val().toLowerCase()
         if (value.length == 0 || $('.list-client li').text().toLowerCase().indexOf(value) == -1){  
             $('.clients-list').hide()
         }
-        
         $(".clientState").val('newClient')
         $(".hiddenInput").attr('name','newClient')
         $(".hiddenInput").val( $('.myInput').val());
          //filter client list
-     
+       
         $('.list-client li').filter(function(){
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+           
             $(this).click(function(){
                 $('.phone').val($(this).attr('phone'))
                 $('.myInput').val($(this).text())
@@ -82,8 +45,80 @@ $(document).ready(function(){
                 
             })
         })
+    })*/
+  /*  $('.inputCreate').on('keydown',function(e){
+        $(".myInput").on('keyup',function(){
+            $('.clients-list').show()
+        })
+        let list =  $('.create ul.list li')
+              console.log('-------------') 
+        let list_new = list
+       // console.log(list)
+        $(this).ArrowFilterLi($('.create ul.list'),$('.create ul.list'),e,list)
+      //  
+       
+      
     })
 
+    $.fn.ArrowFilterLi = function($list, $scroll,$e,$li){
+        let $listElement = $li
+
+        //console.log('list element')
+      
+        let key = $e.keyCode,
+        $currentElement,
+        $selected = $listElement.filter('.selected');
+       // console.log( $listElement )
+       // console.log('selected')
+       // console.log($selected)
+       // console.log('---------------------')
+        
+        if(key != 40 && key != 38) return; //if not arrow down or up return
+        $listElement.removeClass('selected')
+        if(key==40){ //down 
+            if(!$selected.length || $selected.is(':last-child')){
+                $currentElement = $listElement.eq(0);
+                $list.scrollTop(0)
+                if(key ==	13){
+                    $('.inputCreate').val($currentElement.text())
+                    $('.hiddenInput').val($currentElement.attr('value'))
+                }
+              
+            }else{
+                $currentElement =  $selected.next();
+                $list.scrollTop($scroll.scrollTop()+34)
+                console.log($currentElement.text())
+                console.log($currentElement.attr('value'))
+                if(key ==	13){
+            
+                    $('.inputCreate').val($currentElement.text())
+                    $('.hiddenInput').val($currentElement.attr('value'))
+                }
+            }
+        }
+        else if(key==38){ //up
+            if(!$selected.length || $selected.is(':first-child')){
+                $currentElement = $listElement.last();
+                $list.scrollTop( $listElement.last().offset().top)
+                console.log(key)
+                if(key ==	13){
+                    $('.inputCreate').val($currentElement.text())
+                    $('.hiddenInput').val($currentElement.attr('value'))
+                }
+            }else{
+                $currentElement =  $selected.prev();
+                $list.scrollTop( $scroll.scrollTop()-34)  
+                if(key ==	13){
+                    $('.inputCreate').val($currentElement.text())
+                    $('.hiddenInput').val($currentElement.attr('value'))
+                }
+            }
+        }
+        $currentElement.addClass('selected');
+
+    }*/
+
+   
     $(".showForm").click(function(){
         $('#visitForm').show();
     })
@@ -115,27 +150,12 @@ $(document).ready(function(){
             $('.openForm').closest('form').find("input").val('')
             $('#comapnyForm').closest('form').find("input").val('')
         }
-         //Check If Clicked Outside Input 
-        if(!target.is('.myInput'))
-            $('.clients-list').hide()
-        else{
-            let value = $('.myInput').val().toLowerCase()
-            if($('.clients-list li').text().toLowerCase().indexOf(value) != -1)
-                $('.clients-list').show()     
-        }
-        //Check If Clicked Outside Input 
-        if(!target.is('.myInputTreatment'))
-            $('.treatments-list').hide()
-        else{
-            let value = $('.myInputTreatment').val().toLowerCase()
-            if($('.treatments-list li').text().toLowerCase().indexOf(value) != -1)
-                $('.treatments-list').show()   
-        }
+
        
         
     })
     
-
+ 
 
 
 })

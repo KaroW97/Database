@@ -46,9 +46,11 @@ $(document).ready(function(){
             $(this).window_click(event,$(".my-input-new-list-name"),$('.form-content .clients-list'),$('.clients-list li'))
         })
     })
+
+  
     //Search
     $.fn.search_list_settings = function($list ,$list_li,$input){
-        $list.show()
+        //$list.show()
         let value = $(this).val().toLowerCase()
         if (value.length == 0 || $list_li.text().toLowerCase().indexOf(value) == -1) 
             $list.hide()
@@ -64,7 +66,7 @@ $(document).ready(function(){
     ///Create Form
     $.fn.toggle_list_create_edit = function($form_content, $input, $list_client,$hidden_input, $data_state,
     $data_dosnt_exists, $data_exists) {
-            $form_content.show()
+            //$form_content.show()
             let value =$(this).val().toLowerCase()
             
             if (value.length == 0 || $list_client.text().toLowerCase().indexOf(value) == -1) 
@@ -104,8 +106,8 @@ $(document).ready(function(){
             $list.hide()
         else{
             let value = $input.val().toLowerCase()
-            if($list_li.text().toLowerCase().indexOf(value) != -1)
-                $list.show()     
+            //if($list_li.text().toLowerCase().indexOf(value) != -1)
+                //$list.show()     
         }
     }
     //toggle main page on search 

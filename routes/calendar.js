@@ -13,7 +13,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
     let cssSheets = [];
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
     cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
-    let visit = FutureVisit.find({user:req.user.id}).populate('client').populate('treatment')
+    let visit = FutureVisit.find({user:req.user.id})
     let todayDate = new Date(),weekDate=new Date();
    
     //let shoppingForWeek =  ShoppingList.find({user:req.user.id}).populate('listName')
@@ -24,8 +24,6 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
     if(req.query.visitBefore != null &&  req.query.visitBefore !='')
         visit = visit.lte('visitDate', req.query.visitBefore)
   
-  
-    
     try{
         const user = await User.findById(req.user.id);
         todayDate.setDate(todayDate.getDate() - 1)
@@ -37,7 +35,6 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
         
         const treatment = await Treatment.find({user:req.user.id});
         const clients =  await Client.find({user:req.user.id});
- 
         const futureVisit = await visit.sort({visitDate:'asc'}).exec();
       
         
@@ -84,16 +81,14 @@ router.post('/visit',ensureAuthenticated, async(req,res)=>{
     cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     let futureVisit  = new FutureVisit({
         user:req.user.id,
-        client:req.body.clients,
-        newClient:req.body.newClient,
+        clientName:req.body.clients,
+        //newClient:req.body.newClient,
         visitDate :req.body.visitDate,
         timeFrom:req.body.timeFrom,
         timeTo:req.body.timeTo,
         treatment:req.body.treatment ,
-        newTreatment:req.body.newTreatment,
+        //newTreatment:req.body.newTreatment,
         phoneNumber:req.body.phone,
-        clientState:req.body.clientState,
-        treatmentState:req.body.treatmentState
     });
    
     try{
@@ -112,28 +107,10 @@ router.put('/edit/:id', async(req,res)=>{
     let futureVisit;
   
       try{
-        futureVisit = await FutureVisit.findById(Object(req.params.id)).populate( 'treatment').populate('client').exec()
-        console.log(req.params.id)
-   
-        if(req.body.clientState == 'newClient'){
-            futureVisit.newClient = req.body.newClient
-            futureVisit.client=null;
-            
-        }else if(req.body.clientState == 'clients'){
-            futureVisit.client = req.body.clients
-            futureVisit.newClient=null;
-          
-        }
-        if(req.body.treatmentState=='newTreatment'){
-            futureVisit.newTreatment = req.body.newTreatment
-            futureVisit.treatment=null;
-           
-        }else{
-            futureVisit.treatment = req.body.treatment
-            futureVisit.newTreatment=null;
-        }
-        futureVisit.clientState = req.body.clientState
-        futureVisit.treatmentState = req.body.treatmentState
+        futureVisit = await FutureVisit.findById(Object(req.params.id)).exec()
+
+        futureVisit.clientName = req.body.clients
+        futureVisit.treatment = req.body.treatment
         futureVisit.visitDate =new Date(req.body.visitDateEdit)
         futureVisit.timeFrom = req.body.timeFromEdit
         futureVisit.timeTo = req.body.timeToEdit

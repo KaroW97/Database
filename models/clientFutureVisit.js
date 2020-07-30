@@ -7,14 +7,8 @@ const futureVisit = mongoose.Schema({
         type:String,
         require:true
     },
-    //If Client In Database
-    client:{
-        type:mongoose.Schema.Types.ObjectId,
-        required:false,
-        ref:'Client',
-    },
     //If Not
-    newClient:{
+    clientName:{
         type:String,
         require:false
     },
@@ -31,31 +25,19 @@ const futureVisit = mongoose.Schema({
         require:false
     },
     treatment:{
-        type:mongoose.Schema.Types.ObjectId, //id of another object in our colection
+        type:String, 
         required:false,
-        ref:'Treatment' //do czego sie odnosi
-    },
-    newTreatment:{
-        type:String,
-        require:false
     },
     phoneNumber:{
         type:Number,
         required:true
     },
-    clientState:{
-        type:String,
-        required:false
-    },
-    treatmentState:{
-        type:String,
-        required:false
-    }
+
 
 })
 
 
-futureVisit.plugin(ttl,{ttl:ms('2d')})
+futureVisit.plugin(ttl,{ttl:ms('90d')})
 const FutureVisit = mongoose.model('FutureVisit',futureVisit)
 FutureVisit.startTTLReaper()
 
