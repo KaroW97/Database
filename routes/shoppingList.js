@@ -31,7 +31,7 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
             $gt:todayDate,
             $lt:weekDate
         }}).populate('listName').sort({transactionDate:'asc'})
-        console.log(shoppingListShort)
+       
         const shopping =  await shoppingList.sort({transactionDate:'asc'}).exec();
         res.render('shoppingList/index',{
             shoppingAll:shoppingListShort,
@@ -48,7 +48,7 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
 })
 //Add Shopping List Name
 router.post('/', ensureAuthenticated,async(req,res)=>{
-    console.log(req.body.brandName)
+  
     const shoppingList = new ShoppingList({  
         listName:req.body.brand,
         listNameNew:req.body.newBrand,
@@ -125,7 +125,6 @@ router.put('/list-view/:id',ensureAuthenticated,async(req,res)=>{
 })
 //Delete Brands
 router.delete('/brand-name-delete',async(req,res)=>{
-    console.log('jestem 2')
     let brand_name;
     try{
         if(req.body.chackboxDeleteBrand!= null ){
@@ -185,7 +184,6 @@ router.delete('/:id',ensureAuthenticated,async(req,res)=>{
         res.redirect('/shopping-list');
     }catch(err){
         console.log(err)
-        console.log('jestem')
         req.flash('mess','Nie udało się usunąć rekordu.')
         req.flash('type','danger')
         res.redirect(`/shopping-list`)   

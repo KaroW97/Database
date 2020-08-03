@@ -6,7 +6,6 @@ $(document).ready(function(){
         //After Click Give Action
         //set Form action
         $('.formEdit').attr('action', $(this).attr('action') )
-      
         $('.openForm').show();
         $(".inputEdit").val( $(this).attr('client'));
        
@@ -142,18 +141,7 @@ $(document).ready(function(){
             $('.openForm').hide();
         }
     })
-    $(window).click(function(event){
-        var target = $( event.target );
-         //Check If Clicked Outside Edit Form Box 
-        if(target.is('.create-visit-form') || target.is('.center-form')){
-            $('.create-visit-form').hide();
-            $('.openForm').closest('form').find("input").val('')
-            $('#comapnyForm').closest('form').find("input").val('')
-        }
 
-       
-        
-    })
     
  
 

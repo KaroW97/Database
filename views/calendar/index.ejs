@@ -94,14 +94,31 @@
 <div class="main-div-full-content">
     <div class="main-div-center  ">
         <div class="content-div">
-            
+   
             <% for(var i = 0 ; i< newVisit.length ; i++){%>
+                <%if(newVisit[i-1]!= undefined &&newVisit[i-1].visitDate.toISOString().split('T')[0] <newVisit[i].visitDate.toISOString().split('T')[0] ){%>
+                  
+                    <div class="data-separator">
+                        <div class="div-element-day"  >
+                            <p><%=weekdays[newVisit[i].visitDate.getDay()]%> <%=newVisit[i].visitDate.toISOString().split('T')[0]%></p>
+                        </div>
+                    </div>
+                  
+                <% } else if(i==0){%>
+                    <div class="data-separator">
+                        <div class="div-element-day"  >
+                            <p><%=weekdays[newVisit[i].visitDate.getDay()]%> <%=newVisit[i].visitDate.toISOString().split('T')[0]%></p>
+                        </div>
+                    </div>
+                  
+                <% } %> 
                 <div class="visit">
                     <form method="post" action='/calendar/<%=newVisit[i]._id%>?_method=DELETE'>
                         <button type="submit" class="close" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </form>  
+              
                     <div class="div-element"  
                     client ="<%= newVisit[i].clientName%> " 
                     treatment="<%= newVisit[i].treatment %>",
@@ -112,23 +129,22 @@
                     action="/calendar/edit/<%=newVisit[i]._id%>?_method=PUT"
                     >
 
-                        <p class="header"><%= newVisit[i].visitDate == null ? '' : `${weekdays[newVisit[i].visitDate.getDay()] } ${ newVisit[i].visitDate.toISOString().split('T')[0]}` %> </p> 
+                        <div class="header">
+                            <p  ><%= newVisit[i].timeFrom %> - <%=newVisit[i].timeTo%>  </p>  
+                        </div>
                         <div class="first-p-element">
                             <p class="headerVisit">Klient</p>
                             <p ><%= newVisit[i].clientName %></p>
                         </div>
-                        <div class="sec-p-element">
-                            <p class="headerVisit">Telefon</p>
-                            <p><%= newVisit[i].phoneNumber%></p> 
-                        </div>
-                        <div class="th-p-element">
+                        <div class=" sec-p-element">
                             <p class="headerVisit">Zabieg</p>
                             <p><%= newVisit[i].treatment%> </p>
                         </div>
-                        <div class="fourth-p-element">
-                            <p class="headerVisit">Godzina</p> 
-                            <p  ><%= newVisit[i].timeFrom %> - <%=newVisit[i].timeTo%>  </p>  
-                        </div>                        
+                        <div class="th-p-element">
+                            <p class="headerVisit">Telefon</p>
+                            <p><%= newVisit[i].phoneNumber%></p> 
+                        </div>
+                                         
                     </div>
                 </div>   
             <%} %> 
@@ -137,38 +153,8 @@
     </div>
 
 </div>
-<div class="anchor" onclick="location.href='#shopping-list'">
-    <a class="anchor-button" ><i class="fas fa-caret-down"></i></a>
-</div>
-<div id="shopping-list" class="shopping-list-out">
-    <div class="company-square" clicked="false"><p class="p-color">Zakupy</p></div>
-    <div class="square-shadow"></div>
-    <div class="center-shopping-list">
-        <div class="shopping-list">
-            <%shoppingAll.forEach(element => {%>
-                <div onclick="location.href='/shopping-list/list-view/<%=element._id%>'" class="list-content">
-                    <div class="date">
-                        <p><%= element.transactionDate == null ? '' : element.transactionDate.toISOString().split('T')[0] %> </p> 
-                    </div>
-                    <div class="shopping-price-name">
-                        <div class="list-name">
-                            <p class="headerVisit">Nazwa</p>
-                            <p><%= element.listNameNew != undefined ? element.listNameNew :element.listName.name %> </p> 
-                        </div>
-                        <div  class="list-price">
-                            <p class="headerVisit">Cena</p>
-                            <p class="last"><%= element.totalPrice %>zł </p>
-                        </div>
-                    
-                    </div> 
-                </div>
-            
-            
-            <%}); %>
-        </div>
+<%-include('../partials/shopping-list.ejs')%>
 
-    </div>
-</div>
 
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -189,7 +175,24 @@
     $('.create .listTreatment li').filter(function(){
         treatmentCreate.push($(this).text())
     })
-   
+   /* $(function(){
+        $('.content-div .visit .div-element').filter(function(index){
+            if(index == 0){
+                $(this).attr('id','start')
+            }
+        })
+
+        var $curr = $('#start')
+        $next = $curr.next()
+        console.log($curr.attr('timeFrom'))
+        console.log($next.find('timeFrom').get())
+        if($curr.attr('timeFrom') >=$next.attr('timeFrom') &&$curr.attr('timeTo') >=$next.attr('timeTo'))
+            $curr.css('background','red')
+        else
+            $curr.css('background','green')
+      
+    })
+   */
     $(function(){
         $( ".inputEdit" ).autocomplete({
             source: clientsCreate,

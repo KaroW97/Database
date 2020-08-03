@@ -1,0 +1,32 @@
+<div class="anchor" >
+    <a class="anchor-button" ><i class="fas fa-caret-down"></i></a>
+</div>
+<div id="shopping-list" class="shopping-list-out" name="shopping-list">
+    <div class="company-square" clicked="false"><p class="p-color">Zakupy</p></div>
+    <div class="square-shadow"></div>
+    <div class="center-shopping-list">
+        <div class="shopping-list">
+            <%shoppingAll.forEach(element => {%>
+                <div onclick="location.href='/shopping-list/list-view/<%=element._id%>'" class="list-content">
+                    <div class="date">
+                        <p><%= element.transactionDate == null ? '' : element.transactionDate.toISOString().split('T')[0] %> </p> 
+                    </div>
+                    <div class="shopping-price-name">
+                        <div class="list-name">
+                            <p class="headerVisit">Nazwa</p>
+                            <p><%= element.listNameNew != undefined ? element.listNameNew :element.listName.name %> </p> 
+                        </div>
+                        <div  class="list-price">
+                            <p class="headerVisit">Cena</p>
+                            <p class="last"><%= element.totalPrice != null ? element.totalPrice + 'zł' : '-'%> </p>
+                        </div>
+                    
+                    </div> 
+                </div>
+            
+            
+            <%}); %>
+        </div>
+
+    </div>
+</div>

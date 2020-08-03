@@ -1,5 +1,5 @@
 
-function showFormm(){
+/*function showFormm(){
     let comapnyForm = document.getElementById('comapnyForm');
     let visitForm = document.getElementById('visitForm');
     let input = document.getElementById('input')
@@ -48,7 +48,7 @@ function checkIfNull(){
     if(select && select.options.length != 0)
         myForm.style.display="block"    
 }
-
+*/
 //TODO: add arrow navigation to toggle menu
 $(document).ready(function(){
     $(".alert" ).fadeOut(3000);
@@ -68,23 +68,30 @@ $(document).ready(function(){
             }
         }
     })
-    //ANCHOR
+     //ANCHOR
+    function scrollToTopAnchor(an){
+        let anchor =  $("div[name='"+ an +"']");
+       
+        console.log(anchor)
+        $('html,body').animate({scrollTop: anchor.offset().top},'slow');
+    }
+    $('.anchor ').click(function(){
+        if($('.anchor .anchor-button i').hasClass('fa-caret-down')){
+            scrollToTopAnchor('shopping-list')
+        }else{
+            scrollToTopAnchor('nav-bar')
+        }
+    })
     var position = $(window).scrollTop();
     $(window).scroll(function (event) {
         let scroll = $(window).scrollTop();
-        if(scroll>position){
-            $('.anchor ').attr('onclick','location.href="#top"')
-            $('.anchor .anchor-button i').removeClass('fa-caret-down').addClass('fa-caret-up').css('color','white')
-            .css('justify-content','center').css('align-items','center')
-        
-        }
-        else{
-            $('.anchor ').attr('onclick',"location.href='#shopping-list'")
+        if(scroll>position)
+            $('.anchor .anchor-button i').addClass('fa-caret-up').removeClass('fa-caret-down',100).css('color','white')
+        else
             $('.anchor .anchor-button i').removeClass('fa-caret-up').addClass('fa-caret-down').css('color','white')
-        }
+        
         position =scroll
-
-        // Do something
+       
     });
     //If Click Toggle List
     $('.company-square').click(function(){
@@ -102,17 +109,51 @@ $(document).ready(function(){
                 $(".company-square").animate({right:'350px', queue:false})
                 $(".square-shadow").animate({right:'350px', queue:false})
             }
-        
-        
-
-        
-        })
+    })
     
     //Control Shopping List Height
    $(window).on('resize onload load',function(){
         var height =  $(window).height();
         $('.visit-div').css('max-height',`${height-314}px`) 
    })
+   $(window).click(function(event){
+        var target = $( event.target );
+        //Check If Clicked Outside Edit Form Box 
+        if(target.is('.create-visit-form') || target.is('.center-form')){
+            $('.create-visit-form').hide();
+            $('.openForm').closest('form').find("input").val('')
+            $('#comapnyForm').closest('form').find("input").val('')
+        }   
+    })
+    $('.div-element').click(function(){
+        $('.openForm').show();
+        $('.formEdit').attr('action', $(this).attr('action') )
+        console.log($(this).attr('treatmentPrice'))
+        $('.treatmentNameEdit').val($(this).attr('treatmentName'))
+        $('.treatmentPriceEdit').val(parseInt($(this).attr('treatmentPrice')))
+
+    })
+    $('.delete').click(function(){
+        $(this).open_box( $('.hide-delete'))
+    })
+    $('.close').click(function(){
+        $(this).close_box( $('.create-form'),$('.center-form'));
+    })
+    $('.create').click(function(){
+       $(this).open_box($('.hidden-create'))
+    })
+    $('.showForm').click(function(){
+        $(this).open_box($('.form'))
+    })
+       //open window
+       $.fn.open_box = function($box){
+        $box.show();
+    }
+    $.fn.close_box = function($box,$clear_form){
+        $clear_form.closest('form').find("input").val('')
+
+        $box.hide();
+    }
 })
 
 

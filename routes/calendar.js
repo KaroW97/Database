@@ -117,7 +117,6 @@ router.put('/edit/:id', async(req,res)=>{
         futureVisit.phoneNumber = req.body.phone
     
         await futureVisit.save();
-        console.log(futureVisit)
         req.flash('mess', 'Edytowano wizyte!');
         req.flash('type', 'success')
         res.redirect('/calendar')

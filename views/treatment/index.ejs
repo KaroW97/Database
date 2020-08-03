@@ -1,52 +1,116 @@
-<h2>All Treatments</h2>
+
+
+
 <%-include('../partials/infoMessages.ejs')%>
-<form method="GET">
-    <label id="treatmentName"></label>
-    <input id="treatmentName"name="treatmentName" placeholder="Nazwa zabiegu" value="<%=searchOptions.name  %>" autofocus>
-</form>
-<button onclick="showFormm() " >Add Treatment</button>
 
-<form method="post" action="/treatment?_method=DELETE">
-    <input type="submit" value="Usuń">
-    <table>
-        <thead>
-            <tr>
-                <th >Nazwa</th>
-                <th >Cena</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>   
-            <% treatment.forEach(treatment => {%>
-                    <tr>
-                        <td onclick="showEditForm(`<%=treatment.treatmentName%>`,`<%=treatment.treatmentPrice%>`,null,`treatment/edit/<%=treatment.id%>?_method=PUT`)"><%=treatment.treatmentName%></td>
-                        <td onclick="showEditForm(`<%=treatment.treatmentName%>`,`<%=treatment.treatmentPrice%>`,null,`treatment/edit/<%=treatment.id%>?_method=PUT`)"><%=treatment.treatmentPrice%></td>
-                        <td><input type="checkbox" name="chackboxDelete" value="<%=treatment.id%>"></td>
-                       
-                    </tr>
-            <% });%>
+<div  class="center-main-div">
+    <div class="main-div">
+        <div class="content">
+            <div class="visit">
+                    <form class="find-visit" method="GET">
+                            <div class="data-input-from ui-widget">
+                                <input id="treatmentName" class="myInputSearch"name="treatmentName" placeholder="Nazwa zabiegu" value="<%=searchOptions.name  %>" autocomplete="off">
+                            </div>
+                   
+                    </form>
+                    <div class="add">
+                        <button class="button_action showForm " ><i class="fas fa-plus"></i></button>
+                    </div>
+                    <div class="treatments-list create">
+                        <ul class="listTreatment list"  >
+                            <% treatment.forEach(treatment => { %>
+                                <li value="<%=treatment._id%>"><%=treatment.treatmentName%></li>
+                            <%}); %>
+                        </ul>
+                    </div>
+                     
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-div-full-content">
+    <div class="main-div-center  ">
+        <div class="content-div">
+   
+            <% for(var i = 0 ; i< treatment.length ; i++){%>
+                <div class="visit">
+                    <form method="post" action='/treatment/<%=treatment[i]._id%>?_method=DELETE'>
+                        <button type="submit" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </form>  
+              
+                    <div class="div-element" 
+                    action="/treatment/edit/<%=treatment[i]._id%>?_method=PUT"
+                    treatmentName="<%=treatment[i].treatmentName%> " 
+                    treatmentPrice="<%=treatment[i].treatmentPrice != null ? treatment[i].treatmentPrice:'ss'%> " 
+                    >
+
+                        <div class="header">
+                            <p  ><%=treatment[i].treatmentName%> </p>  
+                        </div>
+                        <div class="first-p-element">
+                            <p class="headerVisit">Cena</p>
+                            <p ><%=treatment[i].treatmentPrice != null ? treatment[i].treatmentPrice +'zł' : '-'%></p>
+                        </div>
+                 
+                                         
+                    </div>
+                </div>   
+            <%} %> 
          
-        </tbody>
-    </table>
-    
-</form>
+        </div>
+    </div>
 
-<div id="popUpPage" style="display: none">
-    <form id="editForm" method="post" action="">
-        <span id ="close"class="close" onclick="closeEditForm()">&times;</span>
-        <label for="input"></label>
-        <input type="text" id="productName" placeholder="Nazwa" value=""  name="treatmentName"  required >
-    
-        <label for="treatmentPrice"></label>
-        <input type="number" id="productPrice" placeholder="Cena" value="" name="treatmentPrice" required>
-        <button type="submit">Edytuj</button>
+</div>
+
+<div class="create-visit-form openForm " id="visitForm">
+    <form method="POST" action="" class="center-form formEdit">
+        <div   class="form">
+            <!--onclick="closeForm()"-->
+            <span id ="close"class="close" >&times;</span>
+            <div class="form-content">
+               
+                <input type="text" class="treatmentNameEdit"  placeholder="Nazwa" value=""  name="treatmentNameEdit"  required >
+                <input type="number" class="treatmentPriceEdit" placeholder="Cena" value="" name="treatmentPriceEdit" required>
+                <button type="submit">Edytuj</button>     
+             
+            </div>
+   
+        </div>
     </form>
 </div>
 
-<form method="POST" action="/treatment" >
-    <div style="display: none;" id ="comapnyForm" >
-        <span id ="close"class="close" onclick="closeForm()">&times;</span>
-        <%-include('./_form_fields.ejs')%>
-        <button type="submit">Dodaj</button>
-    </div>
-</form>
+
+<div class="create-visit-form form " id="visitForm">
+    <form method="POST" action="/treatment" class="center-form">
+        <div   class="form">
+            <!--onclick="closeForm()"-->
+            <span id ="close"class="close" >&times;</span>
+            <div class="form-content">
+                <%-include('./_form_fields.ejs')%>          
+                <button type="submit">Dodaj</button>
+               </div>
+   
+        </div>
+    </form>
+</div>
+
+
+<%-include('../partials/shopping-list.ejs')%>
+<script src="../../public/toggle_main_page_list.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    var treatmentCreate = []
+    $('.listTreatment li').filter(function(){
+        treatmentCreate.push($(this).text())
+    })
+    $(function(){
+        $( ".myInputSearch" ).autocomplete({
+            source: treatmentCreate,
+            autoFocus:true
+        });
+    })
+ 
+</script>

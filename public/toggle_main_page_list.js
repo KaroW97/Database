@@ -3,15 +3,14 @@ $(document).ready(function(){
         $(this).window($('.create-visit-form '),$('.center-form'),e)
         
     })
-    //if clients write
+    //if clients write toggle elements on 
     $('.myInputSearch').on('keyup click', function () {
         $(this).toggle_main_page_list($(this),  $('.main-div-full-content .visit '))
-
     })
     //if clients list clicked toggle visits
-    $('.clients-list').on('click',function(){
-        $(this).toggle_main_page_list($('.myInputSearch'),  $('.main-div-full-content .visit '))
-    })
+    //$('.clients-list').on('click',function(){
+      //  $(this).toggle_main_page_list($('.myInputSearch'),  $('.main-div-full-content .visit '))
+    //})
     $('.delete-brand').click(function(){
         $(this).open_box( $('.hide-delete'))
     })
@@ -28,13 +27,13 @@ $(document).ready(function(){
     //Search
     $(".myInputSearch").on('keyup click', function(){
         let value = $(this).val().toLowerCase()
-         $(this).search_list_settings($('.clients-list'),$('.list-client li'),$(".myInputSearch"))
-         $(window).click(function(event){
-            var target = $( event.target );
-            console.log(target)
+       //  $(this).search_list_settings($('.clients-list'),$('.list-client li'),$(".myInputSearch"))
+       //  $(window).click(function(event){
+           // var target = $( event.target );
+           // console.log(target)
             //Check If Clicked Outside Edit Form Box
-            $(this).window_click(event,$('.myInputSearch'), $('.clients-list'),$('.clients-list li'))
-        })
+           // $(this).window_click(event,$('.myInputSearch'), $('.clients-list'),$('.clients-list li'))
+        //})
     })
 
     $(".my-input-new-list-name").on('keyup click', function(){
@@ -46,8 +45,6 @@ $(document).ready(function(){
             $(this).window_click(event,$(".my-input-new-list-name"),$('.form-content .clients-list'),$('.clients-list li'))
         })
     })
-
-  
     //Search
     $.fn.search_list_settings = function($list ,$list_li,$input){
         //$list.show()
@@ -92,24 +89,7 @@ $(document).ready(function(){
             return this
     
     }
-    //open close window if outside box
-    $.fn.window_click=function($event,$input,$list,$list_li){
-        var target = $( $event.target );
-        console.log(target)
-        if(target.is('.create-visit-form') || target.is('.center-form')){
-            $('.create-visit-form').hide();
-            $('.center-form').closest('form').find("input").val('')
-   
-        }
-        //Check If Clicked Outside Edit Form Box 
-        if(!target.is($input))
-            $list.hide()
-        else{
-            let value = $input.val().toLowerCase()
-            //if($list_li.text().toLowerCase().indexOf(value) != -1)
-                //$list.show()     
-        }
-    }
+
     //toggle main page on search 
     $.fn.toggle_main_page_list = function($input,$visits){
         let value = $input.val().toLowerCase();
@@ -118,15 +98,7 @@ $(document).ready(function(){
       
        })  
     }
-    //open window
-    $.fn.open_box = function($box){
-        $box.show();
-    }
-    $.fn.close_box = function($box,$clear_form){
-        $clear_form.closest('form').find("input").val('')
-
-        $box.hide();
-    }
+ 
     $.fn.window = function($close_form,$clear_form, $e){
         if($e.keyCode == 27){
             $clear_form.closest('form').find("input").val('')
@@ -134,5 +106,6 @@ $(document).ready(function(){
           
         }
     }
+   
   
 })
