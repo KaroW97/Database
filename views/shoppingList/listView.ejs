@@ -8,7 +8,7 @@
         </div>
         
             <div class="list-header">
-                <p name="listName" > <%=list.listNameNew !=undefined ? list.listNameNew :list.listName.name%></p>
+                <p name="listName" > <%=list.listName%></p>
                 <% if(list.transactionDate!= null){ %> 
                     <p name="transactionDate"> <%=list.transactionDate.toISOString().split('T')[0] %> </p>
                 <% } %> 
@@ -19,20 +19,17 @@
                 <button type="submit" ><i class="far fa-trash-alt"></i></button>       
                 <div class="list-content"   >
                     
-                        <div class="element-font-size"onclick="window.location='/shopping-list/list-view/<%=list.id%>/edit'" >
-                    
+                        <div class="element-font-size showForm" >
                             <% list.productName.forEach(element => { %>
                                 <p><%= element %></p>
                             <% }); %> 
                         </div>
-                        <div class="element-font-size"  >
+                        <div class="element-font-size showForm"  >
                             <% list.price.forEach((element, index) => { %>
                                 <div class="flex">
-                                    <p onclick="window.location='/shopping-list/list-view/<%=list.id%>/edit'"> <%= element %>zł </p> 
-                                    <input class="checkbox" onclick="window.location='#'" type="checkbox" name="chackboxDelete" value="<%=index%>"> 
-     
-                                </div>
-                                    
+                                    <p> <%= element %>zł </p> 
+                                    <input class="checkbox" type="checkbox" name="chackboxDelete" value="<%=index%>"> 
+                                </div>   
                             <% }); %> 
                         </div>
                 </div>
@@ -58,4 +55,43 @@
     
     
 </div>
+
+<div class="create-visit-form form create-form " id="visitForm">
+    <form method="POST" action="/shopping-list/list-view/<%=list.id%>/edit?_method=PUT" class="center-form">
+        <div  id ="comapnyForm" class="form">
+            <!--onclick="closeForm()"-->
+            <span id ="close"class="close" >&times;</span>
+            <div class="form-content">
+                <input type="date" id="dataFrom" name="transactionDate" value="<%=list.transactionDate==null ? '' : list.transactionDate.toISOString().split('T')[0]%>" >
+                <div  class="list-content">
+                    <div class="list-element-padding">
+                        <% list.productName.forEach(element => { %>
+                            <div class="list-element-margin">
+                                <input type="text" placeholder="nazwa produktu" name="productName" value="<%=element%>" >
+                            </div>
+                        <% }); %> 
+                    </div>
+                    <div class="list-element-padding" >
+                        <% list.price.forEach(element => { %>
+                            <div class="list-element-margin">
+                                <input type="number" placeholder="cena"  name="price"  value="<%=element%>" >
+                            </div>
+                        <% }); %> 
+                    </div>
+                </div>
+                
+                
+                
+                <button type="submit">Dodaj</button>
+            </div>
+   
+        </div>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<script src="../../public/dataTimePicker.js"></script>
+<script>
+
+</script>
 

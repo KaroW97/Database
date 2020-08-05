@@ -31,7 +31,7 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
-        }}).populate('listName').sort({transactionDate:'asc'})
+        }}).sort({transactionDate:'asc'})
         res.render('clients/index',{
             shoppingAll:shoppingList,
             clients:clientFind,

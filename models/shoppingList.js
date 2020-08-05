@@ -7,18 +7,10 @@ const shoppingList = mongoose.Schema ({
         require:false
     },
     listName:{
-        type:mongoose.Schema.Types.ObjectId,
-        require:false,
-        ref:'BrandName'
-    },
-    listNameNew:{
         type:String,
         require:false
     },
-    brandState:{
-        type:String,
-        require:false
-    },
+  
     productName:{
         type:[String],
         require:false

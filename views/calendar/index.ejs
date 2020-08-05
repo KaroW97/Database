@@ -14,24 +14,24 @@
                                 <input placeholder="Do" id="dataTo"  name="visitBefore"   autocomplete="off" value="<%=searchOptions.visitBefore%>" />
                             </div>
                             <div class="search">
-                                <button type="submit" class="search-button"><i class="fas fa-search"></i></button>
+                                <button type="submit" class="search-button"aria-label="search-by-date"><i class="fas fa-search"></i></button>
                             </div>
 
                        
 
                     </form>
                     <div class="add">
-                        <button class="button_action showForm " ><i class="fas fa-plus"></i></button>
+                        <button class="button_action showForm "aria-label="open-create-visit-form" ><i class="fas fa-plus"></i></button>
                     </div>
             <!--onclick="showFormm()"-->
             </div>
         </div>
     </div>
 </div>
-<div class="create-visit-form toggleListHide " id="visitForm">
+<div class="create-visit-form  close-form create-form">
     <form method="POST" action="/calendar/visit" class="center-form">
-        <div  id ="comapnyForm" class="form">
-            <!--onclick="closeForm()"-->
+        <div class="form">
+          
             <span id ="close"class="close" >&times;</span>
             <div class="form-content">
               
@@ -46,7 +46,7 @@
                 <input   id="timepickerFrom" onclick="$timepickerFrom.open()" name="timeFrom"   placeholder="Czas rozpoczęcia" value="<%=newVisit.timeFrom  %>" autocomplete="off" required />
                 <input   id="timepickerTo"onclick="$timepickerTo.open()"name="timeTo"  placeholder="Czas zakończenia" value="<%=newVisit.timeTo  %>" autocomplete="off" />
 
-                <button type="submit">Dodaj</button>
+                <button type="submit"aria-label="create-visit-form">Dodaj</button>
                 <div class="clients-list create">
                     <ul class="list-client list"  >
                         <% clients.forEach(client => { %>
@@ -67,10 +67,10 @@
         </div>
     </form>
 </div>
-<div class="create-visit-form toggleListHide openForm ">
+<div class="create-visit-form   close-form edit-form ">
     <form method="POST" class="formEdit center-form" action="" >
-        <div id ="openForm" class="form" >
-            <span class="close closeEdit" onclick="closeForm()">&times;</span>
+        <div  class="form" >
+            <span class="close closeEdit" >&times;</span>
             <div class="form-content">
                 <div class = "ui-widget ">
                     <input  class="myInput inputEdit" type="text" name ="clients" placeholder="Nazwa Klienta"  autocomplete="off" required>
@@ -83,7 +83,7 @@
                 <input id="timepickerFromEdit" class="timeFrom"onclick="$timepickerFromEdit.open()" name="timeFromEdit"  placeholder="Czas rozpoczęcia"  autocomplete="off" required/>
                 <input id="timepickerToEdit" class="timeTo" onclick="$timepickerToEdit.open()"name="timeToEdit"  placeholder="Czas zakończenia" autocomplete="off" />
                 
-                <button class="button"type="submit">Edytuj</button>
+                <button class="button"type="submit"aria-label="edit-form">Edytuj</button>
              
                  </div>
   

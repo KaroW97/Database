@@ -15,7 +15,7 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
     let todayDate = new Date(),weekDate=new Date();
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
     cssSheets.push('../../public/css/user/shopping_list/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
-    let shoppingList =  ShoppingList.find({user:req.user.id}).populate('listName')
+    let shoppingList =  ShoppingList.find({user:req.user.id})
    
     if(req.query.visitAfter != null && req.query.visitAfter !='')
         shoppingList = shoppingList.gte('transactionDate',req.query.visitAfter);
@@ -30,7 +30,7 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
         const shoppingListShort = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
-        }}).populate('listName').sort({transactionDate:'asc'})
+        }}).sort({transactionDate:'asc'})
        
         const shopping =  await shoppingList.sort({transactionDate:'asc'}).exec();
         res.render('shoppingList/index',{
@@ -48,10 +48,9 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
 })
 //Add Shopping List Name
 router.post('/', ensureAuthenticated,async(req,res)=>{
-  
+    console.log('brand')
     const shoppingList = new ShoppingList({  
         listName:req.body.brand,
-        listNameNew:req.body.newBrand,
         transactionDate:req.body.transactionDate,
         user:req.user.id
     })
@@ -70,8 +69,8 @@ router.get('/list-view/:id',ensureAuthenticated,async(req,res)=>{
     cssSheets.push('../../public/css/user/shopping_list/list-view.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     try{
         const shoppingList = await ShoppingList.findById(req.params.id)
-        .populate('listName')
-        .exec();
+       
+     
         res.render('shoppingList/listView',{
             list:shoppingList,
             styles:cssSheets
@@ -194,7 +193,7 @@ router.get('/list-view/:id/edit',ensureAuthenticated, async(req,res)=>{
     const cssSheets =[]
 
     try{
-        const list = await ShoppingList.findById(req.params.id).populate('listName').exec();
+        const list = await ShoppingList.findById(req.params.id)
         res.render('shoppingList/edit',{
             list:list,
             styles:cssSheets
