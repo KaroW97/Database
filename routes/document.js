@@ -4,6 +4,7 @@ const multer = require('multer');
 const crypto = require('crypto');
 const path = require('path');
 const ObjectId = require('mongodb').ObjectId;
+const ShoppingList = require('../models/shoppingList')
 
 const GridFsStorage = require('multer-gridfs-storage');
 const {ensureAuthenticated} = require('../config/auth')
@@ -34,15 +35,22 @@ const upload = multer({ storage });
 //Document Main Page
 router.get('/', ensureAuthenticated,async(req, res) => {
     const cssSheets =[]
-
+    cssSheets.push('../../public/css/user/documents/index.css');
+    let todayDate = new Date(),weekDate=new Date();
     try{
-       
-      
+        todayDate.setDate(todayDate.getDate() - 1)
+        weekDate.setDate(todayDate.getDate() + 8)
+        const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
+            $gt:todayDate,
+            $lt:weekDate
+        }}).sort({transactionDate:'asc'})
         req.app.locals.gfs.files.find().toArray( (err, files)=> {
             if (err) throw err
-            if(!files|| files.length === 0){  res.render('documents/index',{files:false,  user:req.user,styles:cssSheets})}
+            if(!files|| files.length === 0){  
+                res.render('documents/index',{files:false,  user:req.user, shoppingAll:shoppingList,styles:cssSheets}
+            )}
             else{
-                res.render('documents/index',{files:files, user:req.user})
+                res.render('documents/index',{files:files, user:req.user, shoppingAll:shoppingList,styles:cssSheets})
             }
         })
     }catch(err){
@@ -83,28 +91,16 @@ router.post('/',ensureAuthenticated,upload.array('file'),async(req,res)=>{
 
 })
 //Delete File
-router.delete('/',ensureAuthenticated,async(req,res)=>{
+router.delete('/:id',ensureAuthenticated,async(req,res)=>{
     try{
-        if(req.body.deleteRow != null){
-            if(Array.isArray(req.body.deleteRow)){
-                for(var i =0; i<req.body.deleteRow.length; i++){
-                    await req.app.locals.gfs.remove({_id:ObjectId(req.body.deleteRow[i]),root:'uploads'}, function (err, gridStore) {
-                        if (err)  throw(err);
-                    });
-                }
-                req.flash('mess','Usunięto pliki');
-                req.flash('type','success')
-            }else{
-               await  req.app.locals.gfs.remove({_id:ObjectId(req.body.deleteRow),root:'uploads'}, function (err, gridStore) {
-                    if (err) throw(err);
-                });
-                req.flash('mess','Usunięto plik');
-                req.flash('type','success')
-            }
-        }else{
-            req.flash('mess','Nie wybrano plików do usunięcia');
-            req.flash('type','info') 
-        }
+      
+          
+        await  req.app.locals.gfs.remove({_id:ObjectId(req.params.id),root:'uploads'}, function (err, gridStore) {
+            if (err) throw(err);
+        });
+        req.flash('mess','Usunięto plik');
+        req.flash('type','success')
+            
         res.redirect('/document') 
     }catch(err){
         req.flash('mess','Nie udało się usunąć plik');

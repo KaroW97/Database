@@ -66,7 +66,8 @@ $(document).ready(function(){
         //Check If Clicked Outside Edit Form Box 
         if(target.is('.create-visit-form') || target.is('.center-form')){
             $('.close-form').hide();
-            $('.center-form').closest('form').find("input").val('')
+            if(!$('#list-edit-form'))
+                $('.center-form').closest('form').find("input").val('')
            
         }   
     })
@@ -95,8 +96,9 @@ $(document).ready(function(){
    
     $(window).keyup(function(e){
         if(e.keyCode == 27){
-            $('.form').closest('form').find("input").val('')
-           $('.close-form').hide(); 
+            if(!$('#list-edit-form'))
+                $('.form').closest('form').find("input").val('')
+            $('.close-form').hide(); 
         }
     })
 
@@ -105,7 +107,8 @@ $(document).ready(function(){
         $box.show();
     }
     $.fn.close_box = function($box,$clear_form){
-        $clear_form.closest('form').find("input").val('')
+        if(!$('#list-edit-form'))
+            $clear_form.closest('form').find("input").val('')
         $box.hide();
     }
 

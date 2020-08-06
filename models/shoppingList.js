@@ -32,8 +32,10 @@ const shoppingList = mongoose.Schema ({
    
  
 })
-////shoppingList.plugin(ttl,{ttl:ms('1d')})
+
+shoppingList.plugin(ttl,{ttl:ms('40d')})
 const ShoppingList = mongoose.model('ShoppingList',shoppingList)
-//ShoppingList.startTTLReaper()
+ShoppingList.startTTLReaper()
+
 
 module.exports = ShoppingList
