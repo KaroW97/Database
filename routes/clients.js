@@ -140,7 +140,8 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         diagnose1:req.body.diagnose1,
         teraphyPlan:req.body.teraphyPlan,
         recommendedCare:req.body.recommendedCare,
-        user:req.user.id
+        user:req.user.id,
+     
     })
 
     try{
@@ -196,7 +197,11 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
         user:req.user.id,
         shopping:req.body.shopping
     })
+   
+   // totalSumSpent
     try{   
+
+        //console.log(treatment.treatmentPrice)
         if(req.body.treatment== null){
             req.flash('mess','Nie masz żadnych zabiegów w bazie');
             req.flash('type','danger')

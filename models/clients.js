@@ -6,6 +6,10 @@ const clientSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    totalSumSpent:{
+        type:Number,
+        required:false
+    },
     visitDate:{
         type:Date,
         required:false
@@ -93,11 +97,7 @@ const clientSchema = new mongoose.Schema({
         other:String
     },
    
-   /* other:{
-        type:String,
-        required:false
-    },*/
-
+ 
     //Wywiad
     washingFace:{
         type:String,

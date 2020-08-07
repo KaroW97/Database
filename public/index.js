@@ -2,9 +2,11 @@
 $(document).ready(function(){
     $(".alert" ).fadeOut(3000);
     //If  List Is Not Empty Shine Till Not Clicked
-    if($('.list-content').length > 0){
-        $('.company-square').addClass('list-content-shine')
-        $('.company-square p').removeClass('p-color')
+    if($('.list-content').length == 0){
+        $('.company-square').css("-webkit-animation", "1s ease-out slideInBigSquare");
+        $('.company-square').css("-moz-animation", "1s ease-out slideInBigSquare");
+        $('.company-square').css("-ms-animation", "1s ease-out slideInBigSquare");
+        $('.company-square').css("animation", "1s ease-out slideInBigSquare");
     }
     //If Width Less Then 1079 show list on the bottom if grater then 180 dont display if clicked is not true 
     $(window).resize(function(){
@@ -16,6 +18,7 @@ $(document).ready(function(){
                 $(".center-shopping-list").css('display','none')
             }
         }
+    
     })
      //ANCHOR
     function scrollToTopAnchor(an){
@@ -31,6 +34,7 @@ $(document).ready(function(){
             scrollToTopAnchor('nav-bar')
         }
     })
+
     var position = $(window).scrollTop();
     $(window).scroll(function (event) {
         let scroll = $(window).scrollTop();
@@ -46,7 +50,11 @@ $(document).ready(function(){
     $('.company-square').click(function(){
 
             $('.company-square').attr('clicked','true')
-            $('.company-square').removeClass('list-content-shine')
+            $('.company-square').css("-webkit-animation", "1s ease-out slideInBigSquare");
+            $('.company-square').css("-moz-animation", "1s ease-out slideInBigSquare");
+            $('.company-square').css("-ms-animation", "1s ease-out slideInBigSquare");
+            $('.company-square').css("animation", "1s ease-out slideInBigSquare");
+
             $('.company-square p').addClass('p-color')
             $(".center-shopping-list").animate({width:'toggle', queue:false},400)
            
@@ -88,6 +96,7 @@ $(document).ready(function(){
        $(this).open_box($('.hidden-create'))
     })
     $('.showForm').click(function(){
+        console.log('jestem')
         $(this).open_box($('.create-form'))
     })
     $('.create-brand').click(function(){
@@ -112,7 +121,7 @@ $(document).ready(function(){
         $box.hide();
     }
 
-    
+  
 })
 
 

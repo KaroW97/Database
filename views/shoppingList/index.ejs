@@ -4,20 +4,23 @@
     <div class="main-div">
         <div class="content">
             <div class="visit">
-           
-                <div class="data-input-from ui-widget ">
-                    <input type="text" class="myInputSearch" name="name"  placeholder="Szukaj Listy" autocomplete="off" >  
-                </div>
                 <form class="find-visit"  action="/shopping-list" method="GET">
-                    <input placeholder="Od" id="dataFrom" name="visitAfter" value="<%=searchOptions.visitAfter%>"  autocomplete="off"   />
-                    <button type="submit"aria-label="search-by-date"><i class="fas fa-search"></i></button>
+                    <div class="data-input-from ui-widget ">
+                        <input type="text" class="myInputSearch" name="name"  placeholder="Szukaj Listy" autocomplete="off" >  
+                    </div>
+                    <div class="data-input-to">
+                        <input placeholder="Od" id="dataFrom" name="visitAfter" value="<%=searchOptions.visitAfter%>"  autocomplete="off"   />
+                    </div>
+                    <div class="search-button">
+                        <button type="submit" aria-label="search-by-date"><i class="fas fa-search"></i></button>
+
+                    </div>
                 </form>
 
               <div class="flex-end">
                 <button class="separate create"aria-label="open-create-new-list"><i class="fas fa-plus"></i></button><!--create list-->
                 <button class="separate create-brand" aria-label="open-create-brand-name"><i class="fas fa-building"></i></button><!--add new company or assign-->
                 <button class="separate-last delete"aria-label="open-delete-brand-name"><i class="far fa-trash-alt"></i></button><!--delete company-->
-               
               </div>
            
             </div>

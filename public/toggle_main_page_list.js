@@ -4,11 +4,13 @@ $(document).ready(function(){
         
     })
     //if clients write toggle elements on 
-    $('.myInputSearch').on('keyup click ', function () {
+    $('.myInputSearch').on('keyup click input', function () {
         $(this).toggle_main_page_list($(this),  $('.main-div-full-content .visit '))
         
     })
-  
+    $('.ui-menu').on('click',function(){
+        $(".myInputSearch").trigger('click')
+    })
     $(".my-input-new-list-name").on('keyup click ', function(){
         let value = $(this).val().toLowerCase()
     
@@ -42,6 +44,7 @@ $(document).ready(function(){
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 $(this).click(function(){
                     $input.val($(this).text())
+                  
                 })
             })
             return this

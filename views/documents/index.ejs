@@ -6,12 +6,12 @@
                 <form class="find-visit"action="/document" method="post" enctype="multipart/form-data">
                     <input type="file" id="download" name="file" multiple/>
                     <div class="data-input-from ui-widget ">
-                        <input type="text" class="myInputSearch"   placeholder="Szukaj Klienta" autocomplete="off" >  
+                        <input type="text" class="myInputSearch"   placeholder="Szukaj Dokumentu" autocomplete="off" >  
                     </div>
                     <div class="download_file_wrapper">
                         <label for="download" ><i class="fas fa-download"></i></label>
-                        <div class="download_file_border" id="p">
-                            <p class="download_file" ></p>
+                        <div class="download_file_border" >
+                            <p class="download_file" >Wybierz plik</p>
                         </div>
                        
                     </div>
@@ -23,11 +23,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
 <div class="main-div-full-content .main-div-toogle">
     <div class="main-div-center ">
         <% if(files) {%> 
@@ -61,6 +56,10 @@
 </div>
 <%-include('../partials/shopping-list.ejs')%>
 
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script>
     window.onload = function(){
@@ -69,22 +68,29 @@
         window.location.reload();
         }
     }
+ 
     $(document).ready(function(){
-
+        $('#download').change(function(){
+       
+            let elem = $('#download').val();
+            if($('#download').val().length>= 24){
+                elem =  $('#download').val().substring(0,24)+'...';
+            }
+            if($(window).width() <=670 && $(window).width() >=571){
+                elem =  $('#download').val().substring(0,15)+'...';
+            }
+            if($('#download').prop('files').length >= 2)
+                $('.download_file').text(elem+ ' '+$('#download').prop('files').length+' pliki')
+            else if($('#download').prop('files').length >= 10)
+                $('.download_file').text(elem+ ' '+$('#download').prop('files').length+' plików')
+            else
+                $('.download_file').text(elem)
+        
+        })
+  
     })  
     $('.download_file_border').click(function(){
         $('#download').click();
-    })
-    $(document).on('change','#download',function(){
-        let elem = $('#download').val();
-        
-        if($('#download').prop('files').length >= 2)
-            $('.download_file').text(elem+ ' '+$('#download').prop('files').length+' pliki')
-        else if($('#download').prop('files').length >= 10)
-            $('.download_file').text(elem+ ' '+$('#download').prop('files').length+' plików')
-        else
-            $('.download_file').text(elem)
-        
     })
   
 </script>

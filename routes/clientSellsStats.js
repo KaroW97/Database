@@ -4,11 +4,13 @@ const Client = require('../models/clients');
 const ClientVisits = require('../models/clientsVisits')
 const Treatment = require('../models/treatment')
 const CompanyShopping = require('../models/stats/companyShoppingStats')
+const ShoppingList = require('../models/shoppingList')
 const {ensureAuthenticated} = require('../config/auth')
 //Clients Statistics Main Page
 router.get('/' ,ensureAuthenticated, async(req,res)=>{
     const cssSheets =[]
-
+    cssSheets.push('../../public/css/user/statistics/statistics.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
+    let todayDate = new Date(),weekDate=new Date();
     let cliantStats = ClientVisits.find().populate('treatment');
     let searchClient = {}
     let searchClientLastName = {}
@@ -30,8 +32,15 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
             clientt =await clientLastName.find({user:req.user.id}).exec();
       
         const clientVisits = await cliantStats.exec();
-    
+        todayDate.setDate(todayDate.getDate() - 1)
+        weekDate.setDate(todayDate.getDate() + 8)
+        const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
+            $gt:todayDate,
+            $lt:weekDate
+        }}).sort({transactionDate:'asc'})
+
         res.render('stats/index',{
+            shoppingAll:shoppingList,
             user:req.user,
             clients:clientt,
             sum:sum,
