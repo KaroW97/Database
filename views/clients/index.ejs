@@ -7,7 +7,7 @@
                     <form class="find-visit"  method="GET"  id="myform">
 
                         <div class="data-input-from ui-widget ">
-                            <input type="text" class="myInputSearch" name="name" value="<%=searchOptions.name%>" placeholder="Szukaj Klienta" autocomplete="off" >  
+                            <input type="text" class="myInputSearch client-search" name="name" value="<%=searchOptions.name%>" placeholder="Szukaj Klienta" autocomplete="off" >  
                         </div>
                         <div class="data-input-to">
                             <input placeholder="Od" id="dataFrom" name="visitAfter"   autocomplete="off" value="<%=searchOptions.visitAfter%>" autocomplete="off" />
@@ -59,7 +59,7 @@
             </div>
     </div>
 </div>
-
+<div  class="statistics"></div>
 <%-include('../partials/shopping-list.ejs')%>
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -70,18 +70,6 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
- var clientsCreate = []
-    $('.list-client li').filter(function(){
-        clientsCreate.push({value:$(this).text(),phone:$(this).attr('phone') })
-    })
 
-    $(function(){
-        $( ".myInputSearch" ).autocomplete({
-            source: clientsCreate,
-            autoFocus:true
-        });
-    })
-    $(document).ready(function(){
 
-});
 </script>

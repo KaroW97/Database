@@ -6,7 +6,7 @@
             <div class="visit">
                 <form class="find-visit"  action="/shopping-list" method="GET">
                     <div class="data-input-from ui-widget ">
-                        <input type="text" class="myInputSearch" name="name"  placeholder="Szukaj Listy" autocomplete="off" >  
+                        <input type="text" class="myInputSearch brand-search" name="name"  placeholder="Szukaj Listy" autocomplete="off" >  
                     </div>
                     <div class="data-input-to">
                         <input placeholder="Od" id="dataFrom" name="visitAfter" value="<%=searchOptions.visitAfter%>"  autocomplete="off"   />
@@ -82,7 +82,7 @@
             <span id ="close"class="close" >&times;</span>
             <div class="form-content">
                 <div class="data-input-from ui-widget ">
-                    <input  class="my-input-new-list-name create"type="text" name="brand" placeholder="Podaj nazwe listy" value="<%=brandName.name%>"required autofocus autocomplete="off" >
+                    <input  class="my-input-new-list-name create-brand"type="text" name="brand" placeholder="Podaj nazwe listy" value="<%=brandName.name%>"required autofocus autocomplete="off" >
                 </div>
                 <input placeholder="Od" id="datapickerAdd" name="transactionDate"  autocomplete="off" required  />
                 <button type="submit" aria-label="create-new-list">Dodaj</button>
@@ -125,6 +125,7 @@
 
   
 </div>
+<div  class="statistics"></div>
 <%-include('../partials/shopping-list.ejs')%>
 
 
@@ -138,21 +139,5 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-     var clientsCreate = []
-    $('.brand li').filter(function(){
-        clientsCreate.push({value:$(this).text()})
-    })
-    
-    $(function(){
-        $( ".myInputSearch" ).autocomplete({
-            source: clientsCreate,
-            autoFocus:true
-        });
-    })
-    $(function(){
-        $( ".create" ).autocomplete({
-            source: clientsCreate,
-            autoFocus:true
-        });
-    })
+
 </script>

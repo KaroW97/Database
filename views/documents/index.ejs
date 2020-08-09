@@ -6,7 +6,7 @@
                 <form class="find-visit"action="/document" method="post" enctype="multipart/form-data">
                     <input type="file" id="download" name="file" multiple/>
                     <div class="data-input-from ui-widget ">
-                        <input type="text" class="myInputSearch"   placeholder="Szukaj Dokumentu" autocomplete="off" >  
+                        <input type="text" class="myInputSearch doc-search"   placeholder="Szukaj Dokumentu" autocomplete="off" >  
                     </div>
                     <div class="download_file_wrapper">
                         <label for="download" ><i class="fas fa-download"></i></label>
@@ -54,10 +54,19 @@
         <% } %> 
     </div>
 </div>
-<%-include('../partials/shopping-list.ejs')%>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
+    <ul class="doc "  >
+        <% if(files){%>
+            <% files.forEach(file => { %>
+                <li><%=file.metadata.initialFilename%></li>
+            <%}); %>
+       <%   } %> 
+  
+    </ul>
+    <div  class="statistics"></div>
+    <%-include('../partials/shopping-list.ejs')%>
+<script src="../../public/toggle_main_page_list.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -92,5 +101,15 @@
     $('.download_file_border').click(function(){
         $('#download').click();
     })
-  
+    var doc = []
+    $('.doc li').filter(function(){
+        doc.push({value:$(this).text()})
+    })
+    
+    $(function(){
+        $( ".doc-search" ).autocomplete({
+            source: doc,
+            autoFocus:true
+        });
+    })
 </script>

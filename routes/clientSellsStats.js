@@ -24,12 +24,9 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
     if(req.query.dateTo != null &&  req.query.dateTo != '')
         cliantStats = cliantStats.lte('clientVisitDate', req.query.dateTo);
     try{
-        const clients =  Client.find(searchClient)
-        const clientLastName =  Client.find(searchClientLastName);
-        
-        let clientt =await clients.find({user:req.user.id}).exec();
-        if(clientt =='')
-            clientt =await clientLastName.find({user:req.user.id}).exec();
+    
+      
+        clientt =await Client.find({user:req.user.id}).exec();
       
         const clientVisits = await cliantStats.exec();
         todayDate.setDate(todayDate.getDate() - 1)
@@ -56,27 +53,36 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
 })
 //Treatments Statistics Main Page
 router.get('/treatment', async(req,res)=>{
-    let searchTreatment = {};
+    let todayDate = new Date(),weekDate=new Date();
     let sum=0;
     let moneySpent = 0;
     const cssSheets =[]
+    cssSheets.push('../../public/css/user/statistics/statistics.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
 
     let cliantStats =  ClientVisits.find().populate('treatment')/*.find({user:req.user.id})*/
-    if(req.query.treatment != null &&req.query.treatment !='')
-        searchTreatment.treatmentName = new RegExp(req.query.treatment,'i');
-    
+
     if(req.query.dateFrom != null &&  req.query.dateFrom != '')
         cliantStats = cliantStats.gte('clientVisitDate', req.query.dateFrom);
     if(req.query.dateTo != null &&  req.query.dateTo != '')
         cliantStats = cliantStats.lte('clientVisitDate', req.query.dateTo);
 
     try{
-        const treatment =  Treatment.find(searchTreatment)//.find({user:req.user.id});
+        todayDate.setDate(todayDate.getDate() - 1)
+        weekDate.setDate(todayDate.getDate() + 8)
+        const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
+            $gt:todayDate,
+            $lt:weekDate
+        }}).sort({transactionDate:'asc'})
+
+
+
+        const treatment =  Treatment.find({user:req.user.id});
         let treatments = await treatment.find({user:req.user.id}).exec();
         const clientVisits = await cliantStats.find({user:req.user.id}).exec()
         var totalAmountOfTreatments =  calculateAmountOfTreatments(treatments,clientVisits )
         var totalAmountOfSpent = calculateTotalAmountSpent(clientVisits);
         res.render('stats/treatmentStats',{
+            shoppingAll:shoppingList,
             treatmentExists: false,
             treatments:treatments,
             clientVisits:clientVisits,

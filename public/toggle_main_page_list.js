@@ -8,9 +8,7 @@ $(document).ready(function(){
         $(this).toggle_main_page_list($(this),  $('.main-div-full-content .visit '))
         
     })
-    $('.ui-menu').on('click',function(){
-        $(".myInputSearch").trigger('click')
-    })
+  
     $(".my-input-new-list-name").on('keyup click ', function(){
         let value = $(this).val().toLowerCase()
     
@@ -66,6 +64,53 @@ $(document).ready(function(){
           
         }
     }
+   //CLIENT
+   var clientsCreate = []
+   $('.list-client li').filter(function(){
+       clientsCreate.push({value:$(this).text(),phone:$(this).attr('phone') })
+   })
+
+   $(function(){
+       $( ".client-search" ).autocomplete({
+           source: clientsCreate,
+           autoFocus:true
+       });
+   })
+   //TREATMANT
+   var treatmentCreate = []
+   $('.listTreatment li').filter(function(){
+       treatmentCreate.push($(this).text())
+   })
+   $(function(){
+       $( ".treatment-search" ).autocomplete({
+           source: treatmentCreate,
+           autoFocus:true
+       });
+   })
+   //BRAND
+   var brand = []
+   $('.brand li').filter(function(){
+       brand.push({value:$(this).text()})
+   })
    
-  
+   $(function(){
+       $( ".brand-search" ).autocomplete({
+           source: brand,
+           autoFocus:true
+       });
+   })
+   $(function(){
+       $( ".create-brand" ).autocomplete({
+           source: brand,
+           autoFocus:true
+       });
+   })
+   
+   $('.ui-menu').on('click',function(){
+    $(".myInputSearch").trigger('click')
+})
+
+
+
+
 })

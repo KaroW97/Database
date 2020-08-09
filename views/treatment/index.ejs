@@ -9,7 +9,7 @@
             <div class="visit">
                     <form class="find-visit" method="GET">
                             <div class="data-input-from ui-widget">
-                                <input id="treatmentName" class="myInputSearch"name="treatmentName" placeholder="Nazwa zabiegu" value="<%=searchOptions.name  %>" autocomplete="off">
+                                <input id="treatmentName" class="myInputSearch treatment-search"name="treatmentName" placeholder="Nazwa zabiegu" value="<%=searchOptions.name  %>" autocomplete="off">
                             </div>
                    
                     </form>
@@ -23,7 +23,6 @@
                             <%}); %>
                         </ul>
                     </div>
-                     
             </div>
         </div>
     </div>
@@ -63,7 +62,6 @@
     </div>
 
 </div>
-
 <div class="create-visit-form openForm close-form " id="visitForm">
     <form method="POST" action="" class="center-form formEdit">
         <div   class="form">
@@ -80,8 +78,6 @@
         </div>
     </form>
 </div>
-
-
 <div class="create-visit-form form close-form create-form" id="visitForm">
     <form method="POST" action="/treatment" class="center-form">
         <div   class="form">
@@ -96,21 +92,12 @@
     </form>
 </div>
 
-
+<div  class="statistics"></div>
 <%-include('../partials/shopping-list.ejs')%>
 <script src="../../public/toggle_main_page_list.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-    var treatmentCreate = []
-    $('.listTreatment li').filter(function(){
-        treatmentCreate.push($(this).text())
-    })
-    $(function(){
-        $( ".myInputSearch" ).autocomplete({
-            source: treatmentCreate,
-            autoFocus:true
-        });
-    })
+
  
 </script>

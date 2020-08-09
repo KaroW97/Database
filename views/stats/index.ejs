@@ -6,7 +6,10 @@
         <div class="content  ">
             <div class="visit">
                 <form class="find-visit"  method="GET" action="/statistics">
-                    <input type="text"class="myInputSearch"placeholder="Szukaj Klienta">
+                    <div class="search-wrapper ui-widget">
+                        <input type="text"class="myInputSearch client-search"placeholder="Szukaj Klienta">
+
+                    </div>
                     <div class="data-input-from ">
                         <input  id="dataFrom" name="dateFrom"  placeholder="Od" value="<%=searchOptions.dateFrom%>" autocomplete="off">
                     </div>
@@ -18,13 +21,11 @@
                         <button type="submit" class="search-button" aria-label="search"><i class="fas fa-search"></i></button>
                     </div>
                 </form>
-                
+             
             </div>
         </div>
     </div>
 </div>
-
-
 
 <div class="main-div-full-content .main-div-toogle">
     <div class="main-div-center ">
@@ -60,8 +61,9 @@
 
 
 
-
+<div  class="statistics"></div>
 <%-include('../partials/shopping-list.ejs')%>
+
 <script src="../../public/toggle_main_page_list.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
@@ -69,20 +71,6 @@
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
 <script>
- var clientsCreate = []
-    $('.list-client li').filter(function(){
-        clientsCreate.push({value:$(this).text(),phone:$(this).attr('phone') })
-    })
-
-    $(function(){
-        $( ".myInputSearch" ).autocomplete({
-            source: clientsCreate,
-            autoFocus:true
-        });
-    })
-    $(document).ready(function(){
-
-});
-</script>
+ 
+   </script>

@@ -1,45 +1,103 @@
-<h1>Statystyki Zabiegów</h1>
-<form method="GET" action="/statistics/treatment">
-    <input type="text" name="treatment" value="<%=searchOptions.treatment%>" placeholder="Szukaj Zabiegu">
-    <%- include(`../partials/dateSearchForm.ejs`, {searchFrom: `dateFrom`, searchOptionFrom:`${searchOptions.dateFrom}`, 
-    searchTo: `dateTo`, searchOptionTo:`${searchOptions.dateTo}`}) %>
-    <button type="submit">Szukaj</button>
-</form>
 
-<table>
-    <thead>
-        <tr>
-            <th>Zabieg</th>
-            <th>Ilość Wykonanych</th>
-            <th>Kwota</th>
-        </tr>
-    </thead>
-    <tbody>
-    <% treatments.forEach( treatment=> {%> 
-        <tr>
-            <td><%=treatment.treatmentName %> </td>
-            <% sum=0 %> 
-            <% moneySpent=0 %> 
-            <%clientVisits.forEach(element => { %> 
-                <%if(element.treatment!= null &&treatment.id == element.treatment.id){%>
-                    <% sum++;treatmentExists = true;%> 
-                    <% moneySpent+=element.treatment.treatmentPrice %> 
-                <% } %> 
-            <%});%> 
-          
-            <td><%=sum%> </td>
-            <td><%=moneySpent%> </td>
-      
-        </tr>    
-    <% }); %> 
-        
-    </tbody>
-    <tfoot>
-        <tr>
-            <td>Kwota Całkowita: <%= totalAmountOfSpent %> </td>
-            <td>Zabiegi: <%= totalAmountOfTreatments %> </td>
-        </tr>
-    </tfoot>
-</table>
-<p></p>
-<p></p>
+
+<div class="center-main-div ">
+    <div class="main-div toogleList">
+        <div class="content  ">
+            <div class="visit">
+                <form class="find-visit"  method="GET" action="/statistics/treatment">
+                    <div class="search-wrapper">
+                        <input type="text"class="myInputSearch treatment-search"placeholder="Szukaj Klienta">
+
+                    </div>
+                    <div class="data-input-from ">
+                        <input  id="dataFrom" name="dateFrom"  placeholder="Od" value="<%=searchOptions.dateFrom%>" autocomplete="off">
+                    </div>
+                    <div class="data-input-to">
+                        <input  id="dataTo" name="dateTo"  placeholder="Do"value="<%=searchOptions.dateTo%>" autocomplete="off">
+
+                    </div>
+                    <div class="search">
+                        <button type="submit" class="search-button" aria-label="search"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="treatments-list create">
+    <ul class="listTreatment list"  >
+        <% treatments.forEach(treatment => { %>
+            <li value="<%=treatment._id%>"><%=treatment.treatmentName%></li>
+        <%}); %>
+    </ul>
+</div>
+<div class="main-div-full-content .main-div-toogle">
+    <div class="main-div-center ">
+            <div class="content-div">
+                <% treatments.forEach( treatment=> {%>
+                    <div class="visit">
+                            <% sum=0 %> 
+                            <% moneySpent=0 %>  
+                            <%clientVisits.forEach(element => { %> 
+                                <%if(element.treatment!= null &&treatment.id == element.treatment.id){%>
+                                    <% sum++;treatmentExists = true;%> 
+                                    <% moneySpent+=element.treatment.treatmentPrice %> 
+                                <% } %> 
+                            <%});%> 
+                        <div class="div-element" >
+                            <p class="header" >
+                                <%=treatment.treatmentName %> </p>
+                            <div class="first-p-element">
+                                <p class="headerVisit">Wydana Kwota</p>
+                                <p ><%=moneySpent%> zł</p>
+                            </div>
+                            <div class="sec-p-element">
+                                <p class="headerVisit">Ilość Wykonanych</p>
+                                <p ><%=sum %></p>
+                            </div>
+                
+                        </div>
+                    </div> 
+                    <% }); %>
+            </div>
+    </div>
+</div>
+
+
+<div  class="statistics">
+    <div class="stats-square"><p class="p-color">Statystyki</p></div>
+    <div class="stats-shadow"></div>
+    <div class="position-statistics">
+        <div class="content">
+                <div class="content-div-first-element">
+                    <p class="headerVisit">Kwota Całkowita</p>
+                    <p><%= totalAmountOfSpent %>zł</p>
+                </div>
+                <div  class="content-div-sec-element">
+                    <p class="headerVisit">Zabiegi</p>
+                    <p><%= totalAmountOfTreatments %></p>
+                </div>
+        </div>
+
+    </div>
+    
+
+</div>
+<%-include('../partials/shopping-list.ejs')%>
+    
+
+
+
+
+<script src="../../public/toggle_main_page_list.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<script src="../../public/dataTimePicker.js"></script>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+
+</script>
