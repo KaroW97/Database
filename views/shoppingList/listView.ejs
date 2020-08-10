@@ -13,10 +13,8 @@
                     <p name="transactionDate"> <%=list.transactionDate.toISOString().split('T')[0] %> </p>
                 <% } %> 
             </div>
-      
-            
             <form method="post" action="/shopping-list/list-view/<%=list.id%>?_method=DELETE">
-                <button type="submit" ><i class="far fa-trash-alt"></i></button>       
+                <button class ="delte-button"type="submit" aria-label="delete-button"><i class="far fa-trash-alt"></i></button>       
                 <div class="list-content"   >
                     
                         <div class="element-font-size showForm" >
@@ -24,10 +22,12 @@
                                 <p><%= element %></p>
                             <% }); %> 
                         </div>
-                        <div class="element-font-size showForm"  >
+                        <div class="element-font-size">
                             <% list.price.forEach((element, index) => { %>
-                                <div class="flex">
-                                    <p> <%= element %>zł </p> 
+                                <div class="flex ">
+                                    <div class="showForm">
+                                        <p><%= element %>zł</p> 
+                                    </div>
                                     <input class="checkbox" type="checkbox" name="chackboxDelete" value="<%=index%>"> 
                                 </div>   
                             <% }); %> 
@@ -45,8 +45,10 @@
                 <div class="list-form">
                     <%- include('./_form_fields_new') %> 
                 </div>
+                <div class="add-button-wrapper">
+                    <button class="add-button"aria-label="add-button" type="submit">Dodaj</button>
 
-                <button style="display: none;"aria-label="add-button" type="submit">Dodaj</button>
+                </div>
                
             </form>
      

@@ -1,49 +1,99 @@
-<h1>Statystyki Zakupów</h1>
+
 <%-include('../partials/infoMessages.ejs')%>
-<form method="GET" action="/statistics/shopping">
-    <input type="text" name="product" value="<%=searchOptions.product%>" placeholder="Szukaj Produktu">
-    <%- include(`../partials/dateSearchForm.ejs`, {searchFrom: `dateFrom`, searchOptionFrom:`${searchOptions.dateFrom}`, 
-    searchTo: `dateTo`, searchOptionTo:`${searchOptions.dateTo}`}) %>
+<div class="center-main-div ">
+    <div class="main-div toogleList">
+        <div class="content  ">
+            <div class="visit">
+                <form class="find-visit"  method="GET" action="/statistics/shopping">
+                    <div class="search-wrapper">
+                        <input type="text"class="myInputSearch shopping-search"placeholder="Szukaj Klienta">
 
-    <button type="submit">Szukaj</button>
-</form>
-<form method="POST" action="/statistics/shopping?_method=DELETE">
-    <input type="submit" value="Usuń">
-    <table>
-        <thead>
-            <tr>
-                <th>Nazwa</th>
-                <th>Cena</th>
-                <th>Ilość</th>
-            </tr>
-        </thead>
-        <tbody>
-            <%companyDistinctShopping.forEach(distShopping => { %>
-                <tr>
-                    <td><%= distShopping %></td>
-                    <% countAmountOfBoughtProducts=0; countPriceOfBoughtProducts=0 %> 
-                    <% companyShopping.forEach(shopping=>{ %>
-                        <% if(shopping.productName == distShopping ) {%> 
-                            <% countAmountOfBoughtProducts++ %> 
-                            <% countPriceOfBoughtProducts+=shopping.productPrice %> 
-                        <% } %>    
-                       
-                    <%}) %> 
-                    <td><%=countPriceOfBoughtProducts %> </td>
-                    <td><%=countAmountOfBoughtProducts %> </td>
-                    <td><input type="checkbox" name="checkboxDelete" value="<%=distShopping%>"></td>
-                </tr>
-             
-            <%}); %> 
-          
-        </tbody>
-        <tfoot>
-            <tr>
-                <td>Kwota: <%= totalPrice %> </td>
-                <td>Ilość: <%=amount  %> <td>
-        </tfoot>
-    </table>
-    
+                    </div>
+                    <div class="data-input-from ">
+                        <input  id="dataFrom" name="dateFrom"  placeholder="Od" value="<%=searchOptions.dateFrom%>" autocomplete="off">
+                    </div>
+                    <div class="data-input-to">
+                        <input  id="dataTo" name="dateTo"  placeholder="Do"value="<%=searchOptions.dateTo%>" autocomplete="off">
 
+                    </div>
+                    <div class="search">
+                        <button type="submit" class="search-button" aria-label="search"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
 
-</form>
+<div class="main-div-full-content .main-div-toogle">
+    <div class="main-div-center ">
+            <div class="content-div">
+                <% companyDistinctShopping.forEach( distShopping=> {%>
+                    <div class="visit">
+                        <form method="post" action='/statistics/shopping/<%=distShopping%>?_method=DELETE'>
+                            <button type="submit" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        <% countAmountOfBoughtProducts=0; countPriceOfBoughtProducts=0 %> 
+                 
+                        <% companyShopping.forEach(shopping=>{ %>
+                            <% if(shopping.productName == distShopping ) {%> 
+                                <% countAmountOfBoughtProducts++ %> 
+                                <% countPriceOfBoughtProducts+=shopping.productPrice %> 
+                            <% } %>    
+                           
+                        <%}) %> 
+                        <div class="div-element" >
+                            <p class="header" >
+                                <%=distShopping %> </p>
+                            <div class="first-p-element">
+                                <p class="headerVisit">Cena</p>
+                                <p ><%=countPriceOfBoughtProducts %> zł</p>
+                            </div>
+                            <div class="sec-p-element">
+                                <p class="headerVisit">Ilość</p>
+                                <p ><%=countAmountOfBoughtProducts %></p>
+                            </div>
+                
+                        </div>
+                    </div> 
+                    <% }); %>
+            </div>
+    </div>
+</div>
+
+<div  class="statistics">
+    <div class="stats-square"><p class="p-color">Statystyki</p></div>
+    <div class="stats-shadow"></div>
+    <div class="position-statistics">
+        <div class="content">
+                <div class="content-div-first-element">
+                    <p class="headerVisit">Kwota Całkowita</p>
+                    <p><%= totalPrice %>zł</p>
+                </div>
+                <div  class="content-div-sec-element">
+                    <p class="headerVisit">Ilość</p>
+                    <p><%=amount  %></p>
+                </div>
+        </div>
+    </div>
+</div>
+<ul class="shopping-elements-list">
+    <%companyDistinctShopping.forEach(distShopping => { %>
+        <li><%=distShopping%></li>
+    <% }) %> 
+</ul>
+
+<%-include('../partials/shopping-list.ejs')%>
+<script src="../../public/toggle_main_page_list.js"></script>
+
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<script src="../../public/dataTimePicker.js"></script>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+
+</script>

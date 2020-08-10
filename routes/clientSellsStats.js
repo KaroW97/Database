@@ -12,13 +12,9 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
     cssSheets.push('../../public/css/user/statistics/statistics.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     let todayDate = new Date(),weekDate=new Date();
     let cliantStats = ClientVisits.find().populate('treatment');
-    let searchClient = {}
-    let searchClientLastName = {}
+
     let sum =0;
-    if(req.query.clientName!= null && req.query.clientName !==''){
-        searchClient.name = new RegExp(req.query.clientName, 'i')
-        searchClientLastName.lastName = new RegExp(req.query.clientName, 'i')
-    }
+
     if(req.query.dateFrom != null &&  req.query.dateFrom != '')
         cliantStats = cliantStats.gte('clientVisitDate', req.query.dateFrom);
     if(req.query.dateTo != null &&  req.query.dateTo != '')
@@ -52,7 +48,7 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
     }
 })
 //Treatments Statistics Main Page
-router.get('/treatment', async(req,res)=>{
+router.get('/treatment', ensureAuthenticated,async(req,res)=>{
     let todayDate = new Date(),weekDate=new Date();
     let sum=0;
     let moneySpent = 0;
@@ -101,17 +97,11 @@ router.get('/treatment', async(req,res)=>{
    
 })
 //Shopping Statistics Main Page
-router.get('/shopping', async(req,res)=>{
-    var countAmountOfBoughtProducts =0;
-    var countPriceOfBoughtProducts = 0;
-    const cssSheets =[]
-
-    //let searchOptions = {}
-    let searchOptions = CompanyShopping.find({user:req.user.id})
-   // let companyDistinct=   CompanyShopping.find({user:req.user.id}).distinct("productName")
-    if(req.query.product != null && req.query.product !='')
-        searchOptions = searchOptions.regex('productName', new RegExp(req.query.product , 'i'))
-        //searchOptions.productName  = new RegExp(req.query.product , 'i');
+router.get('/shopping',ensureAuthenticated, async(req,res)=>{
+    var countAmountOfBoughtProducts  = [], countPriceOfBoughtProducts  = [],cssSheets =[];
+    let todayDate = new Date(),weekDate=new Date();
+    let searchOptions =  CompanyShopping.find({user:req.user.id})
+    cssSheets.push('../../public/css/user/statistics/statistics.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     if(req.query.dateFrom != null && req.query.dateFrom!='')
         searchOptions = searchOptions.gte('transactionDate', req.query.dateFrom)
     if(req.query.dateTo != null && req.query.dateTo!='')
@@ -119,12 +109,18 @@ router.get('/shopping', async(req,res)=>{
 
    
     try{
-        let companyDistinctShopping =  await CompanyShopping.find({user:req.user.id}).find(searchOptions).distinct("productName");
-        //let companyDistinctShopping =  await companyDistinct.exec();
-        let companyShopping = await searchOptions.exec()
+        let companyDistinctShopping =  await CompanyShopping.find({user:req.user.id}).find(searchOptions).sort({productName:'asc'}).distinct("productName");
+        let companyShopping = await searchOptions.sort({productName:'asc'}).exec()
         let price = totalShoppingPrice(companyShopping)
         let amount = totalShoppingAmount(companyShopping)
+        todayDate.setDate(todayDate.getDate() - 1)
+        weekDate.setDate(todayDate.getDate() + 8)
+        const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
+            $gt:todayDate,
+            $lt:weekDate
+        }}).sort({transactionDate:'asc'})
         res.render('stats/shoppingStats',{
+            shoppingAll:shoppingList,
             companyShopping:companyShopping,
             companyDistinctShopping:companyDistinctShopping,
             countAmountOfBoughtProducts:countAmountOfBoughtProducts,
@@ -141,13 +137,15 @@ router.get('/shopping', async(req,res)=>{
    
 })
 
-router.delete('/shopping', async(req,res)=>{
-   
+router.delete('/shopping/:id', async(req,res)=>{
+    
     var shopping;
     try{
-        if(req.body.checkboxDelete != null ){
-            for(var i=0; i<req.body.checkboxDelete.length;i++)
-                var shopping = await CompanyShopping.find({productName:req.body.checkboxDelete}).find({user:req.user.id});
+      
+            var shoppingAll = await CompanyShopping.find()
+            for(var i=0; i<shoppingAll.length;i++)
+                var shopping = await CompanyShopping.find({productName:req.params.id}).find({user:req.user.id});
+            console.log(shopping)
             for(var i=0;i<shopping.length ; i++)
                 await shopping[i].remove()
 
@@ -158,10 +156,8 @@ router.delete('/shopping', async(req,res)=>{
                 req.flash('mess','Usunięto Statystyke Produktu')
                 req.flash('type','success')
             }
-        }else{
-            req.flash('mess','Nie Podano Elementu Do Usunięcia')
-            req.flash('type','info') 
-        }
+      
+        
         res.redirect('/statistics/shopping')
     }catch(err){
         console.log(err)

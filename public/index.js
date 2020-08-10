@@ -112,7 +112,6 @@ $(document).ready(function(){
        $(this).open_box($('.hidden-create'))
     })
     $('.showForm').click(function(){
-        console.log('jestem')
         $(this).open_box($('.create-form'))
     })
     $('.create-brand').click(function(){
@@ -136,84 +135,7 @@ $(document).ready(function(){
             $clear_form.closest('form').find("input").val('')
         $box.hide();
     }
-  
-
-
- 
       
 })
 
 
-   //Slide Shopping List When Width Less Then 1079px
-   $(window).on('resize scroll load', function() {
-    if ($(window).width() <1080 &&$(this).isOnScreen()  ) {
-        $('.content-div-first-element')
-            .css("-webkit-animation", "0.5s linear fade-in 1.2s")
-            .css('animation-fill-mode','forwards')
-            .css("-moz-animation", "0.5s linear fade-in 1.2s")
-            .css("-ms-animation", "0.5s linear fade-in 1.2s")
-    
-        $('.content-div-sec-element')
-            .css("-webkit-animation", "0.5s linear fade-in 1.2s")
-            .css('animation-fill-mode','forwards')
-            .css("-moz-animation", "0.5s linear fade-in 1.2s")
-            .css("-ms-animation", "0.5s linear fade-in 1.2s")
-    
-        $('.statistics .content')
-            .css("-webkit-animation", "0.5s linear fade-in 1.15s")
-            .css('animation-fill-mode','forwards')
-            .css("-moz-animation", "0.5s linear fade-in 1.15s")
-            .css("-ms-animation", "0.5s linear fade-in 1.15s")
-      
-        $(' .center-shopping-list')
-            .css("-webkit-animation", "0.5s linear fade-in 1.15s")
-            .css('animation-fill-mode','forwards')
-            .css("-moz-animation", "0.5s linear fade-in 1.15s")
-            .css("-ms-animation", "0.5s linear fade-in 1.15s")
-    
-      $('.position-statistics')
-            .css("-webkit-animation", "0.35s linear toggle-statistics 0.9s")
-            .css('animation-fill-mode','forwards')
-            .css("-moz-animation", "0.35s linear toggle-statistics  0.9s")
-            .css("-ms-animation", "0.35s linear toggle-statistics  0.9s")
-  
-        $('.shopping-list-out')
-            .css("-webkit-animation", "0.7s linear toggle-shopping-list 0.2s")
-            .css('animation-fill-mode','forwards')
-            .css("-moz-animation", "0.7s linear toggle-shopping-list 0.2s")
-            .css("-ms-animation", "0.7slinear toggle-shopping-list 0.2s")
-   
-  
-    }else if($(window).width() <1080 && !$(this).isOnScreen()) {
-        $('.position-statistics').css("height", "0").css("-webkit-animation", "none");
-        $('.shopping-list-out').css("height", "0").css("-webkit-animation", "none");
-        $('.statistics .content').css("opacity", "0 ").css("-webkit-animation", "none");
-        $(' .center-shopping-list').css("opacity", "0 ").css("-webkit-animation", "none");
-    }
-    if($(window).width() >=1080){
-        $(' .shopping-list-out')
-            .css("-webkit-animation", "none")
-            .css("-moz-animation", "none")
-            .css("-ms-animation", "none")
-        $('.center-shopping-list') 
-            .css("-webkit-animation", "none")
-            .css("-moz-animation", "none")
-            .css("-ms-animation", "none")
-        $('.center-shopping-list').css('opacity','1')
-    }
-})
-
-$.fn.isOnScreen = function(){
-    var win = $(window);
-    var viewport = {
-        top : win.scrollTop(),
-        left : win.scrollLeft()
-    };
-    viewport.right = viewport.left + win.width();
-    viewport.bottom = viewport.top + win.height();
-    var bounds = $('.statistics').offset() ;
-    bounds.right = bounds.left +  $(this).outerWidth();
-    bounds.bottom = bounds.top +  $(this).outerHeight();
-    
-    return (!(viewport.right < bounds.left || viewport.left > bounds.right || viewport.bottom < bounds.top || viewport.top > bounds.bottom));
-};
