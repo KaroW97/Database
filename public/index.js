@@ -114,7 +114,7 @@ $(document).ready(function(){
     $('.showForm').click(function(){
         $(this).open_box($('.create-form'))
     })
-    $('.create-brand').click(function(){
+    $('.create-brand-button').click(function(){
         $(this).open_box($('.create-brand-form'))
     })
    
