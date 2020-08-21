@@ -1,36 +1,76 @@
-<h1><%= clientInfo.name %> <%= clientInfo.lastName %></h1>
-<form  action="/statistics/<%=clientInfo.id%> " method="GET">
-    <input type="date" name="dateFrom" value="<%=searchOptions.dateFrom%>">
-    <input type="date" name="dateTo" value="<%=searchOptions.dateTo%>">
-    <button type="submit">Szukaj</button>
-</form>
 
-<table>
-    <thead>
-        <tr>
-            <th>Nazwa</th>
-            <th>Liczba zabiegów</th>
-            <th>Kwota Całkowita</th>
-        </tr>
-    </thead>
-    <tbody>
-<%treatments.forEach(treatments => { %>
-    <%var count=0;pricePerTreatment=0; %>
-    <tr>
-        <%clientVisits.forEach(visit=>{%>
-            <% if( visit.treatment!= null&&treatments.treatmentName == visit.treatment.treatmentName) {%> 
-                <%count++ %>  
-                <%visit.treatment== null?'':pricePerTreatment+=visit.treatment.treatmentPrice %> 
-            <% } %> 
-        <% })%>
-        <td><%=count != 0 ?treatments.treatmentName : ''%> </td>
-        <td><%=count != 0 ? count : ''%>  </td>
-        <td><%=pricePerTreatment != 0 ? pricePerTreatment : ''%>  </td>
-    </tr>
-<%}); %>  
-    </tbody>
-</table>
-<br>
-<div>
-   <p>Total Price <%=totalPrice%></p> 
+
+
+<div id="top" class="center-main-div client-treatment-stats">
+    <div class="main-div">
+        <div class="content">
+            <div class="visit">
+                <form class="find-visit"  action="/statistics/<%=clientInfo.id%>" method="GET">
+                    <div class="data-input-from">
+                        <input placeholder="Od" id="dataFrom" name="dateFrom"   autocomplete="off" value="<%=searchOptions.dateFrom%>"  />
+                    </div>
+                    <div class="data-input-to">
+                        <input placeholder="Do" id="dataTo"  name="dateTo"   autocomplete="off" value="<%=searchOptions.dateTo%>" />
+                    </div>
+                    <div class="search stats-search">
+                        <button type="submit" class="search-button"aria-label="search-by-date"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+              
+            <!--onclick="showFormm()"-->
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="main-div-full-content">
+    <div class="main-div-center  ">
+        <div class="content-div">
+             <%treatments.forEach((treatments, i) => { %>
+               
+                <%var count=0;pricePerTreatment=0; %>
+                <%clientVisits.forEach(visit=>{%>
+                    <% if( visit.treatment!= null&&treatments.treatmentName == visit.treatment.treatmentName) {%> 
+                        <%count++ %>  
+                        <%visit.treatment== null?'':pricePerTreatment+=visit.treatment.treatmentPrice %> 
+                    <% } %> 
+                <% })%>
+                <%  if(i==0){%>
+                    <div class="data-separator">
+                        <div class="div-element-day stat-div-visit-treatments"  >
+                            <p><%= clientInfo.name %> <%= clientInfo.lastName %></p>
+                            <p>Suma:<%=totalPrice+'zł' %></p>
+                        </div>
+                    </div>
+                <% } %> 
+            <%if(count != 0){%>
+                <div class="visit">
+                    <div class="div-element">
+                        <div class="header">
+                            <p></p>  
+                        </div>
+                        <div class="first-p-element">
+                            <p class="headerVisit">Nazwa</p>
+                            <p ><%=count != 0 ?treatments.treatmentName: ''%> </p>
+                        </div>
+                        <div class=" sec-p-element">
+                            <p class="headerVisit">Liczba zabiegów</p>
+                            <p><%=count != 0 ? count : ''%> </p>
+                        </div>
+                        <div class="th-p-element">
+                            <p class="headerVisit">Kwota</p>
+                            <p><%=pricePerTreatment != 0 ? pricePerTreatment+'zł' : ''%> </p> 
+                        </div>
+                                            
+                    </div>
+                </div>   
+            <% } %> 
+            <%}) %> 
+         
+        </div>
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<script src="../../public/dataTimePicker.js"></script>

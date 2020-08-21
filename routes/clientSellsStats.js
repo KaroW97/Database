@@ -170,7 +170,8 @@ router.delete('/shopping/:id', async(req,res)=>{
 //Client Statistics
 router.get('/:id', ensureAuthenticated,async(req,res)=>{
     const cssSheets =[]
-
+    let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
+    cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     let clientVisitDate =  ClientVisits.find({client:req.params.id}).populate('treatment').populate('client')
     if(req.query.dateFrom != null &&  req.query.dateFrom !=''){
         clientVisitDate = clientVisitDate.gte('clientVisitDate', req.query.dateFrom)
@@ -181,7 +182,7 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
     try{
         const clientt  = await Client.findById(req.params.id)
         const clientVisit = await clientVisitDate.exec()
-       
+
        
         var totalPrcie = calculateTotalPrice(clientVisit)
         const treatment = await Treatment.find()

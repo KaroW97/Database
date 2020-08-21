@@ -37,7 +37,7 @@
             <div class="form-content">
               
                 <div class = "ui-widget ">
-                    <input  class="myInput inputCreate automplete-3" type="text" name ="clients" placeholder="Nazwa Klienta"  autocomplete="off" required>
+                    <input  class="myInput inputCreate client-search" type="text" name ="clients" placeholder="Nazwa Klienta"  autocomplete="off" required>
                  </div>
                 <input class="phone" name="phone" type="phone" placeholder="Numer Telefonu"  autocomplete="off" minlength="9" required>
                 <div class = "ui-widget ">
@@ -74,7 +74,7 @@
             <span class="close closeEdit" >&times;</span>
             <div class="form-content">
                 <div class = "ui-widget ">
-                    <input  class="myInput inputEdit" type="text" name ="clients" placeholder="Nazwa Klienta"  autocomplete="off" required>
+                    <input  class="myInput inputEdit  client-search" type="text" name ="clients" placeholder="Nazwa Klienta"  autocomplete="off" required>
                  </div>
                 <input class="phone" name="phone" type="phone" placeholder="Numer Telefonu"  autocomplete="off" minlength="9" required>
                 <div class = "ui-widget ">
@@ -159,79 +159,9 @@
 
 
 
-
+<script src="../../public/toggle_main_page_list.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="../../public/dataTimePicker.js"></script>
 <script src="../../public/js/calendar.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script>
-    var clientsCreate = []
-    $('.create .list-client li').filter(function(){
-        clientsCreate.push({value:$(this).text(),phone:$(this).attr('phone') })
-    })
-    var treatmentCreate = []
-    $('.create .listTreatment li').filter(function(){
-        treatmentCreate.push($(this).text())
-    })
-   /* $(function(){
-        $('.content-div .visit .div-element').filter(function(index){
-            if(index == 0){
-                $(this).attr('id','start')
-            }
-        })
-
-        var $curr = $('#start')
-        $next = $curr.next()
-        console.log($curr.attr('timeFrom'))
-        console.log($next.find('timeFrom').get())
-        if($curr.attr('timeFrom') >=$next.attr('timeFrom') &&$curr.attr('timeTo') >=$next.attr('timeTo'))
-            $curr.css('background','red')
-        else
-            $curr.css('background','green')
-      
-    })
-   */
-    $(function(){
-        $( ".inputEdit" ).autocomplete({
-            source: clientsCreate,
-            autoFocus:true,
-            classes: {
-                "ui-menu": "highlight"
-            },
-            select: function(e, ui){
-                $('.phone').val(ui.item.phone)
-            }
-        });
-    })
-    $(function(){
-        $( ".automplete-3" ).autocomplete({
-            source: clientsCreate,
-            autoFocus:true,
-            classes: {
-                "ui-menu": "highlight"
-            },
-            select: function(e, ui){
-                $('.phone').val(ui.item.phone)
-            }
-        });
-    })
-    $(function(){
-        $( ".inputCreateTreatment" ).autocomplete({
-            source: treatmentCreate,
-            autoFocus:true,
-            classes: {
-                "ui-menu": "highlight"
-            }
-        });
-    })
-    $(function(){
-        $( ".inputEditTreatment" ).autocomplete({
-            source: treatmentCreate,
-            autoFocus:true,
-            classes: {
-                "ui-menu": "highlight"
-            }
-        });
-    })
-   
-</script>
+<script src="../../public/js/minified_shopping_list.js"></script>

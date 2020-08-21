@@ -69,6 +69,7 @@
 <script src="../../public/toggle_main_page_list.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="../../public/js/minified_shopping_list.js"></script>
 
 <script>
     window.onload = function(){
@@ -77,39 +78,5 @@
         window.location.reload();
         }
     }
- 
-    $(document).ready(function(){
-        $('#download').change(function(){
-       
-            let elem = $('#download').val();
-            if($('#download').val().length>= 24){
-                elem =  $('#download').val().substring(0,24)+'...';
-            }
-            if($(window).width() <=670 && $(window).width() >=571){
-                elem =  $('#download').val().substring(0,15)+'...';
-            }
-            if($('#download').prop('files').length >= 2)
-                $('.download_file').text(elem+ ' '+$('#download').prop('files').length+' pliki')
-            else if($('#download').prop('files').length >= 10)
-                $('.download_file').text(elem+ ' '+$('#download').prop('files').length+' plików')
-            else
-                $('.download_file').text(elem)
-        
-        })
-  
-    })  
-    $('.download_file_border').click(function(){
-        $('#download').click();
-    })
-    var doc = []
-    $('.doc li').filter(function(){
-        doc.push({value:$(this).text()})
-    })
-    
-    $(function(){
-        $( ".doc-search" ).autocomplete({
-            source: doc,
-            autoFocus:true
-        });
-    })
+
 </script>

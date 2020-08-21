@@ -20,7 +20,7 @@ const {ensureAuthenticated} = require('../config/auth')
 router.get('/',ensureAuthenticated, async(req,res)=>{
     try{
         const cssSheets =[]
-
+        cssSheets.push(" ../../public/css/user/settings/index.css");
         const user   = await User.findById(req.user.id);
         res.render('settings/index',{
             user:user,
