@@ -1,4 +1,10 @@
 //TODO: add arrow navigation to toggle menu
+if($('.list-content').length  == 0 ){
+                
+    $('.shopping-list-out').css('display','none')
+    $('.pageContentWrapper').css('margin-bottom','80px')
+  
+}
 $(document).ready(function(){
     $(".alert" ).fadeOut(3000);
     //If  List Is Not Empty Shine Till Not Clicked
@@ -9,7 +15,7 @@ $(document).ready(function(){
         $('.company-square').css("animation", "1s ease-out slideInBigSquare");
     }
 
-
+  
     
     //If Width Less Then 1079 show list on the bottom if grater then 180 dont display if clicked is not true 
     $(window).resize(function(){
@@ -18,7 +24,7 @@ $(document).ready(function(){
            
             if($('.list-content').length  == 0 ){
                 
-                $('.center-shopping-list').css('opacity','0')
+                $('.shopping-list-out').css('display','none')
                 $('.pageContentWrapper').css('margin-bottom','80px')
               
             }else{
