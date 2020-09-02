@@ -15,8 +15,14 @@ $(document).ready(function(){
         $('.company-square').css("animation", "1s ease-out slideInBigSquare");
     }
 
-  
-    
+
+    if($('.list-content').length  == 0 ){
+                
+        $('.shopping-list-out').css('opacity','0')
+        $('.pageContentWrapper').css('margin-bottom','80px')
+      
+    }
+
     //If Width Less Then 1079 show list on the bottom if grater then 180 dont display if clicked is not true 
     $(window).resize(function(){
         if($(window).width() <= 1080){
@@ -24,7 +30,11 @@ $(document).ready(function(){
            
             if($('.list-content').length  == 0 ){
                 
+
                 $('.shopping-list-out').css('display','none')
+
+                $('.shopping-list-out').css('opacity','0')
+
                 $('.pageContentWrapper').css('margin-bottom','80px')
               
             }else{
