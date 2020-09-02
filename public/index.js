@@ -18,7 +18,6 @@ $(document).ready(function(){
 
     if($('.list-content').length  == 0 ){
                 
-        $('.shopping-list-out').css('opacity','0')
         $('.pageContentWrapper').css('margin-bottom','80px')
       
     }
@@ -33,7 +32,6 @@ $(document).ready(function(){
 
                 $('.shopping-list-out').css('display','none')
 
-                $('.shopping-list-out').css('opacity','0')
 
                 $('.pageContentWrapper').css('margin-bottom','80px')
               
