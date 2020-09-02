@@ -74,7 +74,10 @@ $(document).ready(function(){
    $(function(){
        $( ".client-search" ).autocomplete({
            source: clientsCreate,
-           autoFocus:true
+           autoFocus:true,
+             select:function( event, ui ) {
+            $('.phone').val(ui.item.phone)
+           }
        });
    })
    //TREATMANT
