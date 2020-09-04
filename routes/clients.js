@@ -166,7 +166,9 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
 
 //Show Client
 router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
-    const cssSheets=[];
+  
+    const cssSheets=[]
+    cssSheets.push('../../public/css/user/clients/clientView.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     try{
         const visit = new ClientVisits()
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product').exec()

@@ -41,7 +41,7 @@
                  </div>
                 <input class="phone" name="phone" type="phone" placeholder="Numer Telefonu"  autocomplete="off" minlength="9" required>
                 <div class = "ui-widget ">
-                    <input  class="myInput inputCreateTreatment " type="text" name ="treatment" placeholder="Nazwa Zabiegu"  autocomplete="off" required>
+                    <input  class="myInput treatment-search  " type="text" name ="treatment" placeholder="Nazwa Zabiegu"  autocomplete="off" required>
                  </div>
                 <input  id="datapickerAdd"  name ="visitDate"  placeholder="Data"  autocomplete="off"  required/>
                 <input   id="timepickerFrom" onclick="$timepickerFrom.open()" name="timeFrom"   placeholder="Czas rozpoczęcia" value="<%=newVisit.timeFrom  %>" autocomplete="off" required />
@@ -78,7 +78,7 @@
                  </div>
                 <input class="phone" name="phone" type="phone" placeholder="Numer Telefonu"  autocomplete="off" minlength="9" required>
                 <div class = "ui-widget ">
-                    <input  class=" inputEditTreatment " type="text" name ="treatment" placeholder="Nazwa Zabiegu"  autocomplete="off" required>
+                    <input  class="  treatment-search " type="text" name ="treatment" placeholder="Nazwa Zabiegu"  autocomplete="off" required>
                  </div>
                 <input placeholder="Data"  class="visitDateEdit"  id="datapickerAddEdit" name="visitDateEdit"   autocomplete="off"   required/>
                 <input id="timepickerFromEdit" class="timeFrom"onclick="$timepickerFromEdit.open()" name="timeFromEdit"  placeholder="Czas rozpoczęcia"  autocomplete="off" required/>
@@ -160,6 +160,7 @@
 
 
 <script src="../../public/toggle_main_page_list.js"></script>
+<script src="../../public/js/shopping_list_min.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="../../public/dataTimePicker.js"></script>
 <script src="../../public/js/calendar.js"></script>
