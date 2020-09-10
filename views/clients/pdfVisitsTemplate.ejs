@@ -1,0 +1,46 @@
+
+<script>
+    function pdfVisits(){
+    var elem = Number(`<%-addedVisist.length%>`)
+ 
+    var doc =  new jsPDF();
+  
+ `<%addedVisist.forEach((element, index)=> { %>`
+   
+    elem--;
+        doc.setFontSize(11)
+        doc.setDrawColor(162, 123, 56); // draw red lines
+        doc.text(`<%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %>`, 15,15 + `<%=index%>` * 70)
+        doc.line(15,16.5 + `<%=index%>` * 70,39,16.5 + `<%=index%>` * 70)
+
+        doc.setFontSize(9)
+        doc.text('Zabieg',15,23 + `<%=index%>` * 70)
+        doc.setFontSize(11)
+        doc.text(`<%= element.treatment== null ? 'Nie ma w ofercie' :element.treatment.treatmentName %>`, 15,28 + `<%=index%>` * 70)
+
+        doc.setFontSize(9)
+        doc.text('Cena: ',180,23 + `<%=index%>` * 70)
+        doc.setFontSize(11)
+        doc.text(`<%= element.treatment== null ? '' :+element.treatment.treatmentPrice%>`, 180,28 + `<%=index%>` * 70,{maxWidth:'40'})
+
+        doc.setFontSize(9)
+        doc.text('Komentarz: ',15,35 + `<%=index%>` * 70)
+        doc.setFontSize(11)
+        doc.text(`<%=element.comment== null? '------':element.comment%>`, 15,40 + `<%=index%>` * 70,{maxWidth:'185'})
+
+        doc.setFontSize(9)
+        doc.text('Zakupy: ',15,55 + `<%=index%>` * 70)
+        doc.setFontSize(11)
+        doc.text(`<%=element.shopping== null? '------':element.shopping%>`, 15,60 + `<%=index%>` * 70,{maxWidth:'185'})
+        doc.setLineWidth(0.1);
+        doc.line(15,67 + `<%=index%>` * 70,200,67 + `<%=index%>` * 70)
+    
+
+    if(elem ==0){
+        doc.save(`<%=clientInfo.name%> <%=clientInfo.lastName%> Wizyty.pdf`);
+    }
+       
+       
+`  <%});%>`
+ }
+</script>

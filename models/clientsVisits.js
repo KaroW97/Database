@@ -21,9 +21,9 @@ const clientVisits = mongoose.Schema({
     },
         
     treatment:{
-        type:mongoose.Schema.Types.ObjectId, //id of another object in our colection
+        type:String, //id of another object in our colection
         required:false,
-        ref:'Treatment' //do czego sie odnosi
+      
     },
     shopping:{
         type:String,

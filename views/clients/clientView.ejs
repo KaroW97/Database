@@ -2,83 +2,162 @@
 <%-include('./pdfTemplate.ejs') %>
 
 
-<button  onclick='pdff(); pdfVisits();'>Print</button>
-<br><hr>
-<div onclick="window.location='/clients/client-view/<%=clientInfo.id%>/edit'">
-    <h1><%=clientInfo.name%> <%=clientInfo.lastName%></h1>
-    <p>Numer Telefonu: <%=clientInfo.phoneNumber%></p>
-    <% if(clientInfo.visitDate != null) {%> 
-        <p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
-    <% } %> 
-    <% if(clientInfo.dateOfBirth != null) {%> 
-        <p>Urodziny: <%=clientInfo.dateOfBirth == null ? '' :clientInfo.dateOfBirth.toISOString().split('T')[0] %></p>
-    <% } %> 
+<div class="center-main-div">
+    <div class="main-div">
+        <div class="left-side-of-the-div">
+            <div class="client-information-sector">
+                <div class="phone-top-box">
+                    <div class="client-initial-information">
+                        <p class="header"><%=clientInfo.name%> <%=clientInfo.lastName%></p>
+                        <div class="side-by-side-buttons">
+                            <button class="upper-button" onclick='pdff(); pdfVisits();'><i class="fas fa-file-download"></i></button>
+                            <button class="lower-button" onclick="window.location='/clients/client-view/<%=clientInfo.id%>/edit'"><i class="fas fa-user-edit"></i> </button>
+                            <button  onclick="window.location='/clients/client-visits/<%=clientInfo.id%>'"><i class="fas fa-calendar-check"></i></button>   
+                            
+    
+                        </div>
+                        
+                    </div>
+                    
+                    <% if(clientInfo.visitDate != null) {%> 
+                        <p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
+                    <% } %> 
+                    <div class="client-initial-information">
+                        <div class="sec-p-element">
+                            <p class="headerVisit">Urodziny</p>
+                            <p class="client-info"><%=clientInfo.dateOfBirth == null ? '-' :clientInfo.dateOfBirth.toISOString().split('T')[0] %></p>
 
-    <p>Diagnoza</p>
-    <%Object.keys(clientInfo.skinDiagnoseAll).forEach(element=>{%>
-        <% if(clientInfo.skinDiagnoseAll[element].value == true && element !='$init'){ %> 
-            <ul>
-                <li> <%=clientInfo.skinDiagnoseAll[element].name %></li>
-            </ul>
-        <% } %> 
-    <%})%>
-    <p>inne: <%=clientInfo.skinDiagnoseAll.other %> </p>
-    <% if(clientInfo.washingFace != '') {%> 
-        <p>Czym myta twarz:  <%=clientInfo.washingFace  %> </p>
-    <% } %> 
-    <% if(clientInfo.faceTension != '') {%> 
-        <p>Czy występuje napięcie twarzy:  <%=clientInfo.faceTension  %> </p>
-    <% } %> 
-    <% if(clientInfo.currentFaceCreams != '') {%> 
-        <p>Obecnie używane kremy:  <%=clientInfo.currentFaceCreams  %> </p>
-    <% } %>
-    <% if(clientInfo.shopping != '') {%>  
-        <p>Zakupy:  <%=clientInfo.shopping  %> </p>
-    <% } %>
-    <% if(clientInfo.diagnose1 != '') {%>  
-        <p>Wstępna diagnoza:  <%=clientInfo.diagnose1  %> </p>
-    <% } %>
-    <% if(clientInfo.teraphyPlan != '') {%>  
-        <p>Plan zabiegów:  <%=clientInfo.teraphyPlan  %> </p>
-    <% } %>
-    <% if(clientInfo.recommendedCare != '') {%>  
-        <p>Zalecana pilęgnacja:  <%=clientInfo.recommendedCare  %> </p>
-    <% } %>
-</div>
-
-<br>
-<% if(addedVisist != ''){ %> 
-    <h1>Wizyty  </h1>
-<%}%>
-<button  onclick='pdfVisits();'>Print</button>
-<form method="post" action="/clients/client-view/<%=clientInfo.id%>?_method=DELETE ">
-   
-        <input type="submit" value="Usuń">
-        <br>
-        <%addedVisist.forEach(element => { %> 
-            <!-- --> 
-            <div  onclick="window.location='/clients/client-view/<%=element.id%>/editPost'" onclick="showFormm()">
-                <p><%= element.clientVisitDate==null ? '':element.clientVisitDate.toISOString().split('T')[0] %> </p>
-                <p><%= element.comment %> </p>
-                <p><%= element.treatment== null ? 'Nie ma w ofercie' :element.treatment.treatmentName %> </p>
-                <p><%= element.treatment== null ? '' :element.treatment.treatmentPrice %> </p>
-                <p><%= element.shopping== null ? '' :element.shopping %> </p>
+                        </div>
+                        <div class="first-p-element">
+                            <p class="headerVisit">Kontakt</p>
+                            <p class="client-info"> <%=clientInfo.phoneNumber%></p>
+                        </div>
+                   
+    
+                        
+                    </div>
+                </div>
+            <div class="diagnose">
+                
+                <p class="header center-element diagnose-button">Diagnoza</p>
+            
+                <div id="diagnose" class="diagnose-description-phone hide">
+                    <div class="diagnose-description">
+                        <%Object.keys(clientInfo.skinDiagnoseAll).forEach(element=>{%>
+                            <% if(clientInfo.skinDiagnoseAll[element].value == true && element !='$init'){ %> 
+                                <div class="diagnose-description-single-elements">
+                                    <span class="single-element-exists">&#10003;</span>
+                                    <p><%=clientInfo.skinDiagnoseAll[element].name %></p>
+                                </div>
+                                    
+                                
+                            <% }else if(clientInfo.skinDiagnoseAll[element].value == false && element !='$init'){ %>
+                                <div class="diagnose-description-single-elements">
+                                    <span class="single-element-not-exists">&#215;</span>
+                                    <p><%=clientInfo.skinDiagnoseAll[element].name %></p>
+                                </div>
+                                <% } %> 
+                        <%})%>
+                        
+    
+                        </div>
+                        <p class="diagnose-other">inne: <%=clientInfo.skinDiagnoseAll.other !=''?clientInfo.skinDiagnoseAll.other : '-' %> </p>
+    
+                </div>
+            
+            </div>  
+            <div class="skin-treatment-information-box hide-when-small">
+                <p>Czym myta twarz: </p>
+                <textarea disable class="textarea"><%=clientInfo.washingFace !=''?clientInfo.washingFace:'brak danych'%></textarea>
             </div>
-            <input type="checkbox" name="chackboxDelet" value="<%=element.id%>" >
-            <hr>
-        <%});%>   
-</form>
+            </div>
+            
+        </div>
+        
 
-
-
-
-<form action='/clients/client-view/<%=clientInfo.id%>' method="POST">
-    <!--Section for adding coments-->
-    <%- include('./_form_fields_CreatePost.ejs') %> 
-    <button type="submit">Dodaj</button>
-</form>
+        <div class="right-side-of-the-div">
+           
+            <div class="client-information-sector-right" >
+                
+                <p class="hide-when-large header skin-treatment-button">Pielęgnacja</p>
+                <div id="skin-treatment"class="skin-treatment-phone hide">
+                    <div class="skin-treatment-information-box hide-when-large">
+                        <p>Czym myta twarz: </p>
+                        <textarea disable class="textarea"><%=clientInfo.washingFace !=''?clientInfo.washingFace:'brak danych'%></textarea>
+                    </div>
+                    <div class="skin-treatment-information-box">
+                        <p>Czy występuje napięcie twarzy: </p>
+                        <textarea disable  class="textarea"><%=clientInfo.faceTension != ''?clientInfo.faceTension:'brak danych'  %></textarea>
+                    </div>
+                    <div class="skin-treatment-information-box">
+                        <p>Obecnie używane kremy: </p>
+                        <textarea disable class="textarea"><%=clientInfo.currentFaceCreams != ''?clientInfo.currentFaceCreams :'brak danych' %></textarea>
+                    </div>
+                    <div class="skin-treatment-information-box">
+                        <p>Zakupy: </p>
+                        <textarea disable class="textarea"><%=clientInfo.shopping != ''?clientInfo.shopping:'brak danych' %></textarea>
+                    </div>
+                    <div class="skin-treatment-information-box">
+                        <p>Wstępna diagnoza: </p>
+                        <textarea disable class="textarea"><%=clientInfo.diagnose1 != ''?clientInfo.diagnose1:'brak danych'  %></textarea>
+                    </div>
+                    <div class="skin-treatment-information-box">
+                        <p>Plan zabiegów: </p>
+                        <textarea disable class="textarea"><%=clientInfo.teraphyPlan != ''?clientInfo.teraphyPlan:'brak danych'  %></textarea>
+                    </div>
+                    <div class="skin-treatment-information-box">
+                        <p>Zalecana pilęgnacja: </p>
+                        <textarea disable class="textarea"><%=clientInfo.recommendedCare != ''?clientInfo.recommendedCare:'brak danych'  %></textarea>
+                    </div>
+                </div>
+             
+            
+                
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
 <script src="../../public/toggle_main_page_list.js"></script>
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
 <script src="../../public/dataTimePicker.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $(".skin-treatment-button").click(function(){
+
+            if($('#skin-treatment').hasClass("hide")){
+                $('#skin-treatment').addClass('display-hidden')
+                $('#skin-treatment').removeClass('hide')
+           
+            }else if($('#skin-treatment').hasClass("display-hidden")){
+                $('#skin-treatment').addClass('hide')
+                $('#skin-treatment').removeClass('display-hidden')
+
+             
+
+            }
+        })
+        $('.diagnose-button').click(function(){
+            if($('#diagnose').hasClass("hide") ){
+                $('#diagnose').addClass('display-hidden-diagnose')
+                $('#diagnose').removeClass('hide')  
+                $('#diagnose').removeClass('hide-displayed-diagnose')
+
+            }else if($('#diagnose').hasClass("display-hidden-diagnose")){
+                $('#diagnose').removeClass('display-hidden-diagnose')
+                $('#diagnose').addClass('hide') 
+               //$('#diagnose').addClass('hide-displayed-diagnose')
+               // setTimeout(function(){
+               //     $('#diagnose').addClass('hide')  
+              //  },800)
+           
+               
+            }
+        })
+    })
+
+</script>

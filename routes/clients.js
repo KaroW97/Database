@@ -26,9 +26,9 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
         let clientFind =await clients.find({user:req.user.id}).exec();
         if(clientFind =='')
             clientFind = await clientLastName.find({user:req.user.id}).exec(); 
-        todayDate.setDate(todayDate.getDate() - 1)
-        weekDate.setDate(todayDate.getDate() + 8)
-        const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
+            todayDate.setDate(todayDate.getDate() - 1)
+            weekDate.setDate(todayDate.getDate() + 8)
+            const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
         }}).sort({transactionDate:'asc'})
@@ -58,6 +58,10 @@ router.get('/new',ensureAuthenticated,async (req,res)=>{
    
 })
 
+
+
+
+
 //Create Client Route
 router.post('/', ensureAuthenticated,async(req,res)=>{
 
@@ -66,59 +70,59 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         skinDiagnoseAll:{
             drySkin:{
                 name:"Sucha",
-                value:req.body.drySkin
+                value:req.body.drySkin ||false
             },
             wrinkless:{
                 name:"Zmarszczki i drobne linie",
-                value:req.body.wrinkless
+                value:req.body.wrinkless||false
             },
             lackfirmnes:{
                 name:"Brak jędrności",
-                value:req.body.lackfirmnes
+                value:req.body.lackfirmnes||false
             },
             nonuniformColor:{
                 name:"Niejednolity koloryt",
-                value:req.body.nonuniformColor
+                value:req.body.nonuniformColor||false
             },
             tiredness:{
                 name:" Zmęczenie - stres",
-                value:req.body.tiredness
+                value:req.body.tiredness||false
             },
             acne:{
                 name:"Trądzik grudkowy",
-                value:req.body.acne
+                value:req.body.acne||false
             },
             smokerSkin:{
                 name:"Skóra palacza",
-                value:req.body.smokerSkin
+                value:req.body.smokerSkin||false
             },
             fatSkin:{
                 name:"Przetłuszczanie się",
-                value:req.body.fatSkin
+                value:req.body.fatSkin||false
             },
             discoloration:{
                 name:"Przebarwienia",
-                value:req.body.discoloration
+                value:req.body.discoloration||false
             },
             blackheads:{
                 name:"Zaskórniki",
-                value: req.body.blackheads,
+                value: req.body.blackheads||false,
             },
             darkCirclesEyes:{
                 name:"Cienie - opuchnięcia pod oczami",
-                value:req.body.darkCirclesEyes
+                value:req.body.darkCirclesEyes||false
             },
             dilatedCapillaries:{
                 name:"Rozszerzone naczynka",
-                value:req.body.dilatedCapillaries
+                value:req.body.dilatedCapillaries||false
             },
             papularPustularAcne:{
                 name:"Trądzik grudkowo - kostkowy",
-                value:req.body.papularPustularAcne
+                value:req.body.papularPustularAcne||false
             },
             externallyDrySkin:{
                 name:"Zewnętrznie przesuszona ",
-                value:req.body.externallyDrySkin
+                value:req.body.externallyDrySkin||false
             },
             other:req.body.other,
         },
@@ -170,24 +174,46 @@ router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
     const cssSheets=[]
     cssSheets.push('../../public/css/user/clients/clientView.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     try{
-        const visit = new ClientVisits()
-        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product').exec()
-     
+         
         const treatments = await Treatment.find({user:req.user.id});
         const clientt  = await Client.findById(req.params.id)
      
         res.render('clients/clientView',{
-            addedVisist:addedVisit,
+           
             treatments:treatments,
-            newVisit:visit,
+            
             curentClient:req.params.id,
             clientInfo:clientt,
             styles:cssSheets
         })
-    }catch{
+    }catch(err){
+        console.log(err)
         res.redirect('/clients')
     }
 })
+//Show Client Visit
+router.get("/client-visits/:id",ensureAuthenticated,async (req,res)=>{
+    const cssSheets=[]
+    cssSheets.push('../../public/css/user/clients/clientView.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
+    try{
+        const visit = new ClientVisits()  
+        const addedVisit = await ClientVisits.find({client:req.params.id}).populate('client').populate('product').exec()
+        const clientt  = await Client.findById(req.params.id)
+        const treatments = await Treatment.find({user:req.user.id});
+        res.render('clients/clientViewVisits',{
+            treatments:treatments,
+            addedVisist:addedVisit,
+            clientInfo:clientt,
+            newVisit:visit,
+            styles:cssSheets
+        })
+    }catch(err){
+        console.log(err)
+        res.redirect(`/clients/client-view/${req.params.id}`)
+
+    }
+ })
+ 
 
 //Add new Visit/Post
 router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
@@ -195,7 +221,7 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
         client:req.params.id,
         comment: req.body.comment,
         clientVisitDate:new Date( req.body.clientVisitDate) ,
-        treatment: req.body.treatment,
+        treatment: req.body.treatmentName,
         user:req.user.id,
         shopping:req.body.shopping
     })
@@ -204,18 +230,13 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
     try{   
 
         //console.log(treatment.treatmentPrice)
-        if(req.body.treatment== null){
-            req.flash('mess','Nie masz żadnych zabiegów w bazie');
-            req.flash('type','danger')
-            res.redirect( `/clients/client-view/${req.params.id}`)
-        }
         await visit.save();
         req.flash('mess','Dodano wizyte');
         req.flash('type','success')
         res.redirect( `/clients/client-view/${req.params.id}`)
     }catch(err){
         const cssSheets=[];
-
+        console.log(err)
         const treatments = await Treatment.find({user:req.user.id});
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product')
         const clientt  = await Client.findById(req.params.id);
@@ -289,20 +310,21 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
     let visit
     let clientStat
     try{
-         visit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').exec()
+         visit = await ClientVisits.findById(req.params.id).populate('client').exec()
          visit.client=visit.client
          visit.comment= req.body.comment
          visit.clientVisitDate= new Date( req.body.clientVisitDate) 
          visit.treatment= req.body.treatment
          visit.shopping = req.body.shopping
-         await visit.save();
+         await visit.save(req.body.treatment);
+         console.log()
          req.flash('mess','Wizyta została edytowana');
          req.flash('type','success')
          return res.redirect(`/clients/client-view/${visit.client.id}`)
     }catch(err){
-        console.log(err)
+        console.log(err + "jestem")
         const cssSheets =[]
-
+    
         const addedVisit = await ClientVisits.findById(req.params.id)
         const treatments = await Treatment.find({});
         res.render('clients/editPost',{
@@ -340,59 +362,59 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
 
         clients.skinDiagnoseAll.drySkin ={
                 name:"Sucha",
-                value:req.body.drySkin
+                value:req.body.drySkin||false
         }
         clients.skinDiagnoseAll.wrinkless ={
             name:"Zmarszczki i drobne linie",
-                value:req.body.wrinkless
+                value:req.body.wrinkless||false
         }
         clients.skinDiagnoseAll.lackfirmnes ={
             name:"Brak jędrności",
-            value:req.body.lackfirmnes
+            value:req.body.lackfirmnes||false
         }
         clients.skinDiagnoseAll.nonuniformColor ={
             name:"Niejednolity koloryt",
-            value:req.body.nonuniformColor
+            value:req.body.nonuniformColor||false
         }
         clients.skinDiagnoseAll.tiredness ={
             name:" Zmęczenie - stres",
-            value:req.body.tiredness
+            value:req.body.tiredness||false
         }
         clients.skinDiagnoseAll.acne ={
             name:"Trądzik grudkowy",
-            value:req.body.acne
+            value:req.body.acne||false
         }
         clients.skinDiagnoseAll.smokerSkin ={
             name:"Skóra palacza",
-                value:req.body.smokerSkin
+                value:req.body.smokerSkin||false
         }
         clients.skinDiagnoseAll.fatSkin ={
             name:"Przetłuszczanie się",
-            value:req.body.fatSkin
+            value:req.body.fatSkin||false
         }
         clients.skinDiagnoseAll.discoloration ={
             name:"Przebarwienia",
-            value:req.body.discoloration
+            value:req.body.discoloration||false
         }
         clients.skinDiagnoseAll.blackheads ={
             name:"Zaskórniki",
-            value: req.body.blackheads,
+            value: req.body.blackheads||false,
         }
         clients.skinDiagnoseAll.darkCirclesEyes ={
             name:"Cienie - opuchnięcia pod oczami",
-            value:req.body.darkCirclesEyes
+            value:req.body.darkCirclesEyes||false
         }
         clients.skinDiagnoseAll.dilatedCapillaries ={
             name:"Rozszerzone naczynka",
-            value:req.body.dilatedCapillaries
+            value:req.body.dilatedCapillaries||false
         }
         clients.skinDiagnoseAll.papularPustularAcne ={
             name:"Trądzik grudkowo - kostkowy",
-            value:req.body.papularPustularAcne
+            value:req.body.papularPustularAcne||false
         }
         clients.skinDiagnoseAll.externallyDrySkin ={
             name:"Zewnętrznie przesuszona ",
-            value:req.body.externallyDrySkin
+            value:req.body.externallyDrySkin||false
         }
         clients.skinDiagnoseAll.other =req.body.other
         clients.name=req.body.name,
