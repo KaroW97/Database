@@ -60,6 +60,7 @@ router.get('/registration',async (req, res)=>{
 router.post('/registration',async(req,res)=>{
     let cssSheets = [];
     cssSheets.push("../../public/css/registrationUser.css");
+    console.log(req.body)
     await userRegistry(req.body,'user',res,req,'/login','users/register',cssSheets)
 })
 //Email send

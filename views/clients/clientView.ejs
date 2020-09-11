@@ -10,31 +10,23 @@
                     <div class="client-initial-information">
                         <p class="header"><%=clientInfo.name%> <%=clientInfo.lastName%></p>
                         <div class="side-by-side-buttons">
-                            <button class="upper-button" onclick='pdff(); pdfVisits();'><i class="fas fa-file-download"></i></button>
-                            <button class="lower-button" onclick="window.location='/clients/client-view/<%=clientInfo.id%>/edit'"><i class="fas fa-user-edit"></i> </button>
-                            <button  onclick="window.location='/clients/client-visits/<%=clientInfo.id%>'"><i class="fas fa-calendar-check"></i></button>   
-                            
-    
+                            <button aria-label ="download" class="upper-button" onclick='pdff();'><i class="fas fa-file-download"></i></button>
+                            <button aria-label ="edit-user"  class="lower-button div-element" ><i class="fas fa-user-edit"></i> </button>
+                            <button aria-label ="go-to-client-visits" onclick="window.location='/clients/client-visits/<%=clientInfo.id%>'"><i class="fas fa-calendar-check"></i></button>   
                         </div>
-                        
                     </div>
-                    
                     <% if(clientInfo.visitDate != null) {%> 
                         <p>Pierwsza wizyta :<%=clientInfo.visitDate == null ? '' :clientInfo.visitDate.toISOString().split('T')[0] %></p>
                     <% } %> 
                     <div class="client-initial-information">
                         <div class="sec-p-element">
-                            <p class="headerVisit">Urodziny</p>
+                            <label class="headerVisit">Urodziny</label>
                             <p class="client-info"><%=clientInfo.dateOfBirth == null ? '-' :clientInfo.dateOfBirth.toISOString().split('T')[0] %></p>
-
                         </div>
                         <div class="first-p-element">
-                            <p class="headerVisit">Kontakt</p>
+                            <label class="headerVisit">Kontakt</label>
                             <p class="client-info"> <%=clientInfo.phoneNumber%></p>
                         </div>
-                   
-    
-                        
                     </div>
                 </div>
             <div class="diagnose">
@@ -60,21 +52,20 @@
                         <%})%>
                         
     
-                        </div>
-                        <p class="diagnose-other">inne: <%=clientInfo.skinDiagnoseAll.other !=''?clientInfo.skinDiagnoseAll.other : '-' %> </p>
+                    </div>
+                    <p class="diagnose-other">inne: <%=clientInfo.skinDiagnoseAll.other !=''?clientInfo.skinDiagnoseAll.other : '-' %> </p>
     
                 </div>
             
             </div>  
             <div class="skin-treatment-information-box hide-when-small">
                 <p>Czym myta twarz: </p>
-                <textarea disable class="textarea"><%=clientInfo.washingFace !=''?clientInfo.washingFace:'brak danych'%></textarea>
+                <textarea disable class="textarea"><%=clientInfo.washingFace !=''?clientInfo.washingFace:''%></textarea>
             </div>
-            </div>
+        </div>
             
         </div>
-        
-
+    
         <div class="right-side-of-the-div">
            
             <div class="client-information-sector-right" >
@@ -83,31 +74,31 @@
                 <div id="skin-treatment"class="skin-treatment-phone hide">
                     <div class="skin-treatment-information-box hide-when-large">
                         <p>Czym myta twarz: </p>
-                        <textarea disable class="textarea"><%=clientInfo.washingFace !=''?clientInfo.washingFace:'brak danych'%></textarea>
+                        <textarea disable class="textarea"><%=clientInfo.washingFace !=''?clientInfo.washingFace:''%></textarea>
                     </div>
                     <div class="skin-treatment-information-box">
                         <p>Czy występuje napięcie twarzy: </p>
-                        <textarea disable  class="textarea"><%=clientInfo.faceTension != ''?clientInfo.faceTension:'brak danych'  %></textarea>
+                        <textarea disable  class="textarea"><%=clientInfo.faceTension != ''?clientInfo.faceTension:''  %></textarea>
                     </div>
                     <div class="skin-treatment-information-box">
                         <p>Obecnie używane kremy: </p>
-                        <textarea disable class="textarea"><%=clientInfo.currentFaceCreams != ''?clientInfo.currentFaceCreams :'brak danych' %></textarea>
+                        <textarea disable class="textarea"><%=clientInfo.currentFaceCreams != ''?clientInfo.currentFaceCreams :'' %></textarea>
                     </div>
                     <div class="skin-treatment-information-box">
                         <p>Zakupy: </p>
-                        <textarea disable class="textarea"><%=clientInfo.shopping != ''?clientInfo.shopping:'brak danych' %></textarea>
+                        <textarea disable class="textarea"><%=clientInfo.shopping != ''?clientInfo.shopping:'' %></textarea>
                     </div>
                     <div class="skin-treatment-information-box">
                         <p>Wstępna diagnoza: </p>
-                        <textarea disable class="textarea"><%=clientInfo.diagnose1 != ''?clientInfo.diagnose1:'brak danych'  %></textarea>
+                        <textarea disable class="textarea"><%=clientInfo.diagnose1 != ''?clientInfo.diagnose1:''  %></textarea>
                     </div>
                     <div class="skin-treatment-information-box">
                         <p>Plan zabiegów: </p>
-                        <textarea disable class="textarea"><%=clientInfo.teraphyPlan != ''?clientInfo.teraphyPlan:'brak danych'  %></textarea>
+                        <textarea disable class="textarea"><%=clientInfo.teraphyPlan != ''?clientInfo.teraphyPlan:''  %></textarea>
                     </div>
                     <div class="skin-treatment-information-box">
                         <p>Zalecana pilęgnacja: </p>
-                        <textarea disable class="textarea"><%=clientInfo.recommendedCare != ''?clientInfo.recommendedCare:'brak danych'  %></textarea>
+                        <textarea disable class="textarea"><%=clientInfo.recommendedCare != ''?clientInfo.recommendedCare:''  %></textarea>
                     </div>
                 </div>
              
@@ -119,11 +110,225 @@
         
     </div>
 </div>
-<script src="../../public/toggle_main_page_list.js"></script>
-<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-<script src="../../public/dataTimePicker.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<div class="create-visit-form openForm close-form " id="visitForm">
+    <form method="POST" action="/clients/client-view/<%=clientInfo.id%>?_method=PUT" class="center-form formEdit">
+        <div class="main-div ">
+           
+            <div  class="left-side-of-the-div">
+                <div class="client-information-sector">
+                    <div class="phone-top-box">
+                        <div class="client-initial-information">
+                            <input type="text" name="name" placeholder="imie" value="<%=clientInfo.name%>" required >
+                            <input type="text"  name="lastName" placeholder="nazwisko" value="<%=clientInfo.lastName%>"required >
+                        </div>
+                        <div class="client-initial-information">
+                            <input type="tel" minlength="9" name="phoneNumber" placeholder="telefon"  value="<%=clientInfo.phoneNumber%>" required>
+                            <input type="date" name="dateOfBirth" value="<%=clientInfo.dateOfBirth == null ? '' : clientInfo.dateOfBirth.toISOString().split('T')[0]%>"   >
+                      
+                        </div>
+                    </div>
+               
+                  
+                <div class="diagnose">
+                        <div class="diagnose-description-phone">
+                                            
+                            <p class="header center-element diagnose-button">Diagnoza</p>
+                        
+                        <div class="diagnose-description">              
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.drySkin.value != true){%>
+                                    <input type="checkbox" id="dry_skin" name="drySkin"  value="<%=clientInfo.skinDiagnoseAll.drySkin.value=true%>" >
+                                <%}else{%>
+                                    <input type="checkbox" id="dry_skin" name="drySkin"  value="<%=clientInfo.skinDiagnoseAll.drySkin.value=true%>"checked >
+                                <%}%>
+                                <span >Suchość</span>
+                               
+                            </label>
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.wrinkless.value != true){%>
+                                    <input type="checkbox" id="wrinkless_skin" value="<%=clientInfo.skinDiagnoseAll.wrinkless.value=true%>" name="wrinkless"> 
+                                <%}else{%>
+                                    <input type="checkbox" id="wrinkless_skin" value="<%=clientInfo.skinDiagnoseAll.wrinkless.value=true%>" name="wrinkless" checked> 
+                                <%}%>
+                              
+                                <span >Zmarszczki i drobne linie</span>
+    
+                            </label>
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.lackfirmnes.value != true){%>
+                                    <input type="checkbox" id="juicy_skin" value="<%=clientInfo.skinDiagnoseAll.lackfirmnes.value=true%>" name="lackfirmnes">
+                                <%}else{%>
+                                    <input type="checkbox" id="juicy_skin" value="<%=clientInfo.skinDiagnoseAll.lackfirmnes.value=true%>" name="lackfirmnes" checked>
+                                <%}%>
+                                <span >Brak jędrności</span>
+                            </label> 
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.nonuniformColor.value != true){%>
+                                        <input type="checkbox" id="dif_color_skin" value="<%=clientInfo.skinDiagnoseAll.nonuniformColor.value=true%>" name="nonuniformColor">
+                                <%}else{%>
+                                        <input type="checkbox" id="dif_color_skin" value="<%=clientInfo.skinDiagnoseAll.nonuniformColor.value=true%>" name="nonuniformColor" checked>
+                                <%}%>
+                          
+                                <span>Niejednolity koloryt</span>
+                            </label> 
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.tiredness.value != true){%>
+                                    <input type="checkbox" id="tired_skin" value="<%=clientInfo.skinDiagnoseAll.tiredness.value=true%>" name="tiredness">
+                                <%}else{%>
+                                    <input type="checkbox" id="tired_skin" value="<%=clientInfo.skinDiagnoseAll.tiredness=true%>" name="tiredness" checked>
+                                <%}%>
+                              
+                                <span >Zmęczenie - stres</span>
+                            </label> 
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.acne.value != true){%>
+                                    <input type="checkbox" id="spotted_skin" value="<%=clientInfo.skinDiagnoseAll.acne.value=true%>" name="acne">
+                                <%}else{%>
+                                    <input type="checkbox" id="spotted_skin" value="<%=clientInfo.skinDiagnoseAll.acne.value=true%>" name="acne" checked>         
+                                <%}%>
+                         
+                                <span >Trądzik grudkowy</span>
+                            </label>
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.smokerSkin.value != true){%>
+                                    <input type="checkbox" value="<%=clientInfo.skinDiagnoseAll.smokerSkin.value=true%>" name="smokerSkin">
+                                <%}else{%>
+                                    <input type="checkbox" value="<%=clientInfo.skinDiagnoseAll.smokerSkin.value=true%>" name="smokerSkin" checked>
+                                <%}%>
+                   
+                                <span >Skóra palacza</span>
+                            </label> 
+                        
+                    
+                            <label class="diagnose-description-single-elements">
+                                    <%if(clientInfo.skinDiagnoseAll.fatSkin.value != true){%>
+                                        <input type="checkbox" id="fat_skin" value="<%=clientInfo.skinDiagnoseAll.fatSkin.value=true%>" name="fatSkin">
+                                    <%}else{%>
+                                            <input type="checkbox" id="fat_skin" value="<%=clientInfo.skinDiagnoseAll.fatSkin.value=true%>" name="fatSkin" checked>
+                                    <%}%>
+                                <span > Przetłuszczanie się</span>
+                            </label>
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.discoloration.value != true){%>
+                                    <input type="checkbox" id="discoloration_skin" value="<%=clientInfo.skinDiagnoseAll.discoloration.value=true %>" name="discoloration">
+                                <%}else{%>
+                                    <input type="checkbox" id="discoloration_skin" value="<%=clientInfo.skinDiagnoseAll.discoloration.value=true %>" name="discoloration" checked>
+                                <%}%>
+                        
+                                <span>Przebarwienia</span>
+                            </label>
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.blackheads.value != true){%>
+                                    <input type="checkbox" id="spotts_skin" value="<%=clientInfo.skinDiagnoseAll.blackheads.value=true%>" name="blackheads">
+                                <%}else{%>
+                                    <input type="checkbox" id="spotts_skin" value="<%=clientInfo.skinDiagnoseAll.blackheads.value=true%>" name="blackheads" checked>
+                                <%}%>
+                             
+                                <span>Zaskórniki</span>
+                            </label>
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.darkCirclesEyes.value != true){%>
+                                    <input type="checkbox" id="shadows_skin" value="<%=clientInfo.skinDiagnoseAll.darkCirclesEyes.value=true%>" name="darkCirclesEyes">
+                                <%}else{%>
+                                    <input type="checkbox" id="shadows_skin" value="<%=clientInfo.skinDiagnoseAll.darkCirclesEyes.value=true%>" name="darkCirclesEyes" checked>
+                                <%}%>
+                                <span >Cienie - opuchnięcia pod oczami</span>
+                            </label>
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.dilatedCapillaries.value != true){%>
+                                    <input type="checkbox" id="capillaries_skin" value="<%=clientInfo.skinDiagnoseAll.dilatedCapillaries.value=true%>" name="dilatedCapillaries">
+                                <%}else{%>
+                                    <input type="checkbox" id="capillaries_skin" value="<%=clients.skinDiagnoseAll.dilatedCapillaries.value=true%>" name="dilatedCapillaries" checked>
+                                <%}%>
+                         
+                                <span>Rozszerzone naczynka</span>
+                            </label>
+                            <label class="diagnose-description-single-elements">
+                                <%if(clientInfo.skinDiagnoseAll.papularPustularAcne.value  != true){%>
+                                    <input type="checkbox" id="acne_skin" value="<%=clientInfo.skinDiagnoseAll.papularPustularAcne.value=true%>" name="papularPustularAcne">
+                                <%}else{%>
+                                    <input type="checkbox" id="acne_skin" value="<%=clientInfo.skinDiagnoseAll.papularPustularAcne.value=true%>" name="papularPustularAcne" checked>
+                                <%}%>
+                                <span >Trądzik grudkowo - kostkowy</span>
+                            </label>
+                            <label class="diagnose-description-single-elements">
+                                    <%if(clientInfo.skinDiagnoseAll.externallyDrySkin.value != true){%>
+                                        <input type="checkbox" id="outside_dry_skin" value="<%=clientInfo.skinDiagnoseAll.externallyDrySkin.value=true%>" name="externallyDrySkin">
+                                        <%}else{%>
+                                        <input type="checkbox" id="outside_dry_skin" value="<%=clientInfo.skinDiagnoseAll.externallyDrySkin.value=true%>" name="externallyDrySkin" checked>
+                                        <%}%>
+                                    <span>Zewnętrznie przesuszona</span>
+                            </label>
+                        </div>
+                    </div>
+                
+                    <div class="under_input">                     
+                        <label id="other"></label><br>
+                        <i class="fas fa-comment-dots"></i>
+                        <input type="TEXT" id="other" placeholder="inne..." onfocusout="hide_placeholder(this)" onfocus="show_placeholder(this)" name="other" value="<%=clientInfo.skinDiagnoseAll.other%>" >
+                    </div>
+                    
+                    
+                </div>
+                <div class="skin-treatment-information-box hide-when-small">
+                    <p>Czym myta twarz: </p>
+                    <textarea disable class="textarea"name="washingFaceLarge "><%=clientInfo.washingFace !=''?clientInfo.washingFace:''%></textarea>
+                </div>
+             
+
+                </div>
+               
+            </div>   
+            <div class="right-side-of-the-div">
+                    <span aria-hidden="true" id ="close"class="close">&times;</span>
+                
+                <div class="client-information-sector-right" >
+                    <p class="hide-when-large header skin-treatment-button">Pielęgnacja</p>
+
+                    <div id="skin-treatment"class="skin-treatment-phone hide">
+                        <div class="skin-treatment-information-box hide-when-large">
+                            <p>Czym myta twarz: </p>
+                            <textarea name="washingFace" class="textarea"><%=clientInfo.washingFace !=''?clientInfo.washingFace:'brak danych'%></textarea>
+                        </div>
+                        <div class="skin-treatment-information-box">
+                            <p>Czy występuje napięcie twarzy: </p>
+                            <textarea name="faceTension"  class="textarea"><%=clientInfo.faceTension != ''?clientInfo.faceTension:'brak danych'  %></textarea>
+                        </div>
+                        <div class="skin-treatment-information-box">
+                            <p>Obecnie używane kremy: </p>
+                            <textarea name="currentFaceCreams"  class="textarea"><%=clientInfo.currentFaceCreams != ''?clientInfo.currentFaceCreams :'brak danych' %></textarea>
+                        </div>
+                        <div class="skin-treatment-information-box">
+                            <p>Zakupy: </p>
+                            <textarea name="shopping" class="textarea"><%=clientInfo.shopping != ''?clientInfo.shopping:'brak danych' %></textarea>
+                        </div>
+                        <div class="skin-treatment-information-box">
+                            <p>Wstępna diagnoza: </p>
+                            <textarea name="diagnose1" class="textarea"><%=clientInfo.diagnose1 != ''?clientInfo.diagnose1:'brak danych'  %></textarea>
+                        </div>
+                        <div class="skin-treatment-information-box">
+                            <p>Plan zabiegów: </p>
+                            <textarea name="teraphyPlan" class="textarea"><%=clientInfo.teraphyPlan != ''?clientInfo.teraphyPlan:'brak danych'  %></textarea>
+                        </div>
+                        <div class="skin-treatment-information-box">
+                            <p>Zalecana pilęgnacja: </p>
+                            <textarea name="recommendedCare" class="textarea"><%=clientInfo.recommendedCare != ''?clientInfo.recommendedCare:'brak danych'  %></textarea>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        
+                        <button type="submit">Aktualizuj</button>
+                    </div>
+
+                  
+                </div>
+               
+            </div>
+        </div>
+    </form>
+</div>
 
 <script>
     $(document).ready(function(){

@@ -7,7 +7,6 @@ const ObjectId = require('mongodb').ObjectId;
 const User = require('../models/user')
 const ShoppingList = require('../models/shoppingList')
 const {ensureAuthenticated} = require('../config/auth')
-///
 
 //All Clients Route
 router.get('/', ensureAuthenticated,async(req,res)=>{
@@ -57,10 +56,6 @@ router.get('/new',ensureAuthenticated,async (req,res)=>{
    }
    
 })
-
-
-
-
 
 //Create Client Route
 router.post('/', ensureAuthenticated,async(req,res)=>{
@@ -172,7 +167,7 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
 router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
   
     const cssSheets=[]
-    cssSheets.push('../../public/css/user/clients/clientView.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
+    cssSheets.push('../../public/css/user/clients/clientView.css');
     try{
          
         const treatments = await Treatment.find({user:req.user.id});
@@ -338,21 +333,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
    
 })
 
-//edit
-router.get('/client-view/:id/edit',ensureAuthenticated, async(req,res)=>{
-    const cssSheets =[]
 
-    try{
-        const clietnEdit = await Client.findById(req.params.id)
-        res.render('clients/edit',{
-            clients:clietnEdit,
-            styles:cssSheets
-        })
-    }catch{
-        res.redirect(`/clients/${clietnEdit.id}`)
-    }
-   
-})
 //Update Client 
 router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
     let clients;

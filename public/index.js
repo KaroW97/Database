@@ -3,9 +3,19 @@ if($('.list-content').length  == 0 && !$('div').hasClass('keep-shopping-list-on-
                 
     $('.shopping-list-out').css('display','none')
     $('.pageContentWrapper').css('margin-bottom','80px')
+  //  $('.statistics').css('bottom','90px')
   
 }
+
+$(window).resize(function(){
+    if($('.list-content').length  == 0 && !$('div').hasClass('keep-shopping-list-on-top') && $(window).width() <=1080){
+        //alert('jo')
+    }
+})
 $(document).ready(function(){
+    if($('.list-content').length  == 0 && !$('div').hasClass('keep-shopping-list-on-top') && $(window).width() <=1080){
+        //alert('jo')
+    }
     $(".alert" ).fadeOut(3000);
     //If  List Is Not Empty Shine Till Not Clicked
     if($('.list-content').length == 0){
