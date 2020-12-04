@@ -9,3 +9,5 @@ Used technologies:
 - MongoDB
 
 Link to aplication: https://beauty-base.herokuapp.com/
+
+The application front will be changed in close future.
