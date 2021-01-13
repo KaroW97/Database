@@ -1,0 +1,40 @@
+
+        <div class="input-field col s6">
+            <i class="material-icons prefix">account_circle</i>
+            <input  class="validate clientName" type="text" name ="clients" list="clientOptions-<%=id_extention%>" id="clientName-<%=id_extention%>"  autocomplete="off" required>
+            <label  for="clientName-<%=id_extention%>">Nazwa Klienta</label>
+        </div>
+     
+        <%-include('../partials/clients-list.ejs',{id_extention:id_extention}) %>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">phone</i>
+            <input class="validate" list="phoneNumbers-<%=id_extention%>" name="phone" type="tel" id="phoneNumber-<%=id_extention%>"  autocomplete="off" minlength="9" required>
+            <label for="phoneNumber-<%=id_extention%>">Numer Telefonu</label>
+        </div>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">filter_list</i>
+            <input  class="validate" type="text" name ="treatment" id="treatmentName-<%=id_extention%>" list="treatmentOptions-<%=id_extention%>" autocomplete="off" required>
+            <label for="treatmentName-<%=id_extention%>">Nazwa Zabiegu</label>
+        </div>
+    
+        <%-include('../partials/treatments-list.ejs',{id_extention:id_extention}) %>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">date_range</i>
+            <input type="text" class="datepicker"  name ="visitDate" id="data-<%=id_extention%>" autocomplete="off"  required/>
+            <label for="data-<%=id_extention%>">Data</label>
+        </div>
+        
+        <div class="input-field col s6">
+            <i class="material-icons prefix">access_time</i>
+            <input   type="text" class="timepicker" name="timeFrom" id="timeFrom-<%=id_extention%>" autocomplete="off" required />
+            <label for="timeFrom-<%=id_extention%>">Czas rozpoczęcia</label>
+        </div>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">access_time</i>
+            <input   type="text"class="timepicker"  name="timeTo" id="timeTo-<%=id_extention%>" autocomplete="off" />
+            <label for="timeTo-<%=id_extention%>">Czas zakończenia</label>
+        </div>
+        
+        <div class="center-button">
+            <button class="btn waves-effect submit-button" type="submit" aria-label="create-visit-form">Dodaj</button>
+        </div>

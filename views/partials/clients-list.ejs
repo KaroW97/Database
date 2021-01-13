@@ -1,0 +1,5 @@
+<datalist id="clientOptions-<%=id_extention%>">
+    <% clients.forEach(client => { %>
+        <option value="<%=client.name%> <%=client.lastName%>" id="<%=client.id%>" ><%=client.phoneNumber%></option>
+    <%}); %>
+</datalist>

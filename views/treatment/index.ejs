@@ -1,100 +1,76 @@
 
-
-
 <%-include('../partials/infoMessages.ejs')%>
-
-<div  class="center-main-div">
-    <div class="main-div">
-        <div class="content">
-            <div class="visit">
-                    <form class="find-visit" method="GET">
-                            <div class="data-input-from ui-widget">
-                                <input id="treatmentName" class="myInputSearch treatment-search"name="treatmentName" placeholder="Nazwa zabiegu" value="<%=searchOptions.name  %>" autocomplete="off">
-                            </div>
-                   
-                    </form>
-                    <div class="add">
-                        <button class="button_action showForm " ><i class="fas fa-plus"></i></button>
-                    </div>
-                    <div class="treatments-list create">
-                        <ul class="listTreatment list"  >
-                            <% treatment.forEach(treatment => { %>
-                                <li value="<%=treatment._id%>"><%=treatment.treatmentName%></li>
-                            <%}); %>
-                        </ul>
-                    </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="main-div-full-content">
-    <div class="main-div-center  ">
-        <div class="content-div">
-   
-            <% for(var i = 0 ; i< treatment.length ; i++){%>
-                <div class="visit">
-                    <form method="post" action='/treatment/<%=treatment[i]._id%>?_method=DELETE'>
-                        <button type="submit" class="close" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </form>  
-              
-                    <div class="div-element" 
-                    action="/treatment/edit/<%=treatment[i]._id%>?_method=PUT"
-                    treatmentName="<%=treatment[i].treatmentName%> " 
-                    treatmentPrice="<%=treatment[i].treatmentPrice != null ? treatment[i].treatmentPrice:'ss'%> " 
-                    >
-
-                        <div class="header">
-                            <p  ><%=treatment[i].treatmentName%> </p>  
-                        </div>
-                        <div class="first-p-element">
-                            <p class="headerVisit">Cena</p>
-                            <p ><%=treatment[i].treatmentPrice != null ? treatment[i].treatmentPrice +'zł' : '-'%></p>
-                        </div>
-                 
-                                         
-                    </div>
-                </div>   
-            <%} %> 
-         
-        </div>
-    </div>
-
-</div>
-<div class="create-visit-form openForm close-form " id="visitForm">
-    <form method="POST" action="" class="center-form formEdit">
-        <div   class="form ">
-            <!--onclick="closeForm()"-->
-            <span id ="close"class="close" >&times;</span>
-            <div class="form-content">
-               
-                <input type="text" class="treatmentNameEdit"  placeholder="Nazwa" value=""  name="treatmentNameEdit"  required >
-                <input type="number" class="treatmentPriceEdit" placeholder="Cena" value="" name="treatmentPriceEdit" required>
-                <button type="submit">Edytuj</button>     
-             
-            </div>
-   
-        </div>
-    </form>
-</div>
-<div class="create-visit-form form close-form create-form" id="visitForm">
-    <form method="POST" action="/treatment" class="center-form">
-        <div   class="form">
-
-            <span id ="close"class="close" >&times;</span>
-            <div class="form-content">
-                <%-include('./_form_fields.ejs')%>          
-                <button type="submit">Dodaj</button>
-               </div>
-   
-        </div>
-    </form>
-</div>
-
-<div  class="statistics"></div>
 <%-include('../partials/shopping-list.ejs')%>
+<!--Search Bar-->
+<div class="row main-row z-depth-1 small-search-bar">
+    <form class="col s12" method="GET">
+        <div class="input-field col s12 m9 l9 xl9">
+            <input class="myInputSearch" type="text" id="treatmentName-1" list="treatmentOptions-1"  name="treatmentName" value="<%=searchOptions.name  %>" autocomplete="off">
+            <label for="treatmentName-1" class="active">Nazwa Zabiegu</label>
+        </div>
+        <%-include('../partials/treatments-list.ejs',{id_extention:1}) %>
+        <div class="row button-row-flex-all">
+            <div class="col s12 m1 l1 center-button-small-flex-all"> 
+                <button type="submit" class="waves-effect waves-light search-button btn-small  "aria-label="search-by-date"><i class="large material-icons">search</i></button>
+
+            </div>
+            <div class="col s12 m1 l1  center-button-small-flex-all">
+                <button href="#create-treatment" class="waves-effect waves-light modal-trigger btn-small  "><i class="large material-icons">add</i></button>
+            </div> 
+        </div>
+    </form>
+</div>
+
+<div class="main-div-full-content row information-row">
+    <div class="col s12">
+        <% for(var i = 0 ; i< treatments.length ; i++){%>
+            <div class="visit col s12 m12 l4 top-separator ">
+                <div class="card max-width-card">
+                    <div class="card-header ">
+                        <form method="post" action='/treatment/<%=treatments[i]._id%>?_method=DELETE'>
+                            <button type="submit" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </form>  
+                        <p  class="col"><%=treatments[i].treatmentName.length <= 15 ? treatments[i].treatmentName:treatments[i].treatmentName.slice(0,15)+'...'%></p>
+                    </div>
+                    <!---->
+                    <div class="card-body" onclick="window.location='/treatment/<%=treatments[i]._id%>'" >
+                        <div class="col s12 m6 l12">
+                            <label>Cena</label>
+                            <p ><%=treatments[i].treatmentPrice != null ? treatments[i].treatmentPrice +'zł' : ''%></p>
+                        </div>
+                        <div class="col s12 m6 l12">
+                            <label>Czas trwania</label>
+                            <p ><%=treatments[i].duration != null ? treatments[i].duration +'min' : '-'%></p>
+                        </div>    
+                        <div class="col s12 m6 l12">
+                            <label>Opis</label>
+                            <%if(treatments[i].treatmentDescription !=null){%>
+                                <p ><%=treatments[i].treatmentDescription.length <= 39 ? treatments[i].treatmentDescription :treatments[i].treatmentDescription.slice(0,39)+'...' %></p>
+                            <%}else{%>
+                                <p>-</p>
+                            <%}%>
+                        </div>               
+                        
+                    </div>
+                </div>
+            </div>   
+        <%} %> 
+    </div>
+</div>
+
+<div class="form-styling modal" id="create-treatment">
+    <form method="POST" action="/treatment" class="modal-content content-styling">
+        <%-include('./create-edit-treatment.ejs', {id_extention:2})%>
+        <div class="center-button">
+            <button class="btn waves-effect submit-button" type="submit" aria-label="create-visit-form">Dodaj</button>
+        </div> 
+     
+    </form>
+</div>
+
+
 <script src="../../public/toggle_main_page_list.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="../../public/js/shopping_list_min.js"></script>
+
+

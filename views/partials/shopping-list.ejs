@@ -1,30 +1,39 @@
-<div class="anchor" >
-    <a class="anchor-button" ><i class="fas fa-caret-down"></i></a>
+<div class="fixed-action-btn">
+    <a id="floating-btn" data-target="slide-out" class="btn-floating btn-large teal  lighten-2 sidenav-trigger   <%=shoppingAll.length ? 'pulse':''%>" onclick="deleteClass('floating-btn')" >
+        <i class="large material-icons">menu</i>
+    </a>
 </div>
-<div id="shopping-list" class="shopping-list-out" name="shopping-list" >
-    <div class="company-square" clicked="false"><p class="p-color">Zakupy</p></div>
-    <div class="square-shadow"></div>
-    <div class="center-shopping-list">
-        <div class="shopping-list">
-            <%shoppingAll.forEach(element => {%>
-                <div onclick="location.href='/shopping-list/list-view/<%=element._id%>'" class="list-content">
-                    <div class="date">
-                        <p><%= element.transactionDate == null ? '' : element.transactionDate.toISOString().split('T')[0] %> </p> 
-                    </div>
-                    <div class="shopping-price-name">
-                        <div class="list-name">
-                            <p class="headerVisit">Nazwa</p>
-                            <p><%= element.listName%> </p> 
-                        </div>
-                        <div  class="list-price">
-                            <p class="headerVisit">Cena</p>
-                            <p class="last"><%= element.totalPrice != null ? element.totalPrice + 'zł' : '-'%> </p>
-                        </div>
-                    
-                    </div> 
-                </div>
-            <%}); %>
-        </div>
 
-    </div>
-</div>
+<ul id="slide-out" class="sidenav">
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="../../public/shopping-list-background.jpg"><!---->
+            </div>
+            <a href=""><span class="white-text header-font-size ">Zakupy</span></a>
+        </div>
+    </li>
+    <%for(var i = 0 ; i< shoppingAll.length ; i++) {%>
+        <%if(shoppingAll[i-1]!= undefined &&shoppingAll[i-1].transactionDate.toISOString().split('T')[0] < shoppingAll[i].transactionDate.toISOString().split('T')[0]){%>
+            <li><div class="divider"></div></li>
+            <h5><%=weekdays[shoppingAll[i].transactionDate.getDay()]%> <%=shoppingAll[i].transactionDate.toISOString().split('T')[0]%></h5>
+
+        <%}else if(i==0){%> 
+            <h5><%=weekdays[shoppingAll[i].transactionDate.getDay()]%> <%=shoppingAll[i].transactionDate.toISOString().split('T')[0]%></h5>
+        <%}%>
+        <li> 
+            <a href='/shopping-list/list-view/<%=shoppingAll[i]._id%>'>
+                <article>
+                    <label for="list-name">Nazwa</label>
+                    <p id="list-name"><%= shoppingAll[i].listName%></p>
+                </article>
+                <article>
+                    <label for="list-price">Kwota</label>
+                    <p id="list-price"><%= shoppingAll[i].totalPrice != null ? shoppingAll[i].totalPrice + 'zł' : '-'%></p>
+                </article>
+            </a>
+        </li>
+       
+    <%} %>
+   
+</ul>

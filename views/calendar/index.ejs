@@ -1,167 +1,65 @@
-<%-include('../partials/infoMessages.ejs')%>
-<%-include('../partials/arrayMessage.ejs')%>
-
-
-<div id="top" class="center-main-div">
-    <div class="main-div">
-        <div class="content">
-            <div class="visit">
-                    <form class="find-visit"  action="/calendar" method="GET">
-                            <div class="data-input-from">
-                                <input placeholder="Od" id="dataFrom" name="visitAfter"   autocomplete="off" value="<%=searchOptions.visitAfter%>"  />
-                            </div>
-                            <div class="data-input-to">
-                             
-                                <input placeholder="Do" id="dataTo"  name="visitBefore"   autocomplete="off" value="<%=searchOptions.visitBefore%>" />
-                            </div>
-                            <div class="search">
-                                <button type="submit" class="search-button"aria-label="search-by-date"><i class="fas fa-search"></i></button>
-                            </div>
-
-                       
-
-                    </form>
-                    <div class="add">
-                        <button class="button_action showForm "aria-label="open-create-visit-form" ><i class="fas fa-plus"></i></button>
-                    </div>
-            <!--onclick="showFormm()"-->
-            </div>
-        </div>
-    </div>
+<!--Search bar-->
+<%-include('./search-bar.ejs')%>
+<!--create new visit-->
+<div class="form-styling-small modal" id="createVisit">
+    <form method="POST" action="/calendar/visit" class="modal-content content-styling" id="create-visit-form">
+        <%-include('../calendar/create-visit.ejs', {id_extention:1})%>
+    </form>
 </div>
-<div class="create-visit-form  close-form create-form ">
-    <form method="POST" action="/calendar/visit" class="center-form">
-        <div class="form">
-          
-            <span id ="close"class="close" >&times;</span>
-            <div class="form-content ">
-              
-                <div class = "ui-widget">
-                    <input  class="myInput inputCreate client-search" type="text" name ="clients" placeholder="Nazwa Klienta"  autocomplete="off" required>
-                 </div>
-                <input class="phone" name="phone" type="phone" placeholder="Numer Telefonu"  autocomplete="off" minlength="9" required>
-                <div class = "ui-widget ">
-                    <input  class="myInput treatment-search  " type="text" name ="treatment" placeholder="Nazwa Zabiegu"  autocomplete="off" required>
-                 </div>
-                <input  id="datapickerAdd"  name ="visitDate"  placeholder="Data"  autocomplete="off"  required/>
-                <input   id="timepickerFrom" onclick="$timepickerFrom.open()" name="timeFrom"   placeholder="Czas rozpoczęcia" value="<%=newVisit.timeFrom  %>" autocomplete="off" required />
-                <input   id="timepickerTo"onclick="$timepickerTo.open()"name="timeTo"  placeholder="Czas zakończenia" value="<%=newVisit.timeTo  %>" autocomplete="off" />
+<!--edit visit-->
+<div class="form-styling-small modal "  id="visit">
+    <form method="POST"  action="" class="modal-content content-styling"  id="visit-form">
+            <%-include('../calendar/create-visit.ejs',{id_extention:2})%>
+    </form>
 
-                <button type="submit"aria-label="create-visit-form">Dodaj</button>
-                <div class="clients-list create">
-                    <ul class="list-client list"  >
-                        <% clients.forEach(client => { %>
-                            <li value="<%=client.id%>" phone="<%=client.phoneNumber%>" ><%=client.name%> <%=client.lastName%></li>
-                        <%}); %>
-                    </ul>
-                </div>    
-                <div class="treatments-list create">
-                    <ul class="listTreatment list"  >
-                        <% treatments.forEach(treatment => { %>
-                            <li value="<%=treatment._id%>"><%=treatment.treatmentName%></li>
-                        <%}); %>
-                    </ul>
+</div>
+<div class="row information-row">
+    <div class="col s12 ">
+        <% for(var i = 0 ; i< newVisit.length ; i++){%>
+            <%if(newVisit[i-1]!= undefined &&newVisit[i-1].visitDate.toISOString().split('T')[0] <newVisit[i].visitDate.toISOString().split('T')[0] ){%>
+                <div class="col s12 m12 l12">
+                    <div class="z-depth-1 day-header"  >
+                        <h5><%=weekdays[newVisit[i].visitDate.getDay()]%> <%=newVisit[i].visitDate.toISOString().split('T')[0]%></h5>
+                    </div>
+                </div>
+            <% } else if(i==0){%>
+                <div class=" col s12 m12 l12 ">
+                    <div class="z-depth-1 day-header  "  >
+                        <h5><%=weekdays[newVisit[i].visitDate.getDay()]%> <%=newVisit[i].visitDate.toISOString().split('T')[0]%></h5>
+                    </div>
                 </div>
                 
-            </div>
-   
-        </div>
-    </form>
-</div>
-<div class="create-visit-form   close-form edit-form ">
-    <form method="POST" class="formEdit center-form" action="" >
-        <div  class="form" >
-            <span class="close closeEdit" >&times;</span>
-            <div class="form-content">
-                <div class = "ui-widget ">
-                    <input  class="myInput inputEdit  client-search" type="text" name ="clients" placeholder="Nazwa Klienta"  autocomplete="off" required>
-                 </div>
-                <input class="phone" name="phone" type="phone" placeholder="Numer Telefonu"  autocomplete="off" minlength="9" required>
-                <div class = "ui-widget ">
-                    <input  class="  treatment-search " type="text" name ="treatment" placeholder="Nazwa Zabiegu"  autocomplete="off" required>
-                 </div>
-                <input placeholder="Data"  class="visitDateEdit"  id="datapickerAddEdit" name="visitDateEdit"   autocomplete="off"   required/>
-                <input id="timepickerFromEdit" class="timeFrom"onclick="$timepickerFromEdit.open()" name="timeFromEdit"  placeholder="Czas rozpoczęcia"  autocomplete="off" required/>
-                <input id="timepickerToEdit" class="timeTo" onclick="$timepickerToEdit.open()"name="timeToEdit"  placeholder="Czas zakończenia" autocomplete="off" />
-                
-                <button class="button"type="submit"aria-label="edit-form">Edytuj</button>
-             
-                 </div>
-  
-        </div>
-    </form>
-
-</div>
-<div class="main-div-full-content">
-    <div class="main-div-center  ">
-        <div class="content-div">
-   
-            <% for(var i = 0 ; i< newVisit.length ; i++){%>
-                <%if(newVisit[i-1]!= undefined &&newVisit[i-1].visitDate.toISOString().split('T')[0] <newVisit[i].visitDate.toISOString().split('T')[0] ){%>
-                  
-                    <div class="data-separator">
-                        <div class="div-element-day"  >
-                            <p><%=weekdays[newVisit[i].visitDate.getDay()]%> <%=newVisit[i].visitDate.toISOString().split('T')[0]%></p>
-                        </div>
-                    </div>
-                  
-                <% } else if(i==0){%>
-                    <div class="data-separator">
-                        <div class="div-element-day"  >
-                            <p><%=weekdays[newVisit[i].visitDate.getDay()]%> <%=newVisit[i].visitDate.toISOString().split('T')[0]%></p>
-                        </div>
-                    </div>
-                  
-                <% } %> 
-                <div class="visit">
+            <% } %> 
+    
+        <div class="col s12 m12 l4 top-separator"  >
+            <div class="card max-width-card "  >
+                <div class="card-header no-pointer "   >
                     <form method="post" action='/calendar/<%=newVisit[i]._id%>?_method=DELETE'>
                         <button type="submit" class="close" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                    </form>  
-              
-                    <div class="div-element"  
-                    client ="<%= newVisit[i].clientName%> " 
-                    treatment="<%= newVisit[i].treatment %>",
-                    visitDate ="<%=newVisit[i].visitDate.toISOString().split('T')[0]%>",
-                    timeFrom="<%= newVisit[i].timeFrom %>",
-                    timeTo="<%=newVisit[i].timeTo%>",
-                    phone ="<%= newVisit[i].phoneNumber%>",
-                    action="/calendar/edit/<%=newVisit[i]._id%>?_method=PUT"
-                    >
-
-                        <div class="header">
-                            <p  ><%= newVisit[i].timeFrom %> - <%=newVisit[i].timeTo%>  </p>  
-                        </div>
-                        <div class="first-p-element">
-                            <p class="headerVisit">Klient</p>
-                            <p ><%= newVisit[i].clientName %></p>
-                        </div>
-                        <div class=" sec-p-element">
-                            <p class="headerVisit">Zabieg</p>
-                            <p><%= newVisit[i].treatment%> </p>
-                        </div>
-                        <div class="th-p-element">
-                            <p class="headerVisit">Telefon</p>
-                            <p><%= newVisit[i].phoneNumber%></p> 
-                        </div>
-                                         
+                    </form> 
+                    <p  class="col"><%= newVisit[i].timeFrom %> - <%=newVisit[i].timeTo%>  </p>  
+                </div>
+                <div class="card-content modal-trigger " href="#visit" onclick="edit_form(`<%=newVisit[i]._id%>`)" >
+                    <div class="col s12 m6 l12">
+                        <label>Klient</label>
+                        <p><%= newVisit[i].clientName %></p>
                     </div>
-                </div>   
-            <%} %> 
-         
-        </div>
+                    <div class="col s12 m6 l12">
+                        <label>Kontakt</label>
+                        <p><%= newVisit[i].phoneNumber%></p>
+                    </div> 
+                    <div class="col s12 m6 l12">
+                        <label>Zabieg</label>
+                        <p><%= newVisit[i].treatment%> </p>
+                    </div>
+                </div>
+          
+            </div>
+        </div>   
+    <%} %> 
+     
     </div>
-
 </div>
-<div  class="statistics"></div>
 <%-include('../partials/shopping-list.ejs')%>
-
-
-
-<script src="../../public/toggle_main_page_list.js"></script>
-<script src="../../public/js/shopping_list_min.js"></script>
-<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-<script src="../../public/dataTimePicker.js"></script>
-<script src="../../public/js/calendar.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

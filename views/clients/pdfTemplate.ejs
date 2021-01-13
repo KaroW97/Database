@@ -13,13 +13,13 @@
     doc.addFont('public/dist/PTSans.ttf', 'PTSans', 'normal');
     doc.setFont('PTSans')
     doc.setFontSize(13)
-    doc.text(15, 10, `<%=clientInfo.name%> <%=clientInfo.lastName%>`);
-    doc.text(135, 10, `Kontakt: <%=clientInfo.phoneNumber%> ` ,{maxWidth:'185'});
+    doc.text(15, 10, `<%=oneClient.name%> <%=oneClient.lastName%>`);
+    doc.text(135, 10, `Kontakt: <%=oneClient.phoneNumber%> ` ,{maxWidth:'185'});
    
-    doc.text(15, 20, `<%=clientInfo.dateOfBirth == null ? '' :
-        'Data Urodzenia: '+clientInfo.dateOfBirth.toISOString().split('T')[0]%>`);
-    doc.text(135, 20, `<%=clientInfo.visitDate == null ? '' :
-        'Pierwsza wizyta: '+clientInfo.visitDate.toISOString().split('T')[0]%>` ,{maxWidth:'185'});
+    doc.text(15, 20, `<%=oneClient.dateOfBirth == null ? '' :
+        'Data Urodzenia: '+oneClient.dateOfBirth.toISOString().split('T')[0]%>`);
+    doc.text(135, 20, `<%=oneClient.visitDate == null ? '' :
+        'Pierwsza wizyta: '+oneClient.visitDate.toISOString().split('T')[0]%>` ,{maxWidth:'185'});
 
     doc.setFontSize(16)
     doc.text('Diagnoza Skóry',100 , 48,{
@@ -27,23 +27,23 @@
     })
 
     doc.setFontSize(12)
-    var dryskin = `<%=clientInfo.skinDiagnoseAll.drySkin.value%>`
-    var wrinkless = `<%=clientInfo.skinDiagnoseAll.wrinkless.value%>`
-    var lackfirmnes = `<%=clientInfo.skinDiagnoseAll.lackfirmnes.value%>`
-    var nonuniformColor = `<%=clientInfo.skinDiagnoseAll.nonuniformColor.value%>`
-    var tiredness = `<%=clientInfo.skinDiagnoseAll.tiredness.value%>`
-    var acne = `<%=clientInfo.skinDiagnoseAll.acne.value%>`
+    var dryskin = `<%=oneClient.skinDiagnoseAll.drySkin.value%>`
+    var wrinkless = `<%=oneClient.skinDiagnoseAll.wrinkless.value%>`
+    var lackfirmnes = `<%=oneClient.skinDiagnoseAll.lackfirmnes.value%>`
+    var nonuniformColor = `<%=oneClient.skinDiagnoseAll.nonuniformColor.value%>`
+    var tiredness = `<%=oneClient.skinDiagnoseAll.tiredness.value%>`
+    var acne = `<%=oneClient.skinDiagnoseAll.acne.value%>`
 
-    var smokerSkin = `<%=clientInfo.skinDiagnoseAll.smokerSkin.value%>`
-    var fatSkin = `<%=clientInfo.skinDiagnoseAll.fatSkin.value%>`
-    var discoloration = `<%=clientInfo.skinDiagnoseAll.discoloration.value%>`
-    var blackheads = `<%=clientInfo.skinDiagnoseAll.blackheads.value%>`
-    var darkCirclesEyes = `<%=clientInfo.skinDiagnoseAll.darkCirclesEyes.value%>`
-    var dilatedCapillaries = `<%=clientInfo.skinDiagnoseAll.dilatedCapillaries.value%>`
-    var papularPustularAcne = `<%=clientInfo.skinDiagnoseAll.papularPustularAcne.value%>`
-    var externallyDrySkin = `<%=clientInfo.skinDiagnoseAll.externallyDrySkin.value%>`
+    var smokerSkin = `<%=oneClient.skinDiagnoseAll.smokerSkin.value%>`
+    var fatSkin = `<%=oneClient.skinDiagnoseAll.fatSkin.value%>`
+    var discoloration = `<%=oneClient.skinDiagnoseAll.discoloration.value%>`
+    var blackheads = `<%=oneClient.skinDiagnoseAll.blackheads.value%>`
+    var darkCirclesEyes = `<%=oneClient.skinDiagnoseAll.darkCirclesEyes.value%>`
+    var dilatedCapillaries = `<%=oneClient.skinDiagnoseAll.dilatedCapillaries.value%>`
+    var papularPustularAcne = `<%=oneClient.skinDiagnoseAll.papularPustularAcne.value%>`
+    var externallyDrySkin = `<%=oneClient.skinDiagnoseAll.externallyDrySkin.value%>`
 
-    doc.text(`<%=clientInfo.skinDiagnoseAll.drySkin.name%>` , 22, 70)
+    doc.text(`<%=oneClient.skinDiagnoseAll.drySkin.name%>` , 22, 70)
     doc.rect(15, 66.2, 4,4);
     if(dryskin == 'true'){
         doc.setLineWidth(0.7);
@@ -51,7 +51,7 @@
         doc.line(16.26, 69.32, 20.2, 65.8);
     }
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.wrinkless.name%>` , 22, 80)
+    doc.text(`<%=oneClient.skinDiagnoseAll.wrinkless.name%>` , 22, 80)
     doc.rect(15, 76.2, 4,4);
     if(wrinkless == 'true'){
         doc.setLineWidth(0.7);
@@ -60,7 +60,7 @@
     }
 
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.lackfirmnes.name%>` , 22, 90)
+    doc.text(`<%=oneClient.skinDiagnoseAll.lackfirmnes.name%>` , 22, 90)
     doc.rect(15, 86.2, 4,4);
     if(lackfirmnes == 'true'){
         doc.setLineWidth(0.7);
@@ -69,7 +69,7 @@
     }
 
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.nonuniformColor.name%>` , 22, 100)
+    doc.text(`<%=oneClient.skinDiagnoseAll.nonuniformColor.name%>` , 22, 100)
     doc.rect(15, 96.2, 4,4);
     if(nonuniformColor == 'true'){
         doc.setLineWidth(0.7);
@@ -78,7 +78,7 @@
     }
 
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.tiredness.name%>` , 22, 110)
+    doc.text(`<%=oneClient.skinDiagnoseAll.tiredness.name%>` , 22, 110)
     doc.rect(15, 106.2, 4,4);
     if(tiredness == 'true'){
         doc.setLineWidth(0.7);
@@ -87,7 +87,7 @@
     }
 
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.acne.name%>` , 22, 120)
+    doc.text(`<%=oneClient.skinDiagnoseAll.acne.name%>` , 22, 120)
     doc.rect(15, 116.2, 4,4);
     if(acne == 'true'){
         doc.setLineWidth(0.7);
@@ -97,7 +97,7 @@
     
     
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.smokerSkin.name%>` , 22, 130)
+    doc.text(`<%=oneClient.skinDiagnoseAll.smokerSkin.name%>` , 22, 130)
     doc.rect(15, 126.2, 4,4);
     if(smokerSkin == 'true'){
         doc.setLineWidth(0.7);
@@ -107,7 +107,7 @@
     
     //PRZECIWNA STRONA
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.fatSkin.name%>` , 117, 70,{maxWidth:'185'})
+    doc.text(`<%=oneClient.skinDiagnoseAll.fatSkin.name%>` , 117, 70,{maxWidth:'185'})
     doc.rect(110, 66.2, 4,4);
     if(fatSkin == 'true'){
         doc.setLineWidth(0.7);
@@ -115,7 +115,7 @@
         doc.line(111.26, 69.32, 115.2, 65.8);
     }
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.discoloration.name%>` , 117, 80,{maxWidth:'185'})
+    doc.text(`<%=oneClient.skinDiagnoseAll.discoloration.name%>` , 117, 80,{maxWidth:'185'})
     doc.rect(110, 76.2, 4,4);
     if(discoloration == 'true'){
         doc.setLineWidth(0.7);
@@ -123,7 +123,7 @@
         doc.line(111.26, 79.32, 115.2, 75.8);
     }
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.blackheads.name%>` , 117, 90,{maxWidth:'185'})
+    doc.text(`<%=oneClient.skinDiagnoseAll.blackheads.name%>` , 117, 90,{maxWidth:'185'})
     doc.rect(110, 86.2, 4,4);
     if(blackheads == 'true'){
         doc.setLineWidth(0.7);
@@ -132,7 +132,7 @@
     }
 
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.darkCirclesEyes.name%>` , 117, 100,{maxWidth:'185'})    
+    doc.text(`<%=oneClient.skinDiagnoseAll.darkCirclesEyes.name%>` , 117, 100,{maxWidth:'185'})    
     doc.rect(110, 96.2, 4,4);
     if(darkCirclesEyes == 'true'){
         doc.setLineWidth(0.7);
@@ -141,7 +141,7 @@
     }
     
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.dilatedCapillaries.name%>` , 117, 110,{maxWidth:'185'})
+    doc.text(`<%=oneClient.skinDiagnoseAll.dilatedCapillaries.name%>` , 117, 110,{maxWidth:'185'})
     doc.rect(110, 106.2, 4,4);
     if(dilatedCapillaries == 'true'){
         doc.setLineWidth(0.7);
@@ -150,7 +150,7 @@
     }
 
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.papularPustularAcne.name%>` , 117, 120,{maxWidth:'185'})
+    doc.text(`<%=oneClient.skinDiagnoseAll.papularPustularAcne.name%>` , 117, 120,{maxWidth:'185'})
     doc.rect(110, 116.2, 4,4);
     if(papularPustularAcne == 'true'){
         doc.setLineWidth(0.7);
@@ -159,7 +159,7 @@
     }
 
     doc.setLineWidth(0.1);
-    doc.text(`<%=clientInfo.skinDiagnoseAll.externallyDrySkin.name%>` , 117, 130,{maxWidth:'185'})
+    doc.text(`<%=oneClient.skinDiagnoseAll.externallyDrySkin.name%>` , 117, 130,{maxWidth:'185'})
     doc.rect(110, 126.2, 4,4);
     if(externallyDrySkin == 'true'){
         doc.setLineWidth(0.7);
@@ -167,26 +167,26 @@
         doc.line(111.26, 129.32, 115.2, 125.8);
     }
     //INNE
-    doc.text(`Inne: <%=clientInfo.skinDiagnoseAll.other%>` , 14.7, 140,{maxWidth:'185'})
+    doc.text(`Inne: <%=oneClient.skinDiagnoseAll.other%>` , 14.7, 140,{maxWidth:'185'})
 
     doc.autoTable({
         styles: { font: "PTSans", fontSize:12 },
         margin: { top: 150 , bottom: 0},
         body: [
-            [`Czym myta twarz`,`<%=clientInfo.washingFace == '' ? '-----------':clientInfo.washingFace %>`  ],
-            [`Czy występuje napięcie twarzy`,`<%=clientInfo.faceTension == '' ? '-----------':clientInfo.faceTension %>`],
-            [`Obecnie używane kremy`,`<%=clientInfo.currentFaceCreams == '' ? '-----------':clientInfo.currentFaceCreams %>`],
+            [`Czym myta twarz`,`<%=oneClient.washingFace == '' ? '-----------':oneClient.washingFace %>`  ],
+            [`Czy występuje napięcie twarzy`,`<%=oneClient.faceTension == '' ? '-----------':oneClient.faceTension %>`],
+            [`Obecnie używane kremy`,`<%=oneClient.currentFaceCreams == '' ? '-----------':oneClient.currentFaceCreams %>`],
 
-            [`Zakupy`,`<%=clientInfo.shopping == '' ? '-----------':clientInfo.shopping %>` ],
-            [`Wstępna diagnoza`, `<%=clientInfo.teraphyPlan  == '' ? '-----------':clientInfo.teraphyPlan %>` ],
-            [`Plan zabiegów`, `<%=clientInfo.teraphyPlan  == '' ? '-----------':clientInfo.teraphyPlan %>` ],
-            ['Zalecana pilęgnacja', `<%=clientInfo.recommendedCare == '' ? '-----------':clientInfo.recommendedCare  %>` ],
+            [`Zakupy`,`<%=oneClient.shopping == '' ? '-----------':oneClient.shopping %>` ],
+            [`Wstępna diagnoza`, `<%=oneClient.teraphyPlan  == '' ? '-----------':oneClient.teraphyPlan %>` ],
+            [`Plan zabiegów`, `<%=oneClient.teraphyPlan  == '' ? '-----------':oneClient.teraphyPlan %>` ],
+            ['Zalecana pilęgnacja', `<%=oneClient.recommendedCare == '' ? '-----------':oneClient.recommendedCare  %>` ],
             // ...
         ],
     })
 
 
-    doc.save(`<%=clientInfo.name%> <%=clientInfo.lastName%>.pdf`)
+    doc.save(`<%=oneClient.name%> <%=oneClient.lastName%>.pdf`)
 
 }
 </script>

@@ -17,7 +17,6 @@ $(document).ready(function(){
         $(this).toggle_list_create_edit (
             $('.form-content .clients-list'),$(this),$('.ui-menu .ui-menu-item'))
     })
-
     //Search
     $.fn.search_list_settings = function($list ,$list_li,$input){
         //$list.show()
@@ -33,23 +32,7 @@ $(document).ready(function(){
             })
         })
     }
-    ///Create Form
-    $.fn.toggle_list_create_edit = function($form_content, $input, $list_client) {
-            //$form_content.show()
-            let value =$(this).val().toLowerCase()
-            if (value.length == 0 || $list_client.text().toLowerCase().indexOf(value) == -1) 
-                $form_content.hide()
-            $list_client.filter(function(){
-              
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                $(this).click(function(){
-                    $input.val($(this).text())
-                  
-                })
-            })
-            return this
-    
-    }
+
 
     //toggle main page on search 
     $.fn.toggle_main_page_list = function($input,$visits){
@@ -66,55 +49,9 @@ $(document).ready(function(){
           
         }
     }
-   //CLIENT
-   var brand = [], shopping_element = [],treatmentCreate = [], clientsCreate = []
-   $('.list-client li').filter(function(){
-       clientsCreate.push({value:$(this).text(),phone:$(this).attr('phone') })
-   })
-   $(function(){
-       $( ".client-search" ).autocomplete({
-           source: clientsCreate,
-           autoFocus:true,
-             select:function( event, ui ) {
-            $('.phone').val(ui.item.phone)
-           }
-       });
-   })
-   //TREATMANT
-   $('.listTreatment li').filter(function(){
-       treatmentCreate.push($(this).text())
-   })
-   $(function(){
-       $( ".treatment-search" ).autocomplete({
-           source: treatmentCreate,
-           autoFocus:true
-       });
-   })
-   //BRAND
-   $('.brand li').filter(function(){
-       brand.push({value:$(this).text()})
-   })
-   $(function(){
-       $( ".brand-search" ).autocomplete({
-           source: brand,
-           autoFocus:true
-       });
-   })
-   $(function(){
-       $( ".create-brand" ).autocomplete({
-           source: brand,
-           autoFocus:true
-       });
-   })
-   $('.shopping-elements-list li').filter(function(){
-    shopping_element.push({value:$(this).text()})
-   })
-   $(function(){
-       $( ".shopping-search" ).autocomplete({
-           source: shopping_element,
-           autoFocus:true
-       });
-   })
+ 
+  
+
     
    $(document).ready(function(){
     $('#download').change(function(){
@@ -139,18 +76,5 @@ $(document).ready(function(){
     $('.download_file_border').click(function(){
         $('#download').click();
     })
-    var doc = []
-    $('.doc li').filter(function(){
-        doc.push({value:$(this).text()})
-    })
-
-    $(function(){
-        $( ".doc-search" ).autocomplete({
-            source: doc,
-            autoFocus:true
-        });
-    })
-   $('.ui-menu').on('click',function(){
-        $(".myInputSearch").trigger('click')
-    })
+ 
 })

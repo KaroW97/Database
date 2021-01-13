@@ -1,11 +1,11 @@
 
 <script>
     function pdfVisits(){
-    var elem = Number(`<%-addedVisist.length%>`)
+    var elem = Number(`<%-addedVisit.length%>`)
  
     var doc =  new jsPDF();
   
- `<%addedVisist.forEach((element, index)=> { %>`
+ `<%addedVisit.forEach((element, index)=> { %>`
    
     elem--;
         doc.setFontSize(11)
@@ -37,7 +37,7 @@
     
 
     if(elem ==0){
-        doc.save(`<%=clientInfo.name%> <%=clientInfo.lastName%> Wizyty.pdf`);
+        doc.save(`<%=oneClient.name%> <%=oneClient.lastName%> Wizyty.pdf`);
     }
        
        

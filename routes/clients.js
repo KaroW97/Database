@@ -12,8 +12,8 @@ const {ensureAuthenticated} = require('../config/auth')
 router.get('/', ensureAuthenticated,async(req,res)=>{
     let searchOptions ={},searchClientLastName ={}, todayDate = new Date(),weekDate=new Date();
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
-    const cssSheets=[]
-    cssSheets.push('../../public/css/user/clients/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
+    //const cssSheets=[]
+    //cssSheets.push('../../public/css/index.css');
     if(req.query.name!= null && req.query.name !==''){
         searchOptions.name = new RegExp(req.query.name, 'i')
         searchClientLastName.lastName =  new RegExp(req.query.name, 'i')
@@ -34,9 +34,10 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
         res.render('clients/index',{
             shoppingAll:shoppingList,
             clients:clientFind,
+            oneClient:new Client(),
             treatments:treatments, //to raczej zbedne
             searchOptions:req.query,
-            styles:cssSheets,
+            
             weekdays:weekdays
         });
     }catch(err){
@@ -45,79 +46,66 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
     }
    
 })
-
-//New Client Route Displaing form
-router.get('/new',ensureAuthenticated,async (req,res)=>{
-    const cssSheets=[];
-   try{
-    res.render('clients/new',{ clients: new Client(), styles:cssSheets})
-   }catch{
-       res.redirect('/clients')
-   }
-   
-})
-
 //Create Client Route
-router.post('/', ensureAuthenticated,async(req,res)=>{
-
+router.post('/new', ensureAuthenticated,async(req,res)=>{
     const clients = new Client({
      
         skinDiagnoseAll:{
             drySkin:{
                 name:"Sucha",
-                value:req.body.drySkin ||false
+                value:Boolean(req.body.drySkin) ||false
             },
             wrinkless:{
                 name:"Zmarszczki i drobne linie",
-                value:req.body.wrinkless||false
+                value:Boolean(req.body.wrinkless)||false
             },
             lackfirmnes:{
                 name:"Brak jędrności",
-                value:req.body.lackfirmnes||false
+                value:Boolean(req.body.lackfirmnes)||false
             },
             nonuniformColor:{
                 name:"Niejednolity koloryt",
-                value:req.body.nonuniformColor||false
+                value:Boolean(req.body.nonuniformColor)||false
             },
             tiredness:{
                 name:" Zmęczenie - stres",
-                value:req.body.tiredness||false
+                value:Boolean(req.body.tiredness)||false
             },
             acne:{
                 name:"Trądzik grudkowy",
-                value:req.body.acne||false
+                value:Boolean(req.body.acne)||false
             },
             smokerSkin:{
                 name:"Skóra palacza",
-                value:req.body.smokerSkin||false
+                value:Boolean(req.body.smokerSkin)||false
             },
             fatSkin:{
                 name:"Przetłuszczanie się",
-                value:req.body.fatSkin||false
+                value:Boolean(req.body.fatSkin)||false
             },
             discoloration:{
                 name:"Przebarwienia",
-                value:req.body.discoloration||false
+                value:Boolean(req.body.discoloration)||false
             },
             blackheads:{
                 name:"Zaskórniki",
-                value: req.body.blackheads||false,
+                value: Boolean(req.body.blackheads)||false,
             },
             darkCirclesEyes:{
                 name:"Cienie - opuchnięcia pod oczami",
-                value:req.body.darkCirclesEyes||false
+                value:Boolean(req.body.darkCirclesEyes)||false
             },
             dilatedCapillaries:{
                 name:"Rozszerzone naczynka",
-                value:req.body.dilatedCapillaries||false
+                value:Boolean(req.body.dilatedCapillaries)||false
             },
             papularPustularAcne:{
                 name:"Trądzik grudkowo - kostkowy",
-                value:req.body.papularPustularAcne||false
+                value:Boolean(req.body.papularPustularAcne)||false
             },
             externallyDrySkin:{
                 name:"Zewnętrznie przesuszona ",
-                value:req.body.externallyDrySkin||false
+                value:Boolean(req.body.externallyDrySkin)||false
             },
             other:req.body.other,
         },
@@ -144,72 +132,41 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
     })
 
     try{
-       
-        const newClient = await clients.save();
+        await clients.save();
         req.flash('mess','Dodano klienta do bazy.');
-        req.flash('type','success')
-        res.redirect(`clients/client-view/${newClient.id}`)
-        
-       
-    }catch(err){
-        const cssSheets=[]
-        req.flash('mess','Nie udało się dodać klienta do bazy.');
-        req.flash('type','danger')
-        res.render('clients/new',{
-          
-            clients:clients,
-            styles:cssSheets
-        });
-    }
-})
-
-//Show Client
-router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
+        req.flash('type','info-success')
+        res.redirect(`/clients`)
   
-    const cssSheets=[]
-    cssSheets.push('../../public/css/user/clients/clientView.css');
-    try{
-         
-        const treatments = await Treatment.find({user:req.user.id});
-        const clientt  = await Client.findById(req.params.id)
-     
-        res.render('clients/clientView',{
-           
-            treatments:treatments,
-            
-            curentClient:req.params.id,
-            clientInfo:clientt,
-            styles:cssSheets
-        })
+       
     }catch(err){
         console.log(err)
+        const cssSheets=[]
+        req.flash('mess','Nie udało się dodać klienta do bazy.');
+        req.flash('type','info-alert')
+        res.redirect(`/calendar`)
+      
+    }
+})
+//Show Client
+router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
+    try{
+        const treatments = await Treatment.find({user:req.user.id});
+        const clientt  = await Client.findById(req.params.id)
+        const visit = new ClientVisits()  
+        const addedVisit = await ClientVisits.find({client:req.params.id}).populate('product').exec()
+        
+        res.render('clients/clientView',{
+            addedVisit:addedVisit,
+            treatments:treatments,
+            newVisit:visit,
+            curentClient:req.params.id,
+            oneClient:clientt,
+        })
+    }catch(err){
+        //console.log(err)
         res.redirect('/clients')
     }
 })
-//Show Client Visit
-router.get("/client-visits/:id",ensureAuthenticated,async (req,res)=>{
-    const cssSheets=[]
-    cssSheets.push('../../public/css/user/clients/clientView.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
-    try{
-        const visit = new ClientVisits()  
-        const addedVisit = await ClientVisits.find({client:req.params.id}).populate('client').populate('product').exec()
-        const clientt  = await Client.findById(req.params.id)
-        const treatments = await Treatment.find({user:req.user.id});
-        res.render('clients/clientViewVisits',{
-            treatments:treatments,
-            addedVisist:addedVisit,
-            clientInfo:clientt,
-            newVisit:visit,
-            styles:cssSheets
-        })
-    }catch(err){
-        console.log(err)
-        res.redirect(`/clients/client-view/${req.params.id}`)
-
-    }
- })
- 
-
 //Add new Visit/Post
 router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
     const visit = new ClientVisits({
@@ -221,32 +178,27 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
         shopping:req.body.shopping
     })
    
-   // totalSumSpent
     try{   
-
-        //console.log(treatment.treatmentPrice)
         await visit.save();
         req.flash('mess','Dodano wizyte');
-        req.flash('type','success')
+        req.flash('type','info-success')
         res.redirect( `/clients/client-view/${req.params.id}`)
     }catch(err){
-        const cssSheets=[];
-        console.log(err)
         const treatments = await Treatment.find({user:req.user.id});
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product')
         const clientt  = await Client.findById(req.params.id);
         req.flash('mess','Nie udało się dodać wizyty');
-        req.flash('type','danger')
+        req.flash('type','info-alert')
         res.render(`clients/clientView`,{
             addedVisist:addedVisit,
             newVisit:visit,
             treatments:treatments,
             curentClient:req.params.id,
-            clientInfo:clientt,
-            styles:cssSheets
+            clientInfo:clientt
         })
     }
 })
+
 //delete Visits/Post
 router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
     let visit, clientValue,client;
@@ -261,13 +213,13 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
                 await visit.remove();
               } 
               req.flash('mess','Wizyty zostały usunięte');
-              req.flash('type','success')
+              req.flash('type','info-success')
             }else{
                 visit = await ClientVisits.findById(ObjectId(req.body.chackboxDelet));
                 clientValue= visit.client
                 await visit.remove();
                 req.flash('mess','Wizyta została usunięta');
-                req.flash('type','success')
+                req.flash('type','info-success')
             }
           }else{
             req.flash('mess','Nie wybrano wizyty do usunięcia');
@@ -281,44 +233,33 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
     }
 })
 //edit Visit/Post
-router.get('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
-    const cssSheets =[]
+router.get('/edit-visit/:id',ensureAuthenticated, async(req,res)=>{
+    let addedVisit
     try{
-        const addedVisit = await ClientVisits.findById(req.params.id).populate( 'treatment').populate('client').populate( 'product').exec()
-
-        const treatments = await Treatment.find({user:req.user.id});//_id:addedVisit.treatment.id
-        res.render('clients/editPost',{
-            treatments:treatments,
-            curentVisit:req.params.id,
-            newVisit:addedVisit,
-            styles:cssSheets
-        })
-      
+        addedVisit = await ClientVisits.findById(req.params.id)
+        res.send(addedVisit)
     }catch(err){
-        const addedVisit = await ClientVisits.findById(req.params.id)
-        res.redirect(`/clients/${addedVisit.id}`)
+        res.redirect(`/clients`)
     }
   
 })
 //edit Visit/Post
 router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
     let visit
-    let clientStat
     try{
          visit = await ClientVisits.findById(req.params.id).populate('client').exec()
          visit.client=visit.client
          visit.comment= req.body.comment
          visit.clientVisitDate= new Date( req.body.clientVisitDate) 
-         visit.treatment= req.body.treatment
+         visit.treatment= req.body.treatmentName
          visit.shopping = req.body.shopping
          await visit.save(req.body.treatment);
-         console.log()
+         
          req.flash('mess','Wizyta została edytowana');
-         req.flash('type','success')
+         req.flash('type','info-success')
          return res.redirect(`/clients/client-view/${visit.client.id}`)
     }catch(err){
-        console.log(err + "jestem")
-        const cssSheets =[]
+       
     
         const addedVisit = await ClientVisits.findById(req.params.id)
         const treatments = await Treatment.find({});
@@ -327,7 +268,6 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
             curentVisit:req.params.id,
             clientId:addedVisit.client,
             newVisit:addedVisit,
-            styles:cssSheets
         })
     }
    
@@ -337,72 +277,74 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
 //Update Client 
 router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
     let clients;
+   
     try{
         clients =  await Client.findById(req.params.id)
-        //update
-
+      
         clients.skinDiagnoseAll.drySkin ={
                 name:"Sucha",
-                value:req.body.drySkin||false
+                value:Boolean(req.body.drySkin)||false
         }
         clients.skinDiagnoseAll.wrinkless ={
             name:"Zmarszczki i drobne linie",
-                value:req.body.wrinkless||false
+                value:Boolean(req.body.wrinkless)||false
         }
         clients.skinDiagnoseAll.lackfirmnes ={
             name:"Brak jędrności",
-            value:req.body.lackfirmnes||false
+            value:Boolean(req.body.lackfirmnes)||false
         }
         clients.skinDiagnoseAll.nonuniformColor ={
             name:"Niejednolity koloryt",
-            value:req.body.nonuniformColor||false
+            value:Boolean(req.body.nonuniformColor)||false
         }
         clients.skinDiagnoseAll.tiredness ={
             name:" Zmęczenie - stres",
-            value:req.body.tiredness||false
+            value:Boolean(req.body.tiredness)||false
         }
         clients.skinDiagnoseAll.acne ={
             name:"Trądzik grudkowy",
-            value:req.body.acne||false
+            value:Boolean(req.body.acne)||false
         }
         clients.skinDiagnoseAll.smokerSkin ={
             name:"Skóra palacza",
-                value:req.body.smokerSkin||false
+                value:Boolean(req.body.smokerSkin)||false
         }
         clients.skinDiagnoseAll.fatSkin ={
             name:"Przetłuszczanie się",
-            value:req.body.fatSkin||false
+            value:Boolean(req.body.fatSkin)||false
         }
         clients.skinDiagnoseAll.discoloration ={
             name:"Przebarwienia",
-            value:req.body.discoloration||false
+            value:Boolean(req.body.discoloration)||false
         }
         clients.skinDiagnoseAll.blackheads ={
             name:"Zaskórniki",
-            value: req.body.blackheads||false,
+            value: Boolean(req.body.blackheads)||false,
         }
         clients.skinDiagnoseAll.darkCirclesEyes ={
             name:"Cienie - opuchnięcia pod oczami",
-            value:req.body.darkCirclesEyes||false
+            value:Boolean(req.body.darkCirclesEyes)||false
         }
         clients.skinDiagnoseAll.dilatedCapillaries ={
             name:"Rozszerzone naczynka",
-            value:req.body.dilatedCapillaries||false
+            value:Boolean(req.body.dilatedCapillaries)||false
         }
         clients.skinDiagnoseAll.papularPustularAcne ={
             name:"Trądzik grudkowo - kostkowy",
-            value:req.body.papularPustularAcne||false
+            value:Boolean(req.body.papularPustularAcne)||false
         }
         clients.skinDiagnoseAll.externallyDrySkin ={
             name:"Zewnętrznie przesuszona ",
-            value:req.body.externallyDrySkin||false
+            value:Boolean(req.body.externallyDrySkin)||false
         }
+
+
         clients.skinDiagnoseAll.other =req.body.other
         clients.name=req.body.name,
         clients.lastName=req.body.lastName,
         clients.phoneNumber=req.body.phoneNumber,
         clients.dateOfBirth= Date.parse(req.body.dateOfBirth)||'',
-
+      
         clients.washingFace =req.body.washingFace
         clients.faceTension =req.body.faceTension
         clients.currentFaceCreams =req.body.currentFaceCreams
@@ -414,20 +356,16 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
 
         await clients.save();
         req.flash('mess','Dane klienta zostały edytowane.');
-        req.flash('type','success')
-        res.redirect(`/clients/client-view/${clients.id}`)
+        req.flash('type','info-success')
+        res.redirect(`/clients/client-view/${clients._id}`)
     }catch(err){
         if(clients == null){
             res.redirect('/')
         }else{
-            const cssSheets =[]
-
             req.flash('mess','Nie udało się edytować klienta.');
-            req.flash('type','danger')
-            res.render('clients/edit',{
-                clients:clients,
-                styles:cssSheets
-            });
+            req.flash('type','info-alert')
+            console.log(err)
+            res.redirect(`/clients/client-view/${clients.id}`);
         }
        
     }
@@ -436,15 +374,15 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
 router.delete('/:id', ensureAuthenticated,async(req,res)=>{
     try{
         let client =  await Client.findById(req.params.id);
-        await client.remove();
+        await client.deleteOne();
         req.flash('mess','Udało się usunąć klienta')
-        req.flash('type','success') 
+        req.flash('type','info-success') 
         res.redirect('/clients') 
 
     }catch(err){
         console.log(err);
         req.flash('mess','Nie udało się usunąć klienta')
-        req.flash('type','danger') 
+        req.flash('type','info-alert') 
         res.redirect('/clients')       
     }
   

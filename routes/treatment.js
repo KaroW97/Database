@@ -7,16 +7,15 @@ const {ensureAuthenticated} = require('../config/auth')
 //All Treatments
 router.get('/',ensureAuthenticated,async(req,res)=>{
    var searchOptions={};
-   const cssSheets =[];
+
    let todayDate = new Date(),weekDate=new Date();
    todayDate.setDate(todayDate.getDate() - 1)
    weekDate.setDate(todayDate.getDate() + 8)
-   cssSheets.push('../../public/css/user/treatment/index.css')
+  
    if(req.query.treatmentName !=null && req.query.treatmentName !=='')
         searchOptions.treatmentName = new RegExp(req.query.treatmentName,'i');
     try{
-        const treatment = await Treatment.find(searchOptions).find({user:req.user.id});
- 
+        const treatments = await Treatment.find(searchOptions).find({user:req.user.id});
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
@@ -24,39 +23,40 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
       
         res.render('treatment/index',{
             shoppingAll:shoppingList,
-            treatment:treatment,
+            treatments:treatments,
             searchOptions:searchOptions,
-            styles:cssSheets
         })
     }catch(err){
-        console.log(err)
+        req.flash('mess','Nie udało się dodać nowego zabiegu')
+        req.flash('type','info-alert')
         res.redirect('/treatment')
     }
 })
 //Add New Treatment
 router.post('/',ensureAuthenticated, async(req,res)=>{
+    console.log(req.body.products_needed_to_do_the_treatment)
+    console.log(req.body)
     const treatment = new Treatment({
         user:req.user.id,
         treatmentName: req.body.treatmentName,
-        treatmentPrice: req.body.treatmentPrice
+        treatmentPrice: req.body.treatmentPrice,
+        treatmentDescription:req.body.treatmentDescription,
+        duration:req.body.duration,
+        costs_of_products_per_treatment :req.body.costs_of_products_per_treatment,
+        products_needed_to_do_the_treatment:req.body.products_needed_to_do_the_treatment
     })
     try{
         await treatment.save();
         req.flash('mess','Udało się dodać nowy zabieg')
-        req.flash('type','success')
-        res.redirect( `treatment`);
+        req.flash('type','info-success')
+        res.redirect('/treatment')
     }catch{
-        const cssSheets =[]
         req.flash('mess','Nie udało się dodać nowego zabiegu')
-        req.flash('type','success')
-        res.render('treatment',{
-            treatment:treatment,
-            styles:cssSheets
-        });
+        req.flash('type','info-alert')
+        res.redirect('/treatment')
     } 
    
 })
-
 //Delete Treatment
 router.delete('/:id',ensureAuthenticated, async(req,res)=>{
     var treatment;
@@ -64,12 +64,12 @@ router.delete('/:id',ensureAuthenticated, async(req,res)=>{
         treatment = await Treatment.findById(req.params.id);
         await treatment.remove() 
         req.flash('mess','Udało się usunąć zabieg')
-        req.flash('type','success')
+        req.flash('type','info-success')
         
         res.redirect('/treatment');
     }catch{
         req.flash('mess','Nie udało się usunąć rekordu')
-        req.flash('type','danger')
+        req.flash('type','info-alert')
         res.redirect('/treatment')
     }
     
@@ -79,21 +79,33 @@ router.put('/edit/:id',ensureAuthenticated, async(req,res)=>{
     let treatment;
     try{
         treatment = await Treatment.findById(req.params.id)
-        treatment.treatmentName = req.body.treatmentNameEdit
-        treatment.treatmentPrice= req.body.treatmentPriceEdit
+        treatment.treatmentName = req.body.treatmentName
+        treatment.treatmentPrice= req.body.treatmentPrice
+        treatment.treatmentDescription=req.body.treatmentDescription
+        treatment.duration=req.body.duration
+        treatment.costs_of_products_per_treatment = req.body.costs_of_products_per_treatment
+        treatment.products_needed_to_do_the_treatment = req.body.products_needed_to_do_the_treatment
         await treatment.save();
         req.flash('mess','Zabieg został zedytowany')
-        req.flash('type','success')
+        req.flash('type','info-success')
         res.redirect('/treatment')
     }catch(err){
-        const cssSheets =[]
+      
 
         req.flash('mess','Nie udało się zedytować zabiegu')
-        req.flash('type','danger')
-        res.render('/treatment',{
-            treatment:treatment,
-            styles:cssSheets
+        req.flash('type','info-alert')
+        res.redirect('/treatment')
+    }
+})
+//Show Treatment
+router.get('/:id',async (req,res)=>{
+    try{
+        let treatment = await Treatment.findById(req.params.id)
+        res.render('treatment/treatmentView',{
+            treatment:treatment
         })
+    }catch{
+
     }
 })
 module.exports = router

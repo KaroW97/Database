@@ -8,7 +8,7 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="Description" content="Sprawdź jak prowadzenie firmy może być proste dzieki Beuaty Base.">
     <link rel="shortcut icon" href="#">
-
+  
     <title>Beauty Base</title>
     <link defere rel="stylesheet" type="text/css" href="../../public/fontAwesome/css/all.min.css">
   
@@ -18,26 +18,38 @@
     rel = "stylesheet">
 
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-    <% for(var i=0; i < styles.length; i++) { %>
-        <link href="<%= styles[i] %>" rel="stylesheet"  type="text/css"  >
-    <% } %> 
+    <link rel="stylesheet" href="../../public/css/index.css">
+ 
 </head>
+<style>
+    
+
+
+</style>
 <body >
+
     <div class="pageContentWrapper">
       <% if(user) { %>
        
             <%-include('../partials/header')%>
+            <%-include('../partials/infoMessages.ejs')%>
         
     <% }else{%>
         <%-include('../partials/initialHeader')%>
     <% } %>  
 
  
-
-    
+    <div class="container" id="container">
+       
         <%- body %> 
     </div>
+   
+    
+    </div>
+ 
     
     <footer class='footer' name="footer">
         <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
@@ -46,6 +58,7 @@
 
 
  
-    <script type="text/javascript"  src="../../public/index.js"  charset="utf-8"></script> 
-</body>
+    <script type="text/javascript"  src="../../public/js/index.js"  charset="utf-8"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script></body>
+
 </html>

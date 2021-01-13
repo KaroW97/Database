@@ -1,0 +1,26 @@
+<div class="input-field col s6">
+    <i class="material-icons prefix">date_range</i>
+    <input id="clientVisitDate-<%=id_extention%>"  type="text"class="datepicker"name="clientVisitDate" 
+    value= "<%=newVisit.clientVisitDate == null ? '': newVisit.clientVisitDate.toISOString().split('T')[0] %>">
+    <label class="active" for="clientVisitDate-<%=id_extention%>">Data wizyty</label>
+</div>
+<div class="input-field col s6">
+    <i class="material-icons prefix">filter_list</i>
+    <input  class="validate" type="text" list="treatmentOptions-<%=id_extention%>" name ="treatmentName" id="treatmentOptions_<%=id_extention%>"  autocomplete="off" required>
+    <label for="treatmentOptions_<%=id_extention%>">Nazwa Zabiegu</label>
+</div>
+<%-include('../partials/treatments-list.ejs',{id_extention:id_extention}) %>
+
+<div class="input-field col s12 m12 l12 xl12">
+    <i class="material-icons prefix">list</i>
+    <textarea id="diagnose-<%=id_extention%>" class="materialize-textarea"  name="comment" value="<%=newVisit.comment%>"></textarea>
+    <label for="diagnose-<%=id_extention%>">Diagnoza</label>
+</div>
+<div class="input-field col s12">
+    <i class="material-icons prefix">add_shopping_cart</i>
+    <textarea id="shopping-<%=id_extention%>" class="materialize-textarea"  name="shopping" value="<%=newVisit.shopping%>"></textarea>
+    <label for="shopping-<%=id_extention%>">Zakupy</label>
+</div>            
+<div class="center-button button-padding">
+    <button type="submit" class="btn  submit submit-button ">Dodaj</button>
+</div>

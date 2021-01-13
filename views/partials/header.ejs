@@ -1,33 +1,68 @@
-<div class="header-bar" name="nav-bar">
-    <div class="menu">
-        <div class="left-menu">
-            <div class="left-side-bar">
-                <a href="/calendar"><%=user.companyName%></a>
-                <a href="/clients">Klientki</a>
-                <a href="/treatment">Zabiegi</a>
-                <a href="/shopping-list">Zakupy Firmowe</a>
-                <a href="/document">Dokumenty
-                   
-            </div>
-            <div class="dropdown-settings">
-                <a href="#">Statystyki</a>
-                <ul  class="dropdown-menu-settings"> 
-                    <li><a href="/statistics">Statystyki Sprzedaży Klienci</a></li>
-                    <li><a href="/statistics/treatment">Statystyki Sprzedaży Zabiegów</a></li>
-                    <li><a href="/statistics/shopping">Statystyki Zakupów Firmowych</a></li>
-                </ul>
-            </div>
-        </div>
 
-        <div class="dropdown">
-            <div class="user-circle"><i class="far fa-user"></i></div>
-            <ul class="dropdown-menu">
-                
-                <li> <a href="/settings">Ustawienia</a></li>
-                <li><a href="/logout">Wyloguj</a></li>
-            </ul>
-        </div>
+<ul id="dropdown_stats" class="dropdown-content  dropdown-content-header">
+    <li><a href="/statistics">Statystyki Sprzedaży Klienci</a></li>
+    <li><a href="/statistics/treatment">Statystyki Sprzedaży Zabiegów</a></li>
+    <li><a href="/statistics/shopping">Statystyki Zakupów Firmowych</a></li>
+</ul>
+<ul id="dropdown_company_info" class="dropdown-content dropdown-content-header">
+    <li ><a href="/treatment" >Zabiegi</a></li>
+    <li> <a href="/shopping-list">Zakupy Firmowe</a></li>
+    <li> <a href="/document">Dokumenty</a></li>
+</ul>
+
+
+<nav>
+    <div class="nav-wrapper ">
+        <a href="/calendar" class="brand-logo"><%=user.companyName%></a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <li> <a href="/clients">Klientki</a></li>
+            
+           
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown_company_info"  >Dane Firmowe<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a class="dropdown-trigger" href="#!" data-target="dropdown_stats">Statystyki<i class="material-icons right">arrow_drop_down</i></a></li>
+           
+         
+        </ul>
     </div>
-</div>
+</nav>
+<ul class="sidenav" id="mobile-demo">
+    <li> <a href="/clients">Klientki</a></li>
+    <li>
+        <ul class="collapsible">
+            <li class="no-border">
+                <div class="collapsible-header">
+                    <a class="" >Dane Firmowe
+                        <i class="material-icons right">arrow_drop_down</i>
+                    </a>
+                </div>
+                <div class="collapsible-body">
+                    <div onclick="window.location='/treatment'"><a>Zabiegi</a></div>
+                    <div onclick="window.location='/shopping-list'"><a>Zakupy Firmowe</a></div>
+                    <div onclick="window.location='/document'"><a>Dokumenty</a></div>
+                 
+                 
+                </div>
+              </li>
+        </ul>
+    </li>
+    <li>
+        <ul class="collapsible">
+            <li class="no-border">
+                <div class="collapsible-header">
+                    <a class="" >Statystyki
+                        <i class="material-icons right">arrow_drop_down</i>
+                    </a>
+                </div>
+                <div class="collapsible-body">
+                    <div onclick="window.location='/statistics'" ><a >Statystyki Sprzedaży Klienci</a></div>
+                    <div onclick="window.location='/statistics/treatment'"><a >Statystyki Sprzedaży Zabiegów</a></div>
+                    <div onclick="window.location='/statistics/shopping'"><a>Statystyki Zakupów Firmowych</a></div>
+                </div>
+              </li>
+        </ul>
+    </li>
+    <li><a href="/settings">Ustawienia</a></li>
+    <li><a href="/logout">Wyloguj</a></li>
 
-
+</ul>

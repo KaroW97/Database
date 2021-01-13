@@ -1,0 +1,84 @@
+<div class="row top-separation-3">
+    <div class="col s12 m12 l12 xl12 vertical-align">
+        <div class="switch col s12 m12 l3 xl3">
+            <label>
+                Off
+                <input type="checkbox" id="getvalue" onchange="edit_client()">
+                <span class="lever" id="getlever"></span>
+                On
+            </label>
+        </div>
+    </div>
+</div>   
+<div class="col s12 m12 l12 xl12">
+    <form method="post" class="top-separation-3 " action="/treatment/edit/<%=treatment._id%>?_method=PUT">
+        <div class="row header ">
+            <div class=" header-content flex-content  ">
+                <div class="name add-input-field">
+                    <p class=" pTag separate-right" name="treatmentName" id="treatmentName"><%=treatment.treatmentName%> </p>
+                </div>
+              
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="add-input-field col s12 m6 l4 xl4">
+                    <label>Cena</label>
+                    <p class="pTag dateTag " type="text"><%=treatment.treatmentPrice == null ? '-' :treatment.treatmentPrice+'zł' %></p>
+                </div>
+                <div class="add-input-field col s12 m6 l4 xl4">
+                    <label>Koszty</label>
+                    <p class="pTag dateTag " type="text"><%=treatment.costs_of_products_per_treatment == null ? '-' :treatment.costs_of_products_per_treatment+'zł' %></p>
+                </div>
+                <div class="add-input-field col s12 m6 l4 xl4">
+                    <label>Czas Trwania</label>
+                    <p class="pTag dateTag " type="text"><%=treatment.duration == null ? '-' :treatment.duration+'min' %></p>
+                </div>
+              
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="input-field col s12 m12 l12 xl12">
+                    <label>Opis</label>
+                    <textarea readonly class="materialize-textarea textarea" type="text"><%=treatment.treatmentDescription == null ? '-' :treatment.treatmentDescription %></textarea>
+                </div>
+                <div class="input-field col s12 ">
+                    <label class="active" for="products_needed_to_do_the_treatment">Produkty potrzebne do zabiegu</label>
+                    <div class="chips-initial "   disabled >
+                        <input disabled list="products" name="products_needed_to_do_the_treatment" id="products_needed_to_do_the_treatment" class="chips-input"  >
+                    </div>
+                </div>
+                <%let split_treatment_products = treatment.products_needed_to_do_the_treatment.split(',')%>
+                <label class="active" for="products_needed_to_do_the_treatment">Produkty potrzebne do zabiegu</label>
+                <div class="input-field col s12 ">
+                    <%for(let i =0; i < split_treatment_products.length; i++){%>
+                        <div class="chip">
+                            <%=split_treatment_products[i]%>
+                           
+                        </div>
+                   <% }%>
+                </div>
+             
+           
+            </div>
+        </div>
+     
+    </form>
+ 
+            
+</div>
+<script>
+     let products_for_treatment =  '<%=treatment.products_needed_to_do_the_treatment%>'
+     let data = [];
+     document.addEventListener('DOMContentLoaded', function() {
+         
+         products_for_treatment.split(',').forEach((e)=>{
+            data.push({tag:e})
+        })
+        var elems = document.querySelectorAll('.chips-initial');
+        var instances = M.Chips.init(elems, {
+            data:data
+        });
+    });
+</script>

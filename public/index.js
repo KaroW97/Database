@@ -108,6 +108,7 @@ $(document).ready(function(){
         var target = $( event.target );
         //Check If Clicked Outside Edit Form Box 
         if(target.is('.create-visit-form') || target.is('.center-form')){
+            
             $('.close-form').hide();
             if(!$('#list-edit-form'))
                 $('.center-form').closest('form').find("input").val('')
@@ -125,6 +126,7 @@ $(document).ready(function(){
         $(this).open_box( $('.hide-delete'))
     })
     $('.close').click(function(){
+
         $(this).close_box( $('.close-form'),$('.center-form'));
     })
     $('.create').click(function(){

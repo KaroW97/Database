@@ -1,6 +1,6 @@
 
-    <% if(messages.mess){ %>
-            <div class="alert alert-<%=messages.type%>  ">
-                <%= messages.mess%> 
-            </div>  
-    <% } %>
+<% if(messages.mess){ %>
+    <section class="<%=messages.type%>">
+        <p> <%= messages.mess%>  </p>  
+    </section>        
+<% } %>

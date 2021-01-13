@@ -13,6 +13,7 @@ const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session');
 const {ensureAuthenticated} = require('./config/auth')
+
 //FILE UPLOADER
 
 const Grid = require('gridfs-stream');
@@ -39,8 +40,10 @@ app.use(bodyParser.urlencoded({limit:'10mb',extended:false}))
 const mongoose =  require('mongoose')
 mongoose.connect(process.env.DATABASE_URL , {
     useNewUrlParser:true, 
-    useUnifiedTopology: true
+   useUnifiedTopology: true
 })//url for connection with database
+
+
 const db = mongoose.connection;
 
 db.on('error', error=>console.error(error)) //if error conecting database

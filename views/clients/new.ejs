@@ -1,12 +1,163 @@
-<h2>New Client</h2>
-<form action="/clients" method="POST">
-    <div>
-        <input type="date" name="visitDate"  value="<%=clients.visitDate ==null ? '':clients.visitDate.toISOString().split('T')[0]%>" >
+
+
+
+
+<ul class="collapsible">
+    <li class="active">
+        <div class="collapsible-header"><i class="material-icons">person_pin</i>Informacje kontaktowe</div>
+        <div class="collapsible-body">
+      
+            <div class="input-field col s6">
+                <i class="material-icons prefix">date_range</i>
+                <input class="datepicker" name="visitDate" type="text" id="visitDate"  autocomplete="off" >
+                <label for="visitDate">pierwsza wizyta</label>
+            </div>
+            <div class="col s6 l6 m6 input-field">
+                <i class="material-icons prefix">account_circle</i>
+                <input  class="validate " type="text" name ="name"  id="nameClient"  autocomplete="off" required>
+                <label  for="nameClient">Imie</label>
+            </div>
+            <div class="col s6 l6 m6 input-field">
+                <i class="material-icons prefix">account_circle</i>
+                <input  class="validate " type="text" name ="lastName" id="clientLastName"  autocomplete="off" required>
+                <label  for="clientLastName">Nazwisko</label>
+            </div>
+      
+
+            <div class="input-field col s6">
+                <i class="material-icons prefix">phone</i>
+                <input class="validate" name="phoneNumber" type="tel" id="phoneNumber"  autocomplete="off" minlength="9" required>
+                <label for="phoneNumber">Numer Telefonu</label>
+            </div>
+            
+            <div class="input-field col s6">
+                <i class="material-icons prefix">date_range</i>
+                <input class="datepicker" name="dateOfBirth" type="text" id="dateOfBirth"  autocomplete="off" >
+                <label for="dateOfBirth">Data urodzin</label>
+            </div>
+       
+        </div>
         
+    </li>
+    <li>
+      <div class="collapsible-header"><i class="material-icons">list</i>Diagnoza Skóry</div>
+      <div class="collapsible-body">
+        <label class="separate">
+            <input type="checkbox"  name="drySkin" >
+          <span>Suchość</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="wrinkless">
+          <span>Zmarszczki i drobne linie</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="lackfirmnes"  >
+          <span>Brak jędrności</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="nonuniformColor"  >
+          <span>Niejednolity koloryt</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="tiredness"  >
+          <span>Zmęczenie - stres</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="acne"  >
+          <span>Trądzik grudkowy</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="smokerSkin"  >
+          <span>Skóra palacza</span>
+        </label>
+        <!--sholud be broken-->
+        <label class="separate">
+            <input type="checkbox"  name="fatSkin" >
+          <span>Przetłuszczanie się</span>
+        </label >
+        <label class="separate">
+            <input type="checkbox"  name="discoloration"  >
+          <span>Przebarwienia</span>
+        </label>
+        <label class="separate"> 
+            <input type="checkbox"  name="blackheads"  >
+          <span>Zaskórniki</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="darkCirclesEyes"   >
+          <span>Cienie - opuchnięcia pod oczami</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="dilatedCapillaries"  >
+          <span>Rozszerzone naczynka</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="papularPustularAcne"  >
+          <span>Trądzik grudkowo - kostkowy</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="externallyDrySkin"  >
+          <span>Zewnętrznie przesuszona</span>
+        </label>
+        
+        <div class="input-field col s6">
+          <i class="material-icons prefix">short_text</i>
+          <input class="text" name="other" type="text" id="other"  autocomplete="off" >
+          <label for="other">inne...</label>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="collapsible-header"><i class="material-icons">notification_important</i>Wywiad</div>
+      <div class="collapsible-body">
+        <div class="input-field col s6">
+            <i class="material-icons prefix">info_outline</i>
+            <textarea id="washingFace" name="washingFace" class="materialize-textarea" data-length="120"></textarea>
+            <label for="washingFace">Czym jest myta twarz?</label>
+        </div>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">info_outline</i>
+            <textarea id="faceTension" name="faceTension" class="materialize-textarea" data-length="120"></textarea>
+            <label for="faceTension">Czy występuje uczucie napięcia twarzy?</label>
+        </div>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">info_outline</i>
+            <textarea id="currentFaceCreams" name="currentFaceCreams" class="materialize-textarea" data-length="120"></textarea>
+            <label for="currentFaceCreams">Czy obecnie są stosowane jakieś kremy?</label>
+        </div>
+        
+     
     </div>
-    
-    <%-include('./_form_fields_edit.ejs')%>
-    <%-include('./_form_fields.ejs')%> 
-    <a href="/clients">Anuluj</a>
-    <button type="submit">Stwórz</button>
-</form>
+    </li>
+    <li>
+      <div class="collapsible-header"><i class="material-icons">whatshot</i>Diagnoza i Zakupy</div>
+      <div class="collapsible-body">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">shopping_cart</i>
+          <textarea id="shopping" name="shopping" class="materialize-textarea" data-length="120"></textarea>
+          <label for="shopping">Produkty zakupione w gabinecie</label>
+      </div>
+      <div class="input-field col s6">
+          <i class="material-icons prefix">mode_edit</i>
+          <textarea id="diagnose1" name="diagnose1" class="materialize-textarea" data-length="120"></textarea>
+          <label for="diagnose1">Diagnoza wstępna</label>
+      </div>
+      <div class="input-field col s6">
+          <i class="material-icons prefix">mode_edit</i>
+          <textarea id="teraphyPlan" name="teraphyPlan" class="materialize-textarea" data-length="120" ></textarea>
+          <label for="teraphyPlan">Plan zabiegów</label>
+      </div>
+      <div class="input-field col s6">
+          <i class="material-icons prefix">mode_edit</i>
+          <textarea id="recommendedCare" name="recommendedCare" class="materialize-textarea" data-length="120"></textarea>
+          <label for="recommendedCare">Zalecana pielęgnacja</label>
+      </div>
+      </div>
+    </li>
+  </ul>
+
+<div class="center-button button-padding">
+    <button type="submit" class="btn waves-effect waves-light submit-button">Stwórz</button>
+</div>
+ 
+
