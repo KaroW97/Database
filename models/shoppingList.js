@@ -27,7 +27,10 @@ const shoppingList = mongoose.Schema ({
         type:Number,
         require:false
     },
-    
+    brandName:{
+        type:String,
+        require:false
+    }
 
    
  

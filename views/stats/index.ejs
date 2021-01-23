@@ -1,65 +1,45 @@
+<%-include('../partials/clients-list.ejs', {id_extention:1})%>
+<%-include('../partials/shopping-list-extended.ejs')%>
+<div class="row main-row z-depth-1">
+    <form class=" col s12"  action="/statistics" method="GET">
+        <div class="input-field col s12 m12 l4 xl4">
+            <input class="myInputSearch" name="name" type="text" id="client-search"  autocomplete="off" list="clientOptions-1"  />
+            <label class="active" for="client-search">Klient</label>
+        </div>
+        <div class="input-field col s12 m6 l3 xl3">
+            <input class="datepicker" id="dateFrom" name="dateFrom" type="text"  autocomplete="off" value="<%=searchOptions.dateFrom%>"  />
+            <label class="active" for="dataFrom">Od</label>
+        </div>
+        <div class="input-field col s12 m6 l3 xl3">
+            <input class="datepicker" id="dateTo" name="dateTo" type="text"  autocomplete="off" value="<%=searchOptions.dateTo%>"  />
+            <label class="active" for="dataFrom">Do</label>
+        </div>
+        <div class="row button-row">
+            <div class="col s12 m1 l2 xl2 center-button-small">
+                <button type="submit" class="waves-effect waves-light btn-small  "aria-label="search-by-date"><i class="large material-icons">search</i></button>
 
-<%-include('../partials/toogleListClients.ejs')%>
-
-<div class="center-main-div ">
-    <div class="main-div toogleList">
-        <div class="content  ">
-            <div class="visit">
-                <form class="find-visit"  method="GET" action="/statistics">
-                    <div class="search-wrapper ui-widget">
-                        <input type="text"class="myInputSearch client-search"placeholder="Szukaj Klienta">
-
-                    </div>
-                    <div class="data-input-from ">
-                        <input  id="dataFrom" name="dateFrom"  placeholder="Od" value="<%=searchOptions.dateFrom%>" autocomplete="off">
-                    </div>
-                    <div class="data-input-to">
-                        <input  id="dataTo" name="dateTo"  placeholder="Do"value="<%=searchOptions.dateTo%>" autocomplete="off">
-
-                    </div>
-                    <div class="search">
-                        <button type="submit" class="search-button" aria-label="search"><i class="fas fa-search"></i></button>
-                    </div>
-                </form>
-             
             </div>
         </div>
-    </div>
+    </form>
 </div>
-<div class="main-div-full-content .main-div-toogle">
-    <div class="main-div-center ">
-        
-            <div class="content-div">
-                <% for(var i = 0 ; i< clients.length ; i++){%>
-                    <% sum=0 %> 
-                    <%addedVisist.forEach(element => { %> 
-                        <%element.treatment == null ?'' :clients[i].id == element.client ?sum +=element.treatment.treatmentPrice:0 %>
-                    <%});%> 
-                    <div class="visit">
-            
-                        <div class="div-element"  onclick="window.location='/statistics/<%=clients[i].id%>'" >
-                            <p class="header" client="<%=clients[i].name%> <%=clients[i].lastName%>">
-                                <%=clients[i].name%> <%=clients[i].lastName%></p>
-                            <div class="first-p-element">
-                                <p class="headerVisit">Wydana Kwota</p>
-                                <p ><%=sum %>zł</p>
-                            </div>
-                      
-                                               
+<div class="row information-row">
+    <div class="col s12 ">
+        <% for(var i = 0 ; i< clients.length ; i++){%>
+            <div class="col s12 m12 l4 top-separator ">
+                <div class="card max-width-card"  onclick="window.location='/statistics/<%=clients[i].id%>'">
+                    <div class="card-content">
+                        <div class="col s12 m6 l12">
+                            <label>Klient</label>
+                            <p class="search-by" data-value="<%=clients[i].name%> <%=clients[i].lastName%>"> <%=clients[i].name%> <%=clients[i].lastName%></p>
                         </div>
-                    </div> 
-                   
-                   
-                <%} %> 
+                        <div class="col s12 m6 l12">
+                            <label>Wydana Kwota</label>
+                            <p><%=addedVisist[i].sum%>zł</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        <%} %> 
     </div>
 </div>
-<div  class="statistics"></div>
-<%-include('../partials/shopping-list.ejs')%>
-<script src="../../public/toggle_main_page_list.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-<script src="../../public/dataTimePicker.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="../../public/js/shopping_list_min.js"></script>
+          

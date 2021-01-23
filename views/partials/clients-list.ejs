@@ -1,5 +1,6 @@
-<datalist id="clientOptions-<%=id_extention%>">
+<datalist id="searchTemplate-<%=id_extention%>">
     <% clients.forEach(client => { %>
-        <option value="<%=client.name%> <%=client.lastName%>" id="<%=client.id%>" ><%=client.phoneNumber%></option>
+        <option value="<%=client.name%> <%=client.lastName%>" id="<%=client.phoneNumber%>" ><%=client.phoneNumber%></option>
     <%}); %>
 </datalist>
+<datalist id="clientOptions-<%=id_extention%>"></datalist>

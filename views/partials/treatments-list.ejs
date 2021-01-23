@@ -1,6 +1,8 @@
 
-<datalist id="treatmentOptions-<%=id_extention%>">
+<datalist id="searchTemplate1-<%=id_extention%>">
     <% treatments.forEach(treatment => { %>
-        <option value="<%=treatment.treatmentName%>">
+        <option value="<%=treatment.treatmentName%>" data-value="<%=treatment.treatmentPrice%>">
     <%}); %>
+</datalist>
+<datalist  id="options-<%=id_extention%>">
 </datalist>

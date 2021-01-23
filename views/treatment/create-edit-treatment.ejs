@@ -1,3 +1,4 @@
+ 
 <div class="input-field col s6">
     <i class="material-icons prefix">local_offer</i>
     <input type="text" id="treatmentName-<%=id_extention%>" class="validate"  name="treatmentName"  required >
@@ -26,47 +27,9 @@
 </div>
 <div class="input-field col s12 chips-icon">
     <i class="material-icons prefix">list</i>
-    <div class="chips chips-autocomplete width-chips-input"    >
-        <input list="products"  class="chips-input"  >
+    <div  class="chips chips-autocomplete width-chips-input"    >
+        <input class="chips-input"  list="searchedElement2" id="search2" autocomplete="off" >
     </div>
 </div>
-
-<datalist id="products">
-    <option value="acne x 20ml">
-    <option value="hialuron x 30ml">
-</datalist>
+<%-include('./product-list.ejs')%>
 <input id="chips-input" class="hiden-input"  value="" name="products_needed_to_do_the_treatment" >
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var elems = document.querySelectorAll('.chips-autocomplete');
-        const input = document.getElementById('chips-input')
-        let input_value = []
-        var instances = M.Chips.init(elems, {
-            autocompleteOptions: {
-                limit: Infinity     
-            },
-            placeholder: 'Pordukty',
-            secondaryPlaceholder: ' ',
-            onChipAdd: (event, chip) => {
-               
-                input_value =[];
-                event[0].M_Chips.chipsData.forEach(elem=>{
-                    input_value.push(elem.tag)
-                })
-                input.setAttribute('value',input_value)
-            },
-            onChipDelete:(event, chip)=>{
-                input_value =[];
-                event[0].M_Chips.chipsData.forEach(elem=>{
-                    input_value.push(elem.tag)
-                })
-                input.setAttribute('value',input_value)
-            }
-        });
-    
-  
-  });
-</script>

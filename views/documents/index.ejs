@@ -1,81 +1,75 @@
 <%-include('../partials/infoMessages.ejs')%>
-<div id="top" class="center-main-div">
-    <div class="main-div">
-        <div class="content">
-            <div class="visit">
-                <form class="find-visit"action="/document" method="post" enctype="multipart/form-data">
-                    <input type="file" id="download" name="file" multiple/>
-                    <div class="data-input-from ui-widget ">
-                        <input type="text" class="myInputSearch doc-search"   placeholder="Szukaj Dokumentu" autocomplete="off" >  
-                    </div>
-                    <div class="download_file_wrapper">
-                        <label for="download" ><i class="fas fa-download"></i></label>
-                        <div class="download_file_border" >
-                            <p class="download_file" >Wybierz plik</p>
-                        </div>
-                       
-                    </div>
-                    <div class="add-button-wrapper">
-                        <button type="submit"  class="add-button" value="dodaj"><i class="fa fa-arrow-circle-right fa-lg"></i> </button>
-                    </div>
-                </form>
+<%-include('./doc-list.ejs')%>
+<div class="row main-row z-depth-1">
+    <form class="col s12"  action="/document" method="POST" enctype="multipart/form-data">
+        <div class="input-field col s12 m6 l4 xl5">
+            <input type="text" list="options-1" id="searchby-1" class="myInputSearch " name="name" autocomplete="off" >
+            <label for="searchby-1" class="active">Nazwa Listy</label>  
+        </div>
+        <div class="col s12 m6 l4 xl5">
+            <div class="file-field input-field ">
+                <div class="btn">
+                  <span>File</span>
+                  <input type="file" multiple name="file">
+                </div>
+                <div class="file-path-wrapper">
+                  <input class="file-path validate"   type="text" placeholder="Upload one or more files">
+                </div>
             </div>
         </div>
-    </div>
+        <div class="row button-row">
+            <div class="col s12 m1 l1 center-button-small">
+                <button type="submit"  class="waves-effect waves-light  modal-trigger btn-small  " value="dodaj"><i class="material-icons">
+                    send
+                </i> 
+                </button>
+            </div>
+        </div>
+     
+    </form>
 </div>
-<div class="main-div-full-content .main-div-toogle">
-    <div class="main-div-center ">
+<div class="row information-row">
+    <div class="col s12 ">
         <% if(files) {%> 
-            <div class="content-div">
-                <% for(var i = 0 ; i< files.length ; i++){%>
-                    <% if(files[i].metadata.user == user.id){%>
-                        <div class="visit">
-                
+            <% for(var i = 0 ; i< files.length ; i++){%>
+                <div class="col s12 m12 l4 top-separator ">
+                    <div class="card max-width-card">
+                        <div class="card-header ">
                             <form method="post"action="/document/<%=files[i]._id %>?_method=DELETE">
                                 <button type="submit" class="close" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </form>
-                            <div class="div-element"   onclick="location.href='document/<%=files[i].filename%>';" >
-                                <p name="header" value="<%=files[i]._id%>">
-                                    <%=files[i].metadata.initialFilename%>
-                               </p>
-                             
-                               <div class="first-p-element">
-                                <p class="headerVisit">Data dodania</p>
-                                <p ><%=files[i].uploadDate.toISOString().split('T')[0] %> </p>
-                            </div>       
+                            <p  class="col search-by" data-value="<%=files[i].metadata.initialFilename%>"><%=files[i].metadata.initialFilename.length > 16 ?files[i].metadata.initialFilename.slice(0,16) +'...' :files[i].metadata.initialFilename %></p>
+                        </div>
+                        <div class="card-content"  onclick="window.open('document/<%=files[i].filename%>','_blank')">
+                            <div class="col s12 m6 l12">
+                                <label>Data dodania</label>
+                                <p><%=files[i].uploadDate.toISOString().split('T')[0] %> </p>
                             </div>
-                        </div> 
-                   
-                    <% } %> 
-                <%} %> 
-            </div>
+                            <div class="col s12 m6 l12">
+                                <label>Typ pliku</label>
+                                <p><%=files[i].contentType.split('/')[1] %> </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+        
+            <%} %> 
         <% } %> 
-    </div>
+    </div>     
 </div>
+       
+<%-include('../partials/shopping-list.ejs')%>
 
-
-    <ul class="doc "  >
-        <% if(files){%>
-            <% files.forEach(file => { %>
-                <li><%=file.metadata.initialFilename%></li>
-            <%}); %>
-       <%   } %> 
-  
-    </ul>
-    <div  class="statistics"></div>
-    <%-include('../partials/shopping-list.ejs')%>
-<script src="../../public/toggle_main_page_list.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="../../public/js/shopping_list_min.js"></script>
 <script>
-    window.onload = function(){
+    /*window.onload = function(){
         if(!window.location.hash){
         window.location = window.location +'#loaded';
         window.location.reload();
         }
-    }
+    }*/
 
 </script>

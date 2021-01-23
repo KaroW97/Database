@@ -1,9 +1,11 @@
+<%-include('./product-list.ejs')%>
+
 <div class="row top-separation-3">
     <div class="col s12 m12 l12 xl12 vertical-align">
         <div class="switch col s12 m12 l3 xl3">
             <label>
                 Off
-                <input type="checkbox" id="getvalue" onchange="edit_client()">
+                <input type="checkbox" id="getvalue" onchange="edit_treatment(`<%=treatment.products_needed_to_do_the_treatment%>`)">
                 <span class="lever" id="getlever"></span>
                 On
             </label>
@@ -14,25 +16,26 @@
     <form method="post" class="top-separation-3 " action="/treatment/edit/<%=treatment._id%>?_method=PUT">
         <div class="row header ">
             <div class=" header-content flex-content  ">
-                <div class="name add-input-field">
-                    <p class=" pTag separate-right" name="treatmentName" id="treatmentName"><%=treatment.treatmentName%> </p>
+                <div class="treatmentName add-input-field">
+                    <label treatmentName="price" style="display:none">Nazwa</label>
+                    <p class="pTag separate-right" name="treatmentName" id="treatmentName"><%=treatment.treatmentName%> </p>
                 </div>
-              
             </div>
         </div>
         <div class="row">
             <div class="col s12">
                 <div class="add-input-field col s12 m6 l4 xl4">
-                    <label>Cena</label>
-                    <p class="pTag dateTag " type="text"><%=treatment.treatmentPrice == null ? '-' :treatment.treatmentPrice+'zł' %></p>
+                    <label for="price">Cena</label>
+                    <p class="pTag dateTag " id="price" name="treatmentPrice" type="text"><%=treatment.treatmentPrice == null ? '-' :treatment.treatmentPrice %></p>
+                 
                 </div>
                 <div class="add-input-field col s12 m6 l4 xl4">
-                    <label>Koszty</label>
-                    <p class="pTag dateTag " type="text"><%=treatment.costs_of_products_per_treatment == null ? '-' :treatment.costs_of_products_per_treatment+'zł' %></p>
+                    <label for="costs">Koszty</label>
+                    <p class="pTag dateTag " id="costs" name="costs_of_products_per_treatment" type="text"><%=treatment.costs_of_products_per_treatment == null ? '-' :treatment.costs_of_products_per_treatment %></p>
                 </div>
                 <div class="add-input-field col s12 m6 l4 xl4">
-                    <label>Czas Trwania</label>
-                    <p class="pTag dateTag " type="text"><%=treatment.duration == null ? '-' :treatment.duration+'min' %></p>
+                    <label for="duration">Czas Trwania(min)</label>
+                    <p class="pTag dateTag " id="duration" name="duration" type="text"><%=treatment.duration == null ? '-' :treatment.duration %></p>
                 </div>
               
             </div>
@@ -40,45 +43,35 @@
         <div class="row">
             <div class="col s12">
                 <div class="input-field col s12 m12 l12 xl12">
+                    <textarea name="treatmentDescription" readonly class="materialize-textarea textarea" type="text"><%=treatment.treatmentDescription == null ? '-' :treatment.treatmentDescription %></textarea>
                     <label>Opis</label>
-                    <textarea readonly class="materialize-textarea textarea" type="text"><%=treatment.treatmentDescription == null ? '-' :treatment.treatmentDescription %></textarea>
                 </div>
-                <div class="input-field col s12 ">
-                    <label class="active" for="products_needed_to_do_the_treatment">Produkty potrzebne do zabiegu</label>
-                    <div class="chips-initial "   disabled >
-                        <input disabled list="products" name="products_needed_to_do_the_treatment" id="products_needed_to_do_the_treatment" class="chips-input"  >
-                    </div>
+                <div class="input-field col s12 add-auto-chips ">
+                    <label class="active" >Produkty potrzebne do zabiegu</label>
+                   
+                    <%if(splited != ['']){%>
+                        <%for(let i =0; i < splited.length; i++){%>
+                            <div class="chip chips-padding add-chips-input" >
+                                <%=splited[i]%>
+                            </div>
+                       <% }%>
+                    <%}%>
+                  
+                   <div class="chips  init" style="display: none">
+                    <input list="products" id="search" autocomplete="off">
+                   </div>
                 </div>
-                <%let split_treatment_products = treatment.products_needed_to_do_the_treatment.split(',')%>
-                <label class="active" for="products_needed_to_do_the_treatment">Produkty potrzebne do zabiegu</label>
-                <div class="input-field col s12 ">
-                    <%for(let i =0; i < split_treatment_products.length; i++){%>
-                        <div class="chip">
-                            <%=split_treatment_products[i]%>
-                           
-                        </div>
-                   <% }%>
-                </div>
-             
-           
             </div>
         </div>
-     
+        <input id="chips-input" class="hiden-input"  value="" name="productsForTreatment" >
+
+        <div class="button-styling-large center-button">
+            <button type="submit" style="display: none;" class="btn button-styling-large  submit">Akutalizuj</button>
+        </div>
     </form>
- 
+
             
 </div>
 <script>
-     let products_for_treatment =  '<%=treatment.products_needed_to_do_the_treatment%>'
-     let data = [];
-     document.addEventListener('DOMContentLoaded', function() {
-         
-         products_for_treatment.split(',').forEach((e)=>{
-            data.push({tag:e})
-        })
-        var elems = document.querySelectorAll('.chips-initial');
-        var instances = M.Chips.init(elems, {
-            data:data
-        });
-    });
+
 </script>

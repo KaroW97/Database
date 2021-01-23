@@ -7,7 +7,8 @@ const ObjectId = require('mongodb').ObjectId;
 const ShoppingList = require('../models/shoppingList')
 
 const GridFsStorage = require('multer-gridfs-storage');
-const {ensureAuthenticated} = require('../config/auth')
+const {ensureAuthenticated} = require('../config/auth');
+const { type } = require('os');
 
 var storage = new GridFsStorage({
     url: process.env.DATABASE_URL,
@@ -34,8 +35,8 @@ var storage = new GridFsStorage({
 const upload = multer({ storage });
 //Document Main Page
 router.get('/', ensureAuthenticated,async(req, res) => {
-    const cssSheets =[]
-    cssSheets.push('../../public/css/user/documents/index.css');
+    let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
+
     let todayDate = new Date(),weekDate=new Date();
     try{
         todayDate.setDate(todayDate.getDate() - 1)
@@ -45,12 +46,24 @@ router.get('/', ensureAuthenticated,async(req, res) => {
             $lt:weekDate
         }}).sort({transactionDate:'asc'})
         req.app.locals.gfs.files.find().toArray( (err, files)=> {
+           
             if (err) throw err
             if(!files|| files.length === 0){  
-                res.render('documents/index',{files:false,  user:req.user, shoppingAll:shoppingList,styles:cssSheets}
+                res.render('documents/index',{
+                    files:false,  
+                    shoppingAll:shoppingList,
+                    weekdays:weekdays,
+                }
             )}
             else{
-                res.render('documents/index',{files:files, user:req.user, shoppingAll:shoppingList,styles:cssSheets})
+                const filteredFiles =  files.filter(e=>{
+                    return e.metadata.user == req.user.id
+                })
+                res.render('documents/index',{
+                    files:filteredFiles,
+                    shoppingAll:shoppingList,
+                    weekdays:weekdays,
+                })
             }
         })
     }catch(err){
@@ -80,12 +93,12 @@ router.get('/:filename', ensureAuthenticated,async(req, res) => {
 router.post('/',ensureAuthenticated,upload.array('file'),async(req,res)=>{
     try{
         req.flash('mess','Dodano plik');
-        req.flash('type','success')
+        req.flash('type','info-success')
         res.redirect('/document')
     }catch(err){
        
         req.flash('mess','Nie udało się dodac plik');
-        req.flash('type','danger')
+        req.flash('type','info-danger')
         res.redirect('/document')
     }
 
@@ -93,18 +106,16 @@ router.post('/',ensureAuthenticated,upload.array('file'),async(req,res)=>{
 //Delete File
 router.delete('/:id',ensureAuthenticated,async(req,res)=>{
     try{
-      
-          
         await  req.app.locals.gfs.remove({_id:ObjectId(req.params.id),root:'uploads'}, function (err, gridStore) {
             if (err) throw(err);
         });
         req.flash('mess','Usunięto plik');
-        req.flash('type','success')
+        req.flash('type','info-success')
             
         res.redirect('/document') 
     }catch(err){
         req.flash('mess','Nie udało się usunąć plik');
-        req.flash('type','danger')
+        req.flash('type','info-danger')
         res.redirect('/document') 
     }
 

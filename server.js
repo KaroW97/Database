@@ -28,6 +28,7 @@ const ClietnSellsStats = require('./routes/clientSellsStats')
 const Document = require('./routes/document.js');
 const Admin = require('./routes/admin');
 
+
 //app.use( express.static('public'));
 app.use('/public', express.static(__dirname + '/public'))
 app.set('view engine', 'ejs') 

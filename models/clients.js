@@ -8,7 +8,8 @@ const clientSchema = new mongoose.Schema({
     },
     totalSumSpent:{
         type:Number,
-        required:false
+        required:false,
+        default:0
     },
     visitDate:{
         type:Date,
@@ -130,6 +131,9 @@ const clientSchema = new mongoose.Schema({
         type:String,
         required:false
     },
+    clientVisits:[
+        
+    ]
 })
 
 clientSchema.pre('remove',function(next){

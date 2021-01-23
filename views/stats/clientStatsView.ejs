@@ -1,76 +1,49 @@
-
-
-
-<div id="top" class="center-main-div client-treatment-stats">
-    <div class="main-div">
-        <div class="content">
-            <div class="visit">
-                <form class="find-visit"  action="/statistics/<%=clientInfo.id%>" method="GET">
-                    <div class="data-input-from">
-                        <input placeholder="Od" id="dataFrom" name="dateFrom"   autocomplete="off" value="<%=searchOptions.dateFrom%>"  />
-                    </div>
-                    <div class="data-input-to">
-                        <input placeholder="Do" id="dataTo"  name="dateTo"   autocomplete="off" value="<%=searchOptions.dateTo%>" />
-                    </div>
-                    <div class="search stats-search">
-                        <button type="submit" class="search-button"aria-label="search-by-date"><i class="fas fa-search"></i></button>
-                    </div>
-                </form>
-              
-            <!--onclick="showFormm()"-->
+<%-include('../partials/shopping-list-extended.ejs')%>
+<%-include('../partials/treatments-list.ejs',{id_extention:1}) %>
+<div class="row main-row z-depth-1">
+    <form class=" col s12"  action="/statistics/<%=clientInfo.id%>"  method="GET">
+        <div class="input-field col s12 m12 l4 xl4">
+            <input class="myInputSearch" name="name" type="text" id="searchby-1"   autocomplete="off" list="options-1"  />
+            <label class="active" for="searchby-1">Klient</label>
+        </div>
+        <div class="input-field col s12 m6 l3 xl3">
+            <input class="datepicker"  name="dateFrom" type="text" id="dataFrom" value="<%=searchOptions.dateFrom%>"  autocomplete="off"   />
+            <label class="active" for="dataFrom">Od</label>
+        </div>
+        <div class="input-field col s12 m6 l3 xl3">
+            <input class="datepicker" name="dateTo" type="text" id="dateTo" value="<%=searchOptions.dateTo%>"  autocomplete="off"   />
+            <label class="active" for="dateTo">Do</label>
+        </div>
+        <div class="row button-row">
+            <div class="col s12 m1 l2 xl2 center-button-small">
+                <button type="submit" class="waves-effect waves-light btn-small  "aria-label="search-by-date"><i class="large material-icons">search</i></button>
             </div>
         </div>
+    </form>
+</div>
+<div class="row information-row">
+    <div class="col s12 ">
+        <%treatmentsMade.forEach(t => {%>
+            <div class="col s12 m12 l12  top-separator  top-separator-2">
+                <div class="card max-width-card">
+                    <div class="card-content">
+                        <div class="col s12 m12 l4">
+                            <label>Zabieg</label>
+                            <p class="search-by" data-value="<%=t.treatmentName%>"> <%=t.treatmentName%></p>
+                        </div>
+                        <div class="col s12 m6 l4">
+                            <label>Kwota Całkowita</label>
+                            <p> <%=t.sum%></p>
+                        </div>
+                        <div class="col s12 m6 l4">
+                            <label>Liczba zabiegów</label>
+                            <p> <%=t.treatmentSum%></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <%})%>
+        
     </div>
 </div>
 
-<div class="main-div-full-content">
-    <div class="main-div-center  ">
-        <div class="content-div">
-             <%treatments.forEach((treatments, i) => { %>
-               
-                <%var count=0;pricePerTreatment=0; %>
-                <%clientVisits.forEach(visit=>{%>
-                    <% if( visit.treatment!= null&&treatments.treatmentName == visit.treatment.treatmentName) {%> 
-                        <%count++ %>  
-                        <%visit.treatment== null?'':pricePerTreatment+=visit.treatment.treatmentPrice %> 
-                    <% } %> 
-                <% })%>
-                <%  if(i==0){%>
-                    <div class="data-separator">
-                        <div class="div-element-day stat-div-visit-treatments"  >
-                            <p><%= clientInfo.name %> <%= clientInfo.lastName %></p>
-                            <p>Suma:<%=totalPrice+'zł' %></p>
-                        </div>
-                    </div>
-                <% } %> 
-            <%if(count != 0){%>
-                <div class="visit">
-                    <div class="div-element">
-                        <div class="header">
-                            <p></p>  
-                        </div>
-                        <div class="first-p-element">
-                            <p class="headerVisit">Nazwa</p>
-                            <p ><%=count != 0 ?treatments.treatmentName: ''%> </p>
-                        </div>
-                        <div class=" sec-p-element">
-                            <p class="headerVisit">Liczba zabiegów</p>
-                            <p><%=count != 0 ? count : ''%> </p>
-                        </div>
-                        <div class="th-p-element">
-                            <p class="headerVisit">Kwota</p>
-                            <p><%=pricePerTreatment != 0 ? pricePerTreatment+'zł' : ''%> </p> 
-                        </div>
-                                            
-                    </div>
-                </div>   
-            <% } %> 
-            <%}) %> 
-         
-        </div>
-    </div>
-
-</div>
-
-<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-<script src="../../public/dataTimePicker.js"></script>

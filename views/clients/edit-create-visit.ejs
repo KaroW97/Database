@@ -1,15 +1,16 @@
 <div class="input-field col s6">
     <i class="material-icons prefix">date_range</i>
     <input id="clientVisitDate-<%=id_extention%>"  type="text"class="datepicker"name="clientVisitDate" 
-    value= "<%=newVisit.clientVisitDate == null ? '': newVisit.clientVisitDate.toISOString().split('T')[0] %>">
+    value= "<%=newVisit.clientVisitDate == null ? '': newVisit.clientVisitDate.toISOString().split('T')[0] %>" autocomplete="off">
     <label class="active" for="clientVisitDate-<%=id_extention%>">Data wizyty</label>
 </div>
 <div class="input-field col s6">
     <i class="material-icons prefix">filter_list</i>
-    <input  class="validate" type="text" list="treatmentOptions-<%=id_extention%>" name ="treatmentName" id="treatmentOptions_<%=id_extention%>"  autocomplete="off" required>
-    <label for="treatmentOptions_<%=id_extention%>">Nazwa Zabiegu</label>
+    <input  class="validate" type="text" list="options-<%=id_extention%>" name ="treatmentName" id="searchby-<%=id_extention%>"  autocomplete="off" required>
+    <label for="searchby-<%=id_extention%>">Nazwa Zabiegu</label>
 </div>
 <%-include('../partials/treatments-list.ejs',{id_extention:id_extention}) %>
+<input  class="hiden-input" id="price-<%=id_extention%>" value="0" type="text"  name ="price"  >
 
 <div class="input-field col s12 m12 l12 xl12">
     <i class="material-icons prefix">list</i>

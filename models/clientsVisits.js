@@ -9,21 +9,25 @@ const clientVisits = mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:'Client',
-        //forId:String, //to mozna sporobwac dodac treatment
+       
     },
     clientVisitDate:{
         type:Date,
-        required:true
+        required:false
     },
     comment:{
         type:String,
-        required:true,
+        required:false,
     },
         
     treatment:{
         type:String, //id of another object in our colection
         required:false,
-      
+    },
+    price:{
+        type:Number,
+        required:false,
+        default:0
     },
     shopping:{
         type:String,

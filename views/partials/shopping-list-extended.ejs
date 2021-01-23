@@ -1,0 +1,120 @@
+
+<div class="fixed-action-btn">
+    <a id="floating-btn" data-target="slide-out" class="btn-floating btn-large teal  lighten-2 sidenav-trigger   <%=shoppingAll.length ? 'pulse':''%>" onclick="deleteClass('floating-btn')" >
+        <i class="large material-icons">menu</i>
+    </a>
+    <ul>
+        <%if(showHiddenFloatingButtons){%>
+            <li><a data-target="slide-out-treatment-statistics" class="btn btn-floating red sidenav-trigger"><i class="material-icons">mode_edit</i></a></li>
+        <%}%>
+   
+    </ul>
+   
+</div>
+<ul id="slide-out" class="sidenav">
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="../../public/shopping-list-background.jpg"><!---->
+            </div>
+            <a href=""><span class="white-text header-font-size ">Zakupy</span></a>
+        </div>
+    </li>
+    <%for(var i = 0 ; i< shoppingAll.length ; i++) {%>
+        <%if(shoppingAll[i-1]!= undefined &&shoppingAll[i-1].transactionDate.toISOString().split('T')[0] < shoppingAll[i].transactionDate.toISOString().split('T')[0]){%>
+            <li><div class="divider"></div></li>
+            <h5><%=weekdays[shoppingAll[i].transactionDate.getDay()]%> <%=shoppingAll[i].transactionDate.toISOString().split('T')[0]%></h5>
+
+        <%}else if(i==0){%> 
+            <h5><%=weekdays[shoppingAll[i].transactionDate.getDay()]%> <%=shoppingAll[i].transactionDate.toISOString().split('T')[0]%></h5>
+        <%}%>
+        <li> 
+            <a href='/shopping-list/list-view/<%=shoppingAll[i]._id%>'>
+                <article>
+                    <label for="list-name">Nazwa</label>
+                    <p id="list-name"><%= shoppingAll[i].listName%></p>
+                </article>
+                <article>
+                    <label for="list-price">Kwota</label>
+                    <p id="list-price"><%= shoppingAll[i].totalPrice != null ? shoppingAll[i].totalPrice + 'zł' : '-'%></p>
+                </article>
+            </a>
+        </li>
+       
+    <%} %>
+   
+</ul>
+<ul id="slide-out-treatment-statistics"class="sidenav">
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="../../public/shopping-list-background.jpg"><!---->
+            </div>
+            <a href=""><span class="white-text header-font-size ">Zakupy</span></a>
+        </div>
+    </li>
+    <li>
+        <a>
+            <article>
+                <label for="list-name">Liczba zabiegów</label>
+                <p id="list-price"><%=clientVisits%></p>
+            </article>
+        </a>
+        <a>
+            <article>
+                <label for="list-name">Kwota Całkowita</label>
+                <p id="list-name"><%=totalSum%></p>
+            </article>
+        </a>
+        <%if(TopSection){%>
+            <h5>Top Zabiegi</h5>
+            <%Top1.forEach(t1 =>{%>
+                <%if(t1.sum != 0){%>
+                    <a>
+                        <article>
+                            <label>Nazwa</label>
+                            <p > <%=t1.treatmentName%></p>
+                        </article>
+                        <article>
+                            <label >Kwota</label>
+                            <p ><%=t1.sum%></p> 
+                        </article>
+                    </a>
+                <%}%>
+            <%}) %>
+           
+            <%Top2.forEach(t2 =>{%>
+                <%if(t2.treatmentSum != 0){%>
+                <a>
+                    <article>
+                        <label >Nazwa</label>
+                        <p> <%=t2.treatmentName%></p>
+                    </article>
+                    <article>
+                        <label >Ilość</label>
+                        <p><%=t2.treatmentSum%></p> 
+                    </article>
+                </a>
+                <%}%>
+            <%}) %>
+        <%}%>
+        <%if(TopSectionClient){%>
+            <h5>Top Klienci</h5>
+            <%Top1.forEach(t1 =>{%>
+                <%if(t1.sum != 0){%>
+                    <a>
+                        <article>
+                            <label >Nazwa</label>
+                            <p> <%=t1.client%></p>
+                        </article>
+                        <article>
+                            <label>Kwota</label>
+                            <p><%=t1.sum%></p> 
+                        </article>
+                    </a>
+                <%}%>
+                
+            <%}) %>
+        <%}%>
+    </li>
+</ul>

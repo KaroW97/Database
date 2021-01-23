@@ -7,9 +7,9 @@ const emailLook = require('../misc/emailLayout')
 ////////////////////////////////////////////////////////////////
 const ObjectId = require('mongodb').ObjectId;
 const Client = require('../models/clients');
-const CompanyShopping = require('../models/stats/companyShoppingStats')
+const CompanyShopping = require('../models/companyShoppingStats')
 const ShoppingList = require('../models/shoppingList')
-const BrandName = require('../models/productCompany')
+const BrandName = require('../models/brandName')
 const Treatment = require('../models/treatment')
 const FutureVisit = require('../models/clientFutureVisit')
 const ClientVisits = require('../models/clientsVisits')

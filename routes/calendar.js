@@ -32,7 +32,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
             $gt:todayDate,
             $lt:weekDate
         }}).sort({transactionDate:'asc'})
-        
+
         const treatment = await Treatment.find({user:req.user.id});
         const clients =  await Client.find({user:req.user.id});
         const futureVisit = await visit.sort({visitDate:'asc'}).exec();
@@ -46,7 +46,7 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
                 treatments:treatment,
                 clients:clients,
                 user:user,
-                weekdays:weekdays
+                weekdays:weekdays,
             });
         else{
             req.logOut();

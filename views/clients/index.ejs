@@ -1,12 +1,11 @@
 
-<%-include('../partials/infoMessages.ejs') %> 
 <%-include('../partials/shopping-list.ejs')%>
 <!--Search bar-->
 <div class="row main-row z-depth-1">
     <form class="form-search-create-visit col s12"   method="GET">
         <div class="input-field col s12 m6 l4 xl5">
-            <input class="" name="name" type="text" id="name"  autocomplete="off" list="clientOptions-1"  />
-            <label class="active" for="name">Imie</label>
+            <input class="myInputSearch" name="name" type="text" id="client-search"  autocomplete="off" list="clientOptions-1"  />
+            <label class="active" for="client-search">Imie</label>
         </div>
         <%-include('../partials/clients-list.ejs', {id_extention:1})%>
         <div class="input-field col s12 m6 l4 xl5">
@@ -41,7 +40,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </form>
-                        <p  class="col"><%=clients[i].name%> <%=clients[i].lastName%></p>
+                        <p  class="col search-by" data-value="<%=clients[i].name%> <%=clients[i].lastName%>"><%=clients[i].name%> <%=clients[i].lastName%></p>
                     </div>
                     <div class="card-content">
                         <div class="col s12 m6 l12">

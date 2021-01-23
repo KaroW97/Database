@@ -6,14 +6,17 @@ const ClientVisits = require('../models/clientsVisits')
 const ObjectId = require('mongodb').ObjectId;
 const User = require('../models/user')
 const ShoppingList = require('../models/shoppingList')
+const CompanyShopping = require('../models/companyShoppingStats')
 const {ensureAuthenticated} = require('../config/auth')
-
-//All Clients Route
+/*
+* All Clients Route
+*/
 router.get('/', ensureAuthenticated,async(req,res)=>{
     let searchOptions ={},searchClientLastName ={}, todayDate = new Date(),weekDate=new Date();
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
-    //const cssSheets=[]
-    //cssSheets.push('../../public/css/index.css');
+    todayDate.setDate(todayDate.getDate() - 1)
+    weekDate.setDate(todayDate.getDate() + 8)
+
     if(req.query.name!= null && req.query.name !==''){
         searchOptions.name = new RegExp(req.query.name, 'i')
         searchClientLastName.lastName =  new RegExp(req.query.name, 'i')
@@ -23,22 +26,21 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
         const clients =  Client.find(searchOptions); //we have no conditions 
         const clientLastName =  Client.find(searchClientLastName); 
         let clientFind =await clients.find({user:req.user.id}).exec();
+       
         if(clientFind =='')
             clientFind = await clientLastName.find({user:req.user.id}).exec(); 
-            todayDate.setDate(todayDate.getDate() - 1)
-            weekDate.setDate(todayDate.getDate() + 8)
-            const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
-            $gt:todayDate,
-            $lt:weekDate
+
+        const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
+        $gt:todayDate,
+        $lt:weekDate
         }}).sort({transactionDate:'asc'})
         res.render('clients/index',{
             shoppingAll:shoppingList,
             clients:clientFind,
             oneClient:new Client(),
-            treatments:treatments, //to raczej zbedne
             searchOptions:req.query,
-            
-            weekdays:weekdays
+            weekdays:weekdays,
+   
         });
     }catch(err){
         console.log(err)
@@ -46,7 +48,9 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
     }
    
 })
-//Create Client Route
+/*
+* Create Client Route
+*/
 router.post('/new', ensureAuthenticated,async(req,res)=>{
     const clients = new Client({
      
@@ -139,22 +143,22 @@ router.post('/new', ensureAuthenticated,async(req,res)=>{
   
        
     }catch(err){
-        console.log(err)
-        const cssSheets=[]
         req.flash('mess','Nie udało się dodać klienta do bazy.');
         req.flash('type','info-alert')
         res.redirect(`/calendar`)
       
     }
 })
-//Show Client
+/*
+* Show Client
+*/
 router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
     try{
         const treatments = await Treatment.find({user:req.user.id});
         const clientt  = await Client.findById(req.params.id)
         const visit = new ClientVisits()  
         const addedVisit = await ClientVisits.find({client:req.params.id}).populate('product').exec()
-        
+   
         res.render('clients/clientView',{
             addedVisit:addedVisit,
             treatments:treatments,
@@ -163,76 +167,110 @@ router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
             oneClient:clientt,
         })
     }catch(err){
-        //console.log(err)
+        console.log(err)
         res.redirect('/clients')
     }
 })
-//Add new Visit/Post
+/*
+* Add new Visit and add it to stats
+*/
 router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
+    let clientt, findTreatmentStat ;
+    let date = req.body.clientVisitDate === '' ? new Date().toISOString().split('T')[0] : new Date(req.body.clientVisitDate).toISOString().split('T')[0]
     const visit = new ClientVisits({
         client:req.params.id,
         comment: req.body.comment,
-        clientVisitDate:new Date( req.body.clientVisitDate) ,
+        clientVisitDate: date ,
         treatment: req.body.treatmentName,
         user:req.user.id,
-        shopping:req.body.shopping
+        shopping:req.body.shopping,
+        price:req.body.price
     })
-   
+
     try{   
+        findTreatmentStat = await CompanyShopping.find({treatment:req.body.treatmentName})
+        clientt  = await Client.findById(req.params.id)
+        clientt.totalSumSpent =  Number(clientt.totalSumSpent) + Number(req.body.price)
+
+        clientt.clientVisits.push({
+            visit:visit.id,
+            treatment: req.body.treatmentName,
+            clientVisitDate: req.body.clientVisitDate === '' ? new Date() : new Date(req.body.clientVisitDate),
+            price:req.body.price
+        })
+        if(findTreatmentStat.length === 0){
+             const treatmentStats = new CompanyShopping({
+                user:req.user.id,
+                treatment: req.body.treatmentName,
+                totalPrice:req.body.price,
+            })
+            treatmentStats.transactionDate.push(date)
+            await treatmentStats.save()
+        }else{
+            findTreatmentStat[0].transactionDate.push(date)
+            await findTreatmentStat[0].save()
+        }
+
+        await clientt.save()
         await visit.save();
         req.flash('mess','Dodano wizyte');
         req.flash('type','info-success')
         res.redirect( `/clients/client-view/${req.params.id}`)
     }catch(err){
-        const treatments = await Treatment.find({user:req.user.id});
-        const addedVisit = await ClientVisits.find({client:req.params.id}).populate( 'treatment').populate('client').populate('product')
-        const clientt  = await Client.findById(req.params.id);
+        console.log(err)
         req.flash('mess','Nie udało się dodać wizyty');
         req.flash('type','info-alert')
-        res.render(`clients/clientView`,{
-            addedVisist:addedVisit,
-            newVisit:visit,
-            treatments:treatments,
-            curentClient:req.params.id,
-            clientInfo:clientt
-        })
+        res.redirect( `/clients/client-view/${req.params.id}`)
     }
 })
-
-//delete Visits/Post
+/*
+* Delete Visit
+*/
 router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
-    let visit, clientValue,client;
-   
+    let visit,clientt, findTreatmentStat;
     try{
-        client = await Client.findById(req.params.id)
-        if(req.body.chackboxDelet!= null ){
-            if(Array.isArray(req.body.chackboxDelet)){
-              for(var i = 0; i < (req.body.chackboxDelet).length; i++){
-                visit = await ClientVisits.findById(ObjectId(req.body.chackboxDelet[i]));
-                clientValue= visit.client
-                await visit.remove();
-              } 
-              req.flash('mess','Wizyty zostały usunięte');
-              req.flash('type','info-success')
-            }else{
-                visit = await ClientVisits.findById(ObjectId(req.body.chackboxDelet));
-                clientValue= visit.client
-                await visit.remove();
-                req.flash('mess','Wizyta została usunięta');
-                req.flash('type','info-success')
-            }
-          }else{
-            req.flash('mess','Nie wybrano wizyty do usunięcia');
-            req.flash('type','info')
-          }
-          res.redirect(`/clients/client-view/${client._id}`)
+        visit = await ClientVisits.findById(req.params.id);
+        clientt = await Client.findById(visit.client)
+        clientt.totalSumSpent -= Number(visit.price)
+        findTreatmentStat = await CompanyShopping.find({treatment:visit.treatment})
+        if(findTreatmentStat.length !== 0){
+            let dateStatToDelete = findTreatmentStat[0].transactionDate.findIndex(data => data === visit.clientVisitDate.toISOString().split('T')[0])
+
+            findTreatmentStat[0].transactionDate =[
+                ...findTreatmentStat[0].transactionDate.splice(0,dateStatToDelete),
+                ...findTreatmentStat[0].transactionDate.splice(dateStatToDelete + 1)
+            ]
+            findTreatmentStat[0].transactionDate.length === 0 ?  findTreatmentStat[0].remove() : await findTreatmentStat[0].save()
+        }
+       
+        let visitToDelte =  clientt.clientVisits.findIndex(v =>{
+            return v.visit === visit.id && 
+                visit.clientVisitDate.toISOString().split('T')[0] === v.clientVisitDate.toISOString().split('T')[0]
+        })
+        clientt.clientVisits.length === 1 ?  
+            clientt.clientVisits = [] :
+            clientt.clientVisits= [
+                ...clientt.clientVisits.slice(0,visitToDelte),
+                ...clientt.clientVisits.slice(visitToDelte +1)
+            ]
+        
+        await clientt.save()
+        await visit.remove();
+    
+        req.flash('mess','Wizyta została usunięta');
+        req.flash('type','info-success')
+        res.redirect(`/clients/client-view/${clientt._id}`)
     }catch(err){
         console.log(err);
-        client = await Client.findById(req.params.id)
-        res.redirect(`/clients/client-view/${client._id}`) 
+        req.flash('mess','Nie udało się usunąć wizyty.');
+        req.flash('type','info-alert')
+        visit = await ClientVisits.findById(req.params.id);
+        res.redirect(`/clients/client-view/${visit.client._id}`) 
     }
 })
-//edit Visit/Post
+/*
+* Get edit Visit data
+*/
 router.get('/edit-visit/:id',ensureAuthenticated, async(req,res)=>{
     let addedVisit
     try{
@@ -243,41 +281,113 @@ router.get('/edit-visit/:id',ensureAuthenticated, async(req,res)=>{
     }
   
 })
-//edit Visit/Post
+/*
+* Edit Visit
+*/
 router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
-    let visit
+    let visit, findTreatmentStat, findTreatmentStatAfter
+    let date = req.body.clientVisitDate === '' ? new Date().toISOString().split('T')[0] : new Date(req.body.clientVisitDate).toISOString().split('T')[0]
+
     try{
          visit = await ClientVisits.findById(req.params.id).populate('client').exec()
+         findTreatmentStat = await CompanyShopping.find({treatment:visit.treatment})
+       
+         let compare = visit.clientVisitDate.toISOString().split('T')[0]
          visit.client=visit.client
          visit.comment= req.body.comment
-         visit.clientVisitDate= new Date( req.body.clientVisitDate) 
+         visit.clientVisitDate= date 
          visit.treatment= req.body.treatmentName
          visit.shopping = req.body.shopping
-         await visit.save(req.body.treatment);
-         
+      
+         clientt  = await Client.findById(visit.client.id)
+         let updateClientVisits =  clientt.clientVisits.findIndex(v =>v.visit == visit._id)
+
+         clientt.totalSumSpent -= Number(visit.price)
+         clientt.totalSumSpent =  Number(clientt.totalSumSpent) + Number(req.body.price)
+         visit.price = req.body.price
+
+         clientt.clientVisits.set(updateClientVisits,{
+            visit: visit.id,
+            treatment : req.body.treatmentName,
+            clientVisitDate : new Date( req.body.clientVisitDate),
+            price : req.body.price
+         })
+         findTreatmentStatAfter = await CompanyShopping.find({treatment:visit.treatment})
+         /*
+         * If treatment is the same but data is not
+         */
+         if(findTreatmentStat.length !==0 && findTreatmentStat[0].treatment ===visit.treatment){
+            let updateTreatmentStats = findTreatmentStat[0].transactionDate.findIndex(data =>{
+                return data === compare
+            })
+            findTreatmentStat[0].transactionDate =[
+                ...findTreatmentStat[0].transactionDate.splice(0,updateTreatmentStats),
+                ...findTreatmentStat[0].transactionDate.splice(updateTreatmentStats + 1)
+            ]
+            findTreatmentStat[0].transactionDate.push(date)
+            findTreatmentStat[0].transactionDate.length === 1 ?  await findTreatmentStat[0].remove() : await  findTreatmentStat[0].save()    
+         }
+         /*
+         * If name of the treatment is diferent and lenght of the treatment after updating does exist
+         */
+        else if(findTreatmentStatAfter.length !== 0 && findTreatmentStat.length !==0 && findTreatmentStat[0].treatment !== visit.treatment){
+           let updateTreatmentStats = findTreatmentStat[0].transactionDate.findIndex(data => data === compare)
+
+           findTreatmentStat[0].transactionDate =[
+               ...findTreatmentStat[0].transactionDate.splice(0,updateTreatmentStats),
+               ...findTreatmentStat[0].transactionDate.splice(updateTreatmentStats + 1)
+           ]
+           findTreatmentStatAfter[0].transactionDate.push(date)
+           findTreatmentStat[0].transactionDate.length === 0 ?   await findTreatmentStat[0].remove() :  await  findTreatmentStat[0].save()
+       
+           await findTreatmentStatAfter[0].save()
+        }
+        /*
+        * If after upadting name of the visit, the visit is not in database create new
+        */
+        else if(findTreatmentStatAfter.length === 0 ){
+            const treatmentStats = new CompanyShopping({
+                user:req.user.id,
+                treatment: req.body.treatmentName,
+                totalPrice:req.body.price,
+            })
+            treatmentStats.transactionDate.push(date)
+            if(findTreatmentStat[0].transactionDate.length > 1){
+                let updateTreatmentStats = findTreatmentStat[0].transactionDate.findIndex(data => data === compare)
+                findTreatmentStat[0].transactionDate = [
+                    ...findTreatmentStat[0].transactionDate.splice(0,updateTreatmentStats),
+                    ...findTreatmentStat[0].transactionDate.splice(updateTreatmentStats + 1)
+                ]
+                await findTreatmentStat[0].save()
+            }
+            if(findTreatmentStat[0].transactionDate.length <= 1){
+              await  findTreatmentStat[0].remove()
+            }
+            await treatmentStats.save()
+         }
+
+ 
+        await clientt.save();
+        await visit.save();
+        
          req.flash('mess','Wizyta została edytowana');
          req.flash('type','info-success')
          return res.redirect(`/clients/client-view/${visit.client.id}`)
     }catch(err){
-       
-    
-        const addedVisit = await ClientVisits.findById(req.params.id)
-        const treatments = await Treatment.find({});
-        res.render('clients/editPost',{
-            treatments:treatments,
-            curentVisit:req.params.id,
-            clientId:addedVisit.client,
-            newVisit:addedVisit,
-        })
+        console.log(err)
+        visit = await ClientVisits.findById(req.params.id).populate('client').exec()
+        req.flash('mess','Nie udało się edytować wizyty');
+        req.flash('type','info-alert')
+        return res.redirect(`/clients/client-view/${visit.client.id}`)
     }
    
 })
-
-
-//Update Client 
+/*
+* Update client
+*/
 router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
     let clients;
-   
+    
     try{
         clients =  await Client.findById(req.params.id)
       
@@ -338,7 +448,6 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
             value:Boolean(req.body.externallyDrySkin)||false
         }
 
-
         clients.skinDiagnoseAll.other =req.body.other
         clients.name=req.body.name,
         clients.lastName=req.body.lastName,
@@ -370,7 +479,9 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
        
     }
 })
-//Delete Client
+/*
+* Delete client
+*/
 router.delete('/:id', ensureAuthenticated,async(req,res)=>{
     try{
         let client =  await Client.findById(req.params.id);

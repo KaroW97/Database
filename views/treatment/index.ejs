@@ -1,12 +1,13 @@
 
-<%-include('../partials/infoMessages.ejs')%>
+
 <%-include('../partials/shopping-list.ejs')%>
+
 <!--Search Bar-->
 <div class="row main-row z-depth-1 small-search-bar">
     <form class="col s12" method="GET">
         <div class="input-field col s12 m9 l9 xl9">
-            <input class="myInputSearch" type="text" id="treatmentName-1" list="treatmentOptions-1"  name="treatmentName" value="<%=searchOptions.name  %>" autocomplete="off">
-            <label for="treatmentName-1" class="active">Nazwa Zabiegu</label>
+            <input class="myInputSearch" type="text" id="searchby-1" list="options-1"  name="treatmentName" value="<%=searchOptions.name  %>" autocomplete="off">
+            <label for="searchby-1" class="active">Nazwa Zabiegu</label>
         </div>
         <%-include('../partials/treatments-list.ejs',{id_extention:1}) %>
         <div class="row button-row-flex-all">
@@ -15,7 +16,7 @@
 
             </div>
             <div class="col s12 m1 l1  center-button-small-flex-all">
-                <button href="#create-treatment" class="waves-effect waves-light modal-trigger btn-small  "><i class="large material-icons">add</i></button>
+                <button href="#create-treatment" class="waves-effect waves-light modal-trigger btn-small  " ><i class="large material-icons">add</i></button>
             </div> 
         </div>
     </form>
@@ -24,7 +25,7 @@
 <div class="main-div-full-content row information-row">
     <div class="col s12">
         <% for(var i = 0 ; i< treatments.length ; i++){%>
-            <div class="visit col s12 m12 l4 top-separator ">
+            <div class="col s12 m12 l4 top-separator">
                 <div class="card max-width-card">
                     <div class="card-header ">
                         <form method="post" action='/treatment/<%=treatments[i]._id%>?_method=DELETE'>
@@ -32,7 +33,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </form>  
-                        <p  class="col"><%=treatments[i].treatmentName.length <= 15 ? treatments[i].treatmentName:treatments[i].treatmentName.slice(0,15)+'...'%></p>
+                        <p  class="col search-by" data-value="<%=treatments[i].treatmentName%>"><%=treatments[i].treatmentName.length <= 15 ? treatments[i].treatmentName:treatments[i].treatmentName.slice(0,15)+'...'%></p>
                     </div>
                     <!---->
                     <div class="card-body" onclick="window.location='/treatment/<%=treatments[i]._id%>'" >
@@ -47,7 +48,7 @@
                         <div class="col s12 m6 l12">
                             <label>Opis</label>
                             <%if(treatments[i].treatmentDescription !=null){%>
-                                <p ><%=treatments[i].treatmentDescription.length <= 39 ? treatments[i].treatmentDescription :treatments[i].treatmentDescription.slice(0,39)+'...' %></p>
+                                <p ><%=treatments[i].treatmentDescription.length <= 20 ? treatments[i].treatmentDescription :treatments[i].treatmentDescription.slice(0,20)+'...' %></p>
                             <%}else{%>
                                 <p>-</p>
                             <%}%>
@@ -69,8 +70,5 @@
      
     </form>
 </div>
-
-
-<script src="../../public/toggle_main_page_list.js"></script>
 
 

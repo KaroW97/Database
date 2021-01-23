@@ -1,64 +1,40 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" >
+  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="HandheldFriendly" content="true">
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    
     <meta name="Description" content="Sprawdź jak prowadzenie firmy może być proste dzieki Beuaty Base.">
     <link rel="shortcut icon" href="#">
   
     <title>Beauty Base</title>
-    <link defere rel="stylesheet" type="text/css" href="../../public/fontAwesome/css/all.min.css">
-  
     <link defere rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
-    rel = "stylesheet">
-
-
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
     <link rel="stylesheet" href="../../public/css/index.css">
- 
 </head>
-<style>
-    
-
-
-</style>
 <body >
 
     <div class="pageContentWrapper">
-      <% if(user) { %>
-       
+        <% if(user) { %>
             <%-include('../partials/header')%>
+        <% }else{%>
+            <%-include('../partials/initialHeader')%>
+        <% } %>  
+        <div class="container" id="container">
             <%-include('../partials/infoMessages.ejs')%>
-        
-    <% }else{%>
-        <%-include('../partials/initialHeader')%>
-    <% } %>  
-
- 
-    <div class="container" id="container">
-       
-        <%- body %> 
+            <%- body %> 
+        </div>
     </div>
-   
-    
-    </div>
- 
-    
     <footer class='footer' name="footer">
         <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
     </footer>
-   
-
-
- 
     <script type="text/javascript"  src="../../public/js/index.js"  charset="utf-8"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script></body>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
 </html>

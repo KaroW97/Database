@@ -1,11 +1,9 @@
 
+
 <%-include('./pdfTemplate.ejs') %>
 <%-include('./pdfVisitsTemplate.ejs') %>
-
 <div class="row top-separation-3">
-    
     <div class="col s12 m12 l12 xl12 vertical-align">
-    
         <div class="switch col s12 m12 l3 xl3">
             <label>
                 Off
@@ -25,6 +23,7 @@
 </div>   
  
 <div class="col s12 m12 l12 xl12">
+
     <form method="post" class="top-separation-3 " action="/clients/client-view/<%=oneClient._id%>?_method=PUT">
         <div class="row header ">
             <div class=" header-content flex-content  ">
@@ -102,30 +101,38 @@
     </form>
    
     <%addedVisit.forEach(element => {%>
-        <div class="row border-bottom  modal-trigger" href="#edit_visit" onclick="edit_form_client_visit(`<%=element._id%>`, 2)">
-            <div class="col s12">
-            <div class="col s12 m6 l6 xl6">
-                <label>Data wizyty</label>
-                <p type="text" class=" "><%=element.clientVisitDate == null ?'':element.clientVisitDate.toISOString().split('T')[0]%></p>
-            </div>
-            <div class="col s12 m6 l6 xl6">
-                <label>Zabieg</label>
-                <p type="text"class=""><%=element.treatment%></p>
-            </div>
-            <div class="col s12 m12 l12 xl12">
-                <label>Komentarz</label>
-                <p  type="text " class=""><%=element.comment%></p>
-            </div>
-            <div class="col s12 m12 l12 xl12">
-                <label>Zakupy</label>
-                <p  type="text"><%=element.shopping%></p>
-            </div>
-            </div>
-            <div class="button-styling-large">
-                <button type="submit" style="display: none;" class="btn button-styling-large  submit">Akutalizuj</button>
-            </div>
+        <div class="border-bottom">
+            <form method="post" action='/clients/client-view/<%=element.id%>?_method=DELETE'>
+                <button type="submit" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </form>
+            <div class="row   modal-trigger" href="#edit_visit" onclick="edit_form_client_visit(`<%=element._id%>`, 2)">
+                <div class="col s12">
         
-        </div>
+                    <div class="col s12 m6 l6 xl6">
+                        <label>Data wizyty</label>
+                        <p type="text" class=" "><%=element.clientVisitDate == null ?'':element.clientVisitDate.toISOString().split('T')[0]%></p>
+                    </div>
+                    <div class="col s12 m6 l6 xl6">
+                        <label>Zabieg</label>
+                        <p type="text"class=""><%=element.treatment%></p>
+                    </div>
+                    <div class="col s12 m12 l12 xl12">
+                        <label>Komentarz</label>
+                        <p  type="text " class=""><%=element.comment%></p>
+                    </div>
+                    <div class="col s12 m12 l12 xl12">
+                        <label>Zakupy</label>
+                        <p  type="text"><%=element.shopping%></p>
+                    </div>
+                </div>
+                <div class="button-styling-large">
+                    <button type="submit" style="display: none;" class="btn button-styling-large  submit">Akutalizuj</button>
+                </div>
+            </div>
+       </div>
+       
     <%});%>
 </div>
 
