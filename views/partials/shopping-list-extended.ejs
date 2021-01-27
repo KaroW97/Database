@@ -56,8 +56,9 @@
     <li>
         <a>
             <article>
-                <label for="list-name">Liczba zabiegów</label>
-                <p id="list-price"><%=clientVisits%></p>
+               
+                <label for="list-name"> <%=sectionNameChange === false ? 'Liczba zabiegów':'Liczba produktów'%></label>
+                <p id="list-price"><%=amount%></p>
             </article>
         </a>
         <a>
@@ -67,41 +68,36 @@
             </article>
         </a>
         <%if(TopSection){%>
-            <h5>Top Zabiegi</h5>
+            <h5><%=sectionNameChange === false ? 'Top zabiegi':'Top produkty'%></h5>
             <%Top1.forEach(t1 =>{%>
-                <%if(t1.sum != 0){%>
-                    <a>
-                        <article>
-                            <label>Nazwa</label>
-                            <p > <%=t1.treatmentName%></p>
-                        </article>
-                        <article>
-                            <label >Kwota</label>
-                            <p ><%=t1.sum%></p> 
-                        </article>
-                    </a>
-                <%}%>
+                <a>
+                    <article>
+                        <label>Nazwa</label>
+                        <p > <%=t1.name%></p>
+                    </article>
+                    <article>
+                        <label >Kwota</label>
+                        <p ><%=t1.price%></p> 
+                    </article>
+                </a>
             <%}) %>
-           
             <%Top2.forEach(t2 =>{%>
-                <%if(t2.treatmentSum != 0){%>
                 <a>
                     <article>
                         <label >Nazwa</label>
-                        <p> <%=t2.treatmentName%></p>
+                        <p> <%=t2.name%></p>
                     </article>
                     <article>
                         <label >Ilość</label>
-                        <p><%=t2.treatmentSum%></p> 
+                        <p><%=t2.amount%></p> 
                     </article>
                 </a>
-                <%}%>
             <%}) %>
         <%}%>
         <%if(TopSectionClient){%>
             <h5>Top Klienci</h5>
             <%Top1.forEach(t1 =>{%>
-                <%if(t1.sum != 0){%>
+                <%if(t1.price != 0){%>
                     <a>
                         <article>
                             <label >Nazwa</label>
@@ -109,7 +105,7 @@
                         </article>
                         <article>
                             <label>Kwota</label>
-                            <p><%=t1.sum%></p> 
+                            <p><%=t1.price%></p> 
                         </article>
                     </a>
                 <%}%>

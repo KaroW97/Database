@@ -3,7 +3,7 @@
         <div class="switch col s12 m12 l3 xl3">
             <label>
                 Off
-                <input type="checkbox" id="getvalue">
+                <input type="checkbox" id="getvalue" onchange="edit_list()">
                 <span class="lever" id="getlever"></span>
                 On
             </label>
@@ -16,32 +16,35 @@
 </div> 
 
 <div class="col s12 m12 l12 xl12">
-    <form method="post" class="top-separation-3 " action="/list-view/<%=list._id%>?_method=PUT">
+    <form method="post" class="top-separation-3 " action="/shopping-list/list-view/edit-list-info/<%=list._id%>?_method=PUT">
         <div class="row header  header-content-samll ">
             <div class="add-input-field  treatmentName col s12 m6 l4 xl4">
-                <label for="price">Nazwa Listy</label>
-                <p class="pTag " id="price" name="totalPrice" type="text"><%=list.listName%></p>
+                <label for="list_name">Nazwa Listy</label>
+                <p class="pTag" id="list_name" name="listName" type="text"><%=list.listName%></p>
             </div>
             <div class="add-input-field  treatmentName col s12 m6 l4 xl4">
-                <label for="price">Nazwa Firmy</label>
-                <p class="pTag " id="price" name="totalPrice" type="text"><%=list.brandName%></p>
+                <label for="brand_name">Nazwa Firmy</label>
+                <p class="pTag" id="brand_name" name="brandName" type="text"><%=list.brandName%></p>
             </div>
         </div>
         <div class="row">
             <div class="col s12">
                 <div class="add-input-field col s12 m6 l4 xl4">
                     <label for="price">Cena</label>
-                    <p id="price" name="totalPrice" type="text"><%=list.totalPrice%></p>
+                    <p id="price" type="text"><%=list.totalPrice%></p>
                 </div>
                 <div class="add-input-field col s12 m6 l4 xl4">
                     <label for="transactionDate">Data</label>
-                    <p class="pTag dateTag " id="transactionDate" name="transactionDate" type="text"><%=list.transactionDate.toISOString().split('T')[0] %></p>
+                    <p class="pTag dateTag" id="transactionDate" name="transactionDate" type="text"><%=list.transactionDate != '' ? list.transactionDate.toISOString().split('T')[0]: '' %></p>
                 </div>
                 <div class="add-input-field col s12 m6 l4 xl4">
                     <label for="capacity">Ilość</label>
                     <p  id="capacity" type="text"><%=list.productListInfo.length %></p>
                 </div>
             </div>
+        </div>
+        <div class="button-styling-large">
+            <button type="submit" style="display: none;" class="btn button-styling-large  submit">Akutalizuj</button>
         </div>
     </form>
 </div>
@@ -136,8 +139,6 @@
         fetch(`/shopping-list/list-view/${id}/${index}`)
         .then(res=>res.json())
         .then(data =>{
-            console.log(data)
-            console.log(index)
             let name = getElementById('searchby-1')
             let price =  getElementById('itemPrice')
             let amount = getElementById('itemAmount')
@@ -151,4 +152,48 @@
             name.select();     
         })
     }
+    var value = false
+    const edit_list = () =>{
+        value = !value
+        let e = document.getElementsByClassName('pTag')
+        let add_input_field = document.getElementsByClassName('add-input-field')
+        let button = document.getElementsByClassName('submit')
+        if(value === true){
+            button[0].style.display = 'block'
+            Array.from(e).forEach(tag =>{
+                var d = document.createElement('input');
+                d.value = tag.innerText;
+                d.classList = tag.classList
+                d.id = tag.id
+                d.name = tag.getAttribute('name')
+                d.type="text"
+                d.setAttribute('autocomplete','off')
+                tag.parentNode.replaceChild(d, tag)
+        
+                if(d.classList.contains('dateTag')){
+                    datapicker(d)   
+                }
+                
+            }); 
+            add_input_field[0].getElementsByTagName('input')[0].select()
+        } else{
+            alert_box( 'Jeśli nie zapisałeś danych zostaną one usunięte '  )
+            button[0].style.display = 'none'
+            let input_field = document.getElementsByClassName('input-field')
+            input_field[0].classList.remove('col','s12','input-field')
+            input_field[0].classList.add('flex-content')
+            Array.from(e).forEach(tag =>{
+            if(tag.getAttribute('type') === 'text' ){
+                var d = document.createElement('p');
+                tag.value === '' ?  d.innerText ='-' :  d.innerText = tag.value;
+                d.classList = tag.classList
+                d.id = tag.id
+                tag.parentNode.replaceChild(d, tag)
+          
+            }  
+        });
+        }
+   
+    }
+
 </script>

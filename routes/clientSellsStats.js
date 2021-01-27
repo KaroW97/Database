@@ -3,9 +3,11 @@ const router = express.Router();
 const Client = require('../models/clients');
 const ClientVisits = require('../models/clientsVisits')
 const Treatment = require('../models/treatment')
-const CompanyShopping = require('../models/companyShoppingStats')
+const ClientsShoppingsStats = require('../models/clientsShoppingsStats')
 const ShoppingList = require('../models/shoppingList')
+const ListProducts = require('../models/listProducts')
 const {ensureAuthenticated} = require('../config/auth')
+
 /*
 * Clients Sell Statistics Main Page
 */
@@ -33,10 +35,10 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
             return{
                 clientId:client.id,
                 client: client.name + ' ' + client.lastName,
-                sum: sum
+                price: sum
             }
         })
-        let clientTop  = [...calculateSpentMonay].splice(0,2).sort((a,b)=>b.sum - a.sum)
+        let clientTop  = [...calculateSpentMonay].splice(0,2).sort((a,b)=>b.price - a.price)
         const totalSum = clientVisits.reduce((a, cv) =>a + cv.price  , 0)
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
@@ -51,10 +53,11 @@ router.get('/' ,ensureAuthenticated, async(req,res)=>{
             searchOptions:req.query , 
             weekdays:weekdays,
             showHiddenFloatingButtons:true,
+            sectionNameChange:false,
             TopSection:false,
             TopSectionClient:true, 
             Top1:clientTop,
-            clientVisits:clientVisits.length,
+            amount:clientVisits.length,
             totalSum:totalSum,
         })
     }catch(err){
@@ -74,7 +77,7 @@ router.get('/treatment', ensureAuthenticated,async(req,res)=>{
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
 
     try{
-        const companyShopping = await CompanyShopping.find();
+        const companyShopping = await ClientsShoppingsStats.find();
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
@@ -84,20 +87,21 @@ router.get('/treatment', ensureAuthenticated,async(req,res)=>{
             let date = cs.transactionDate.filter(date =>{
                 return date >= dateFrom && date <= dateTo
             })
-            return{
-                treatmentName:cs.treatment,
-                sum: date.length * cs.totalPrice,
-                treatmentSum:date.length
+            return{  
+                name:cs.treatment,
+                price: date.length * cs.totalPrice,
+                amount:date.length
             }
         })
-        let treatmentsMadeSortSum = [...treatmentsMade].splice(0,2).sort((a,b) => b.sum - a.sum)
-        let treatmentsMadeSortTreatmentSum = [...treatmentsMade].splice(0,2).sort((a,b) => b.treatmentSum - a.treatmentSum)
-        let countTreatmentSum = [...treatmentsMade].reduce((a, {treatmentSum})=>a + treatmentSum,0)
-        let totalSum =  [...treatmentsMade].reduce((a, b)=>a+ b.sum ,0)
+        let treatmentsMadeSortSum = [...treatmentsMade].sort((a,b) => b.price - a.price).splice(0,2)
+        let treatmentsMadeSortTreatmentSum = [...treatmentsMade].sort((a,b) => b.amount - a.amount).splice(0,2)
+        let countTreatmentSum = [...treatmentsMade].reduce((a, {amount})=>a + amount,0)
+        let totalSum =  [...treatmentsMade].reduce((a, b)=>a+ b.price ,0)
+      
         res.render('stats/treatmentStats',{
             shoppingAll:shoppingList,
             treatments:treatment,
-            clientVisits:countTreatmentSum,
+            amount:countTreatmentSum,
             user:req.user,
             searchOptions:req.query,
 
@@ -108,9 +112,9 @@ router.get('/treatment', ensureAuthenticated,async(req,res)=>{
             totalSum:totalSum,
             treatmentsMade:treatmentsMade,
             showHiddenFloatingButtons:true,
+            sectionNameChange:false,
             TopSection:true,
             TopSectionClient:false
-
         })
     }catch(err){
         console.log(err)
@@ -119,40 +123,63 @@ router.get('/treatment', ensureAuthenticated,async(req,res)=>{
    
 })
 
-//Shopping Statistics Main Page
+//
+/* 
+ * Products shoppings statistics
+*/
 router.get('/shopping',ensureAuthenticated, async(req,res)=>{
-    var countAmountOfBoughtProducts  = [], countPriceOfBoughtProducts  = [],cssSheets =[];
     let todayDate = new Date(),weekDate=new Date();
+    todayDate.setDate(todayDate.getDate() - 1)
+    weekDate.setDate(todayDate.getDate() + 8)
+    let dateFrom = req.query.dateFrom ||new Date(new Date().setFullYear(new Date().getFullYear() -1)).toISOString().split('T')[0]
+    let dateTo = req.query.dateTo ||new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0]
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
-    let searchOptions =  CompanyShopping.find({user:req.user.id})
-    if(req.query.dateFrom != null && req.query.dateFrom!='')
-        searchOptions = searchOptions.gte('transactionDate', req.query.dateFrom)
-    if(req.query.dateTo != null && req.query.dateTo!='')
-        searchOptions = searchOptions.lte('transactionDate', req.query.dateTo)
 
-   
     try{
-        let companyDistinctShopping =  await CompanyShopping.find({user:req.user.id}).find(searchOptions).sort({productName:'asc'}).distinct("productName");
-        let companyShopping = await searchOptions.sort({productName:'asc'}).exec()
-        let price = totalShoppingPrice(companyShopping)
-        let amount = totalShoppingAmount(companyShopping)
-        todayDate.setDate(todayDate.getDate() - 1)
-        weekDate.setDate(todayDate.getDate() + 8)
+        let listProducts = await ListProducts.find({user:req.user.id})
+        let distList = listProducts.map(item=> item.name)
+        let filteredList = listProducts.map(item =>{
+            let price = 0, dateArr = [], amount = 0
+            let date = item.productInfo.reduce((sum,date) =>{
+                if(date.date >= dateFrom && date.date <= dateTo){
+                    dateArr.push(date.date)
+                    price+=(date.price * date.amount)
+                    amount +=date.amount
+                }
+                if(dateArr.length != 0 )
+                    return {
+                        name:item.name,
+                        date : dateArr ,
+                        price : price ,
+                        amount: amount
+                    }
+            },{})
+            return date
+        }).filter(date=> date != undefined)
+
+        let totalPrice = [...filteredList].reduce((sum,item) => sum + item.price, 0)
+        let totalAmount =[...filteredList].reduce((sum,item) => sum + item.amount, 0)
+        let sortedByPrice = [...filteredList].sort((a, b) => b.price - a.price).splice(0,2)
+        let sortedByAmount = [...filteredList].sort((a, b) => b.amount - a.amount).splice(0,2)
+     
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
         }}).sort({transactionDate:'asc'})
         res.render('stats/shoppingStats',{
+            Top1:sortedByPrice,
+            Top2:sortedByAmount,
+            amount:totalAmount,
+            totalSum:totalPrice,
+
             shoppingAll:shoppingList,
-            companyShopping:companyShopping,
-            companyDistinctShopping:companyDistinctShopping,
-            countAmountOfBoughtProducts:countAmountOfBoughtProducts,
-            countPriceOfBoughtProducts:countPriceOfBoughtProducts,
-            totalPrice:price,
-            amount:amount,
             searchOptions:req.query,
-    
-            TopSection:false,
+            shoppingDist:distList,
+            companyShopping: filteredList,
+            TopSection:true,
+            TopSectionClient:false,
+            showHiddenFloatingButtons:true,
+            sectionNameChange:true,
             weekdays:weekdays
         })
     }catch(err){
@@ -161,38 +188,9 @@ router.get('/shopping',ensureAuthenticated, async(req,res)=>{
     }
    
 })
-
-router.delete('/shopping/:id', async(req,res)=>{
-    
-    var shopping;
-    try{
-      
-            var shoppingAll = await CompanyShopping.find()
-            for(var i=0; i<shoppingAll.length;i++)
-                var shopping = await CompanyShopping.find({productName:req.params.id}).find({user:req.user.id});
-            console.log(shopping)
-            for(var i=0;i<shopping.length ; i++)
-                await shopping[i].remove()
-
-            if(shopping.length >1){
-                req.flash('mess','Usunięto Statystyki Produktów')
-                req.flash('type','success')
-            }else{
-                req.flash('mess','Usunięto Statystyke Produktu')
-                req.flash('type','success')
-            }
-      
-        
-        res.redirect('/statistics/shopping')
-    }catch(err){
-        console.log(err)
-        req.flash('mess','Nie udało się usunąć rekordu.')
-        req.flash('type','danger')
-        res.redirect('/statistics/shopping')
-       
-    }
-})
-//Client Statistics
+/*
+* Client Statistics
+*/
 router.get('/:id', ensureAuthenticated,async(req,res)=>{
     let todayDate = new Date(),weekDate=new Date();
     todayDate.setDate(todayDate.getDate() - 1)
@@ -227,9 +225,9 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
                 }
             })
             return{
-                treatmentName:treatmentName,
-                sum: sum,
-                treatmentSum:treatmentSum
+                name:treatmentName,
+                price: sum,
+                amount:treatmentSum
             }
         })
     
@@ -239,6 +237,7 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
         }}).sort({transactionDate:'asc'})
         const treatments = await Treatment.find({user:req.user.id})
         clientVisitDate =''
+
         res.render('stats/clientStatsView',{
             clientInfo:clientt,
             shoppingAll:shoppingList,
@@ -247,7 +246,8 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
             treatmentsMade:treatmentsMade,
             totalSum:totalSum,
             showHiddenFloatingButtons:true,
-            clientVisits:clientt.clientVisits.length,
+            sectionNameChange:false,
+            amount:clientt.clientVisits.length,
             treatments:treatments,
             TopSection:false,
             TopSectionClient:false
@@ -260,17 +260,3 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
 })
 
 module.exports = router;
-
-function totalShoppingPrice(companyShopping){
-    var count =0;
-    companyShopping.forEach(shopping=>{
-        count+=shopping.productPrice
-    })
-    return count
-}
-function totalShoppingAmount(companyShopping){
-    var count =0;
-    for(var i=0;i<companyShopping.length ; i++)
-        count++;
-    return count
-}

@@ -8,7 +8,7 @@ const mailer  = require('../misc/mailer')
 
 const ObjectId = require('mongodb').ObjectId;
 const Client = require('../models/clients');
-const CompanyShopping = require('../models/companyShoppingStats')
+const ClientsShoppingsStats = require('../models/clientsShoppingsStats')
 const ShoppingList = require('../models/shoppingList')
 const BrandName = require('../models/brandName')
 const Treatment = require('../models/treatment')
@@ -217,7 +217,7 @@ const changePassword = async (verify,res,req,redirectSuccess,redirectFailure)=>{
 }
 const adminDeleteUsers = async(deleteUser,req) =>{
     let clients = await Client.find({user:ObjectId(deleteUser)});
-    let companyShopping = await CompanyShopping.find({user:ObjectId(deleteUser)});
+    let clientsShoppingsStats = await ClientsShoppingsStats.find({user:ObjectId(deleteUser)});
     let shoppingList = await ShoppingList.find({user:ObjectId(deleteUser)});
     let brandName = await BrandName.find({user:ObjectId(deleteUser)});
     let treatments = await Treatment.find({user:ObjectId(deleteUser)});
@@ -239,7 +239,7 @@ const adminDeleteUsers = async(deleteUser,req) =>{
     for (let visit of futureVisit)
         await visit.remove()
 
-    for (let shopping of companyShopping)
+    for (let shopping of clientsShoppingsStats)
         await shopping.remove()
 
     for (let treatment of treatments)

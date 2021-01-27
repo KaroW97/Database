@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const companyShopping = mongoose.Schema({
+
+const clientsShoppingsStats = mongoose.Schema({
     user:{
         type:String,
         require:false
@@ -16,4 +17,4 @@ const companyShopping = mongoose.Schema({
     transactionDate:[]
 })
 
-module.exports = mongoose.model('CompanyShopping', companyShopping)
+module.exports = mongoose.model('ClientsShoppingsStats', clientsShoppingsStats)

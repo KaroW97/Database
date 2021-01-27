@@ -7,13 +7,15 @@ const emailLook = require('../misc/emailLayout')
 ////////////////////////////////////////////////////////////////
 const ObjectId = require('mongodb').ObjectId;
 const Client = require('../models/clients');
-const CompanyShopping = require('../models/companyShoppingStats')
+const ClientsShoppingsStats = require('../models/clientsShoppingsStats')
 const ShoppingList = require('../models/shoppingList')
 const BrandName = require('../models/brandName')
 const Treatment = require('../models/treatment')
 const FutureVisit = require('../models/clientFutureVisit')
 const ClientVisits = require('../models/clientsVisits')
-// TODO: Get Files to delete 
+const ListProducts = require('../models/listProducts')
+const ProductsForTreatment = require('../models/treatmentProducts')
+// TODO: Get Files to de lete 
 const {ensureAuthenticated} = require('../config/auth')
 
 //Show current options
@@ -39,14 +41,14 @@ router.put('/change-password',ensureAuthenticated, async(req,res)=>{
         user  = await User.findById(req.user.id);
         if(req.body.newPassword == ''|| req.body.confirmNewPassword == ''){
 
-            req.flash('error','Wypełnij wszystkie pola ')
-            req.flash('danger','info')
+            req.flash('mess','Wypełnij wszystkie pola ')
+            req.flash('type','info-alert')
             res.redirect('/settings')
             return
         }
         else if(req.body.newPassword.length < 3 || req.body.confirmNewPassword.length < 3){
-            req.flash('error','Hasło musi mieć przynajmniej 3 znaki')
-            req.flash('danger','danger')
+            req.flash('mess','Hasło musi mieć przynajmniej 3 znaki')
+            req.flash('type','info-alert')
             res.redirect('/settings')
             return
         }
@@ -73,25 +75,20 @@ router.put('/change-password',ensureAuthenticated, async(req,res)=>{
             res.redirect('/settings')
             return
         }else{
-            const cssSheets =[]
+         
 
-            req.flash('error','Hasła się różnią.')
-            req.flash('danger','danger')
-            res.render('settings/index',{
-                styles:cssSheets
-            })
+            req.flash('mess','Hasła się różnią.')
+            req.flash('type','info-alert')
+            res.redirect('/settings')
+        
             return;
         }
         
     }catch(err){
         console.log(err)
-        const cssSheets =[]
-
-        res.render('settings/index',{
-            errorMessage:'Coś poszło nie tak.',
-            type:'danger',
-            styles:cssSheets
-        })
+        req.flash('mess','Hasła się różnią.')
+        req.flash('type','info-alert')
+        res.redirect('/settings')
     }
 })
 router.put('/change-email',ensureAuthenticated, async(req,res)=>{
@@ -99,8 +96,8 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
     try{
         user = await User.findById(req.user.id);
         if( req.body.newEmail=='' ||req.body.confirmNewEmail==''){
-            req.flash('error','Wypełnij wszystkie pola potrzebne do zmiany hasła')
-            req.flash('danger','info')
+            req.flash('mess','Wypełnij wszystkie pola potrzebne do zmiany hasła')
+            req.flash('type','info-alert')
             res.redirect('/settings')
         }
         else if(user != null && req.body.newEmail == req.body.confirmNewEmail){
@@ -120,27 +117,20 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
                 path: './public/logo2.JPG',
                 cid:'logo'
             })
-            req.flash('error','Email został zmieniony.')
-            req.flash('danger','success')
+            req.flash('mess','Email został zmieniony.')
+            req.flash('type','info-success')
             res.redirect('/settings')
         }else{
-            const cssSheets =[]
+           
 
-            req.flash('error',"Podano różne email'e")
-            req.flash('danger','danger')
-            res.render('settings/index',{
-                styles:cssSheets
-            })
+            req.flash('mess',"Podano różne email'e")
+            req.flash('type','info-danger')
+            res.redirect('/settings')
             return;
         }
     }catch(err){
         console.log(err)
-        const cssSheets =[]
-
-        res.render('settings/index',{
-          
-            styles:cssSheets
-        })
+        res.redirect('/settings')
     }
 })
 
@@ -164,50 +154,35 @@ router.put('/change-company-name',ensureAuthenticated, async(req,res)=>{
             cid:'logo'
         })
 
-        req.flash('error','Nazwa firmy została zmieniona')
-        req.flash('danger','success')
+        req.flash('mess','Nazwa firmy została zmieniona')
+        req.flash('type','info-success')
         res.redirect('/settings')
     }catch{
-        const cssSheets =[]
-
-        res.render('settings/index',{
-        
-            styles:cssSheets
-           
-        })
+        res.redirect('/settings')
     }
 })
 router.delete('/delete-account',ensureAuthenticated, async(req,res)=>{
     try {
         let user = await User.findById(req.user.id);
-        let clients = await Client.find({user:req.user.id});
-        let companyShopping = await CompanyShopping.find({user:req.user.id});
-        let shoppingList = await ShoppingList.find({user:req.user.id});
-        let brandName = await BrandName.find({user:req.user.id});
-        let treatments = await Treatment.find({user:req.user.id});
-        let futureVisit = await FutureVisit.find({user:req.user.id});
+        let clients = await Client.find({user:req.user.id}); 
+        let companyShopping = await ClientsShoppingsStats.find({user:req.user.id}); 
+        let shoppingList = await ShoppingList.find({user:req.user.id}); 
+        let brandName = await BrandName.find({user:req.user.id}); 
+        let treatments = await Treatment.find({user:req.user.id}); 
+        let futureVisit = await FutureVisit.find({user:req.user.id}); 
         let clientVisits = await ClientVisits.find({user:req.user.id});
-      
-        for (let client of clients)
-            await client.remove()
-            
-        for (let list of shoppingList)
-            await list.remove()
+        let listProducts = await ListProducts.find({user:req.user.id});
+        let productsForTreatment = await ProductsForTreatment.find({user:req.user.id});
 
-        for (let brand of brandName)
-            await brand.remove()
-
-        for (let clientVisit of clientVisits)
-            await clientVisit.remove()
-
-        for (let visit of futureVisit)
-            await visit.remove()
-
-        for (let shopping of companyShopping)
-            await shopping.remove()
-
-        for (let treatment of treatments)
-            await treatment.remove()
+        for (let client of clients) await client.deleteOne()
+        for (let list of shoppingList)  await list.deleteOne()
+        for (let brand of brandName) await brand.deleteOne()
+        for (let clientVisit of clientVisits)   await clientVisit.deleteOne()
+        for (let visit of futureVisit)  await visit.deleteOne()
+        for (let shopping of companyShopping)   await shopping.deleteOne()
+        for (let treatment of treatments)   await treatment.deleteOne()
+        for (let listProduct of listProducts) await listProduct.deleteOne()
+        for (let product of productsForTreatment) await product.deleteOne()
 
         await req.app.locals.gfs.files.find({'metadata.user':ObjectId(req.user.id)}).toArray( (err, files)=> {
             if (err) throw err
@@ -219,9 +194,9 @@ router.delete('/delete-account',ensureAuthenticated, async(req,res)=>{
                 });
             }       
         })
-    
-        req.flash('logged','Konto użytkownika zostało usunięte')
-        await user.remove();
+        req.flash('mess','Konto użytkownika zostało usunięte')
+        req.flash('type','info')
+        await user.deleteOne();
         res.redirect('/login'); //TODO: Redirect on Main Page Maybe
     }catch(err){
         console.log(err)

@@ -251,27 +251,22 @@ const add_number_to_input = (e, nr) =>{             //take care of adding number
     const val = document.querySelectorAll(`#clientOptions-${nr} option[value="${e.target.value}"]`)
     if(val.length === 1 ){
         getElementById(`phoneNumber-${nr}`).select();
-        getElementById(`phoneNumber-${nr}`).value = val[0].innerText
+        getElementById(`phoneNumber-${nr}`).value = val[0].getAttribute('data-value')
     }else if(val.length > 1 ){          
                                         //if there is more clients with the same name informa about that and force to choose number 
             getElementById(`phoneNumber-${nr}`).select()                    //select number input atiomaticly
             getElementById(`phoneNumber-${nr}`).value =''
-            const create_section = document.createElement('section')        //create section
-            const create_p = document.createElement('p')                    //create p tag and then fill it
-            create_p.innerText = 'Wykryto więcej klientów o tym imieniu '   
-            create_section.appendChild(create_p)                            //append it to section and then add class
-            create_section.classList.add('info-alert')       
+            alert_box('Wykryto więcej klientów o tym imieniu')  
         
             const datalist = document.createElement('datalist')
             datalist.id = `phoneNumbers-${nr}`
             val.forEach(value =>{
                 const option = document.createElement('option')
-                option.value = value.innerText
+                option.value = value.getAttribute('data-value')
                 option.label = value.value
                 datalist.appendChild(option)
             })
         getElementById('createVisit').appendChild(datalist)
-        getElementById('container').prepend(create_section)
     }
 }
 /*
@@ -296,18 +291,14 @@ const autocomplete = (element, searchedElement, templateContent, addInnerHtml, c
             if(searchedElement.options.length < 4 && searchedElement.options.length < templateContent.length){
                 option.value = e.value
                 if(addInnerHtml === true){
-                    option.innerText = e.innerText
+                    option.innerText = e.getAttribute('id')
                     option.setAttribute('data-value', e.getAttribute('data-value'))
                  
                 }
-                    
-                searchedElement.append(option);
-               
+                searchedElement.append(option); 
             }
         })
-    }else{
-   
-            
+    }else{  
         while (searchedElement.children.length) searchedElement.removeChild(searchedElement.firstChild);
         var inputVal= element.value.trim().toLowerCase()
         Array.from(templateContent).forEach(e=>{
@@ -316,7 +307,7 @@ const autocomplete = (element, searchedElement, templateContent, addInnerHtml, c
             if(searchedElement.options.length < 4 && eToLower.includes(inputVal)){
                 option.value = e.value
                 if(addInnerHtml === true)
-                    option.innerText = e.innerText
+                option.setAttribute('data-value', e.getAttribute('data-value'))
                 searchedElement.append(option);
             }
         })
@@ -369,6 +360,16 @@ const edit_form = (id) =>{
 /*
 * Edit client form CLIENT
 */
+const datapicker = (d) =>{
+    d.classList.add('datepicker')
+    var elems = document.querySelectorAll('.datepicker');
+    var instances = M.Datepicker.init(elems, {
+        container:document.getElementsByTagName("BODY")[0],
+        autoClose:true,
+        firstDay:1,
+        format: 'yyyy-mm-dd',
+    }); 
+}
 var value = false
 const edit_client = (arg) =>{
     value = !value
@@ -404,14 +405,7 @@ const edit_client = (arg) =>{
             tag.parentNode.replaceChild(d, tag)
        
             if(d.classList.contains('dateTag')){
-                d.classList.add('datepicker')
-                var elems = document.querySelectorAll('.datepicker');
-                var instances = M.Datepicker.init(elems, {
-                    container:document.getElementsByTagName("BODY")[0],
-                    autoClose:true,
-                    firstDay:1,
-                    format: 'yyyy-mm-dd',
-                });       
+                datapicker(d)
             }
             
         }); 
@@ -421,10 +415,7 @@ const edit_client = (arg) =>{
         Array.from(textarea).forEach(textarea =>{
             textarea.readOnly = false
         })
-        Array.from(add_input_field).forEach(input=>{
-            input.getElementsByTagName('input')[0].select()
-            input.classList.add('input-field')
-        })
+    
         add_input_field[0].getElementsByTagName('input')[0].select()
     }else{
         

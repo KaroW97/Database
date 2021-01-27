@@ -6,7 +6,7 @@ const ClientVisits = require('../models/clientsVisits')
 const ObjectId = require('mongodb').ObjectId;
 const User = require('../models/user')
 const ShoppingList = require('../models/shoppingList')
-const CompanyShopping = require('../models/companyShoppingStats')
+const ClientsShoppingsStats = require('../models/clientsShoppingsStats')
 const {ensureAuthenticated} = require('../config/auth')
 /*
 * All Clients Route
@@ -188,7 +188,7 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
     })
 
     try{   
-        findTreatmentStat = await CompanyShopping.find({treatment:req.body.treatmentName})
+        findTreatmentStat = await ClientsShoppingsStats.find({user:req.user.id,treatment:req.body.treatmentName})
         clientt  = await Client.findById(req.params.id)
         clientt.totalSumSpent =  Number(clientt.totalSumSpent) + Number(req.body.price)
 
@@ -199,7 +199,7 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
             price:req.body.price
         })
         if(findTreatmentStat.length === 0){
-             const treatmentStats = new CompanyShopping({
+             const treatmentStats = new ClientsShoppingsStats({
                 user:req.user.id,
                 treatment: req.body.treatmentName,
                 totalPrice:req.body.price,
@@ -232,7 +232,7 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
         visit = await ClientVisits.findById(req.params.id);
         clientt = await Client.findById(visit.client)
         clientt.totalSumSpent -= Number(visit.price)
-        findTreatmentStat = await CompanyShopping.find({treatment:visit.treatment})
+        findTreatmentStat = await ClientsShoppingsStats.find({user:req.user.id,  treatment:visit.treatment})
         if(findTreatmentStat.length !== 0){
             let dateStatToDelete = findTreatmentStat[0].transactionDate.findIndex(data => data === visit.clientVisitDate.toISOString().split('T')[0])
 
@@ -290,8 +290,8 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
 
     try{
          visit = await ClientVisits.findById(req.params.id).populate('client').exec()
-         findTreatmentStat = await CompanyShopping.find({treatment:visit.treatment})
-       
+         findTreatmentStat = await ClientsShoppingsStats.find({user:req.user.id, treatment:visit.treatment})
+        
          let compare = visit.clientVisitDate.toISOString().split('T')[0]
          visit.client=visit.client
          visit.comment= req.body.comment
@@ -312,7 +312,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
             clientVisitDate : new Date( req.body.clientVisitDate),
             price : req.body.price
          })
-         findTreatmentStatAfter = await CompanyShopping.find({treatment:visit.treatment})
+         findTreatmentStatAfter = await ClientsShoppingsStats.find({treatment:visit.treatment})
          /*
          * If treatment is the same but data is not
          */
@@ -346,7 +346,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
         * If after upadting name of the visit, the visit is not in database create new
         */
         else if(findTreatmentStatAfter.length === 0 ){
-            const treatmentStats = new CompanyShopping({
+            const treatmentStats = new ClientsShoppingsStats({
                 user:req.user.id,
                 treatment: req.body.treatmentName,
                 totalPrice:req.body.price,
@@ -452,8 +452,7 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
         clients.name=req.body.name,
         clients.lastName=req.body.lastName,
         clients.phoneNumber=req.body.phoneNumber,
-        clients.dateOfBirth= Date.parse(req.body.dateOfBirth)||'',
-      
+        clients. dateOfBirth= Date.parse(req.body.dateOfBirth)||'',
         clients.washingFace =req.body.washingFace
         clients.faceTension =req.body.faceTension
         clients.currentFaceCreams =req.body.currentFaceCreams
@@ -481,6 +480,7 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
 })
 /*
 * Delete client
+* TODO: add deleting also from stats 
 */
 router.delete('/:id', ensureAuthenticated,async(req,res)=>{
     try{

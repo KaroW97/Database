@@ -1,90 +1,83 @@
-<% if(messages.error){ %>
-    <div  id="hideAlert" class="alert alert-<%=messages.danger%>"><%= messages.error%></div>
-<% } %>
-<div class="center-main-div">
-    <div class="main-div">
-        <div class="separate many-elements">
-            <div class="p-wrapper">
-                
-                <p>Zmień hasło<br>Dobrze jest użyć silnego hasła, którego nie używasz nigdzie indziej </p>
-              
-            </div>
-            
-            <form action="/settings/change-password?_method=PUT" method="POST">
-                <div class="change">
-                    <div class="input-element">
-                        <input value="<%=user.password%>" type="password">
-                    </div>
-                    <div class="input-element sec-element">
-                        <input  type="password" name="newPassword" placeholder="Nowe Hasło">
-                    </div>
-                    <div class="input-element">
-                        <input  type="password"name="confirmNewPassword" placeholder="Potwierdź Hasło">
-                    </div>
+
+<ul class="collapsible top-separation-3">
+    <li>
+        <div class="collapsible-header"><i class="material-icons ">filter_drama</i><p class="no-margin">Zmień hasło<br>  <small>Dobrze jest użyć silnego hasła, którego nie używasz nigdzie indziej.</small></p></div>
+        <div class="collapsible-body">
+          <form action="/settings/change-password?_method=PUT" method="POST">
+            <div class="row">
+                <div class="input-field col s12 m6 l4 xl4">
+                    <input  value="<%=user.password%>" type="password" id="password"  autocomplete="off" >
+                    <label for="password">Bieżące hasło</label>
                 </div>
-          
-                <div class="center">
-                    <button type="submit">Edytuj</button>
-                </div >
-            </form>
-        </div>
-        <div class="separate many-elements">
-            <div class="p-wrapper">
-                <p>Zmień email </p>
+                <div class="input-field col s12 m6 l4 xl4">
+                    <input name="newPassword" type="password" id="change-password"  autocomplete="off" >
+                    <label for="change-password">Nowe hasło</label>
+                </div>
+                <div class="input-field col s12 m6 l4 xl4">
+                    <input name="confirmNewPassword" type="password" id="confirm-password"  autocomplete="off" >
+                    <label for="confirm-password">Potwierdź hasło</label>
+                </div>
             </div>
-            
+            <div class="button-styling-large center-button">
+                <button type="submit" class="btn button-styling-large submit">Akutalizuj</button>
+            </div>
+          </form>
+        </div>
+    </li>
+    <li>
+        <div class="collapsible-header"><i class="material-icons">place</i><p class="no-margin">Zmień email<br>  <small>Pamiętaj, wprowadź dwa razy taki sam email.</small></p></div>
+        <div class="collapsible-body">
             <form action="/settings/change-email?_method=PUT" method="POST">
-                <div class="change">
-                    <div class="input-element">
-                        <input value="<%=user.email%>" type="email">
+                <div class="row">
+                    <div class="input-field col s12 m6 l4 xl4">
+                        <input  value="<%=user.email%>" type="text" id="email"  autocomplete="off" >
+                        <label for="email">Bieżące email</label>
                     </div>
-                    <div class="input-element sec-element">                
-                        <input type="email" name="newEmail"placeholder="Nowy Email">
+                    <div class="input-field col s12 m6 l4 xl4">
+                        <input name="newEmail" type="text" id="change-password"  autocomplete="off" >
+                        <label for="change-password">Nowy email</label>
                     </div>
-                    <div class="input-element">
-                        <input type="email" name="confirmNewEmail" placeholder="Potwierdź Email">
+                    <div class="input-field col s12 m6 l4 xl4">
+                        <input name="confirmNewEmail" type="text" id="confirm-password"  autocomplete="off" >
+                        <label for="confirm-password">Potwierdź email</label>
                     </div>
-                   
                 </div>
-              
-                <div class="center">
-                    <button type="submit">Edytuj</button>
-                </div >
+                <div class="button-styling-large center-button">
+                    <button type="submit" class="btn button-styling-large submit">Akutalizuj</button>
+                </div>
             </form>
         </div>
-        <div class="separate not-many-elements">
-            <div class="p-wrapper">
-                <p>Zmień nazwe firmy </p>
-            </div>
-            
+    </li>
+    <li>
+        <div class="collapsible-header"><i class="material-icons">whatshot</i><p class="no-margin">Zmień nazwe firmy<br></p></div>
+        <div class="collapsible-body">
             <form action="/settings/change-company-name?_method=PUT" method="POST">
-                <div class="change">
-                    <div class="input-element">                   
-                        <input value="<%=user.companyName %>" type="text">
+                <div class="row">
+                    <div class="input-field col s12 m6 l6 xl6">
+                        <input  value="<%=user.companyName%>" type="text" id="company-name"  autocomplete="off" >
+                        <label for="company-name">Bieżące email</label>
                     </div>
-                    <div class="input-element sec-element">
-                        <input type="text" name="newCompanyName"placeholder="Nowa Nazwa Firmy">
+                    <div class="input-field col s12 m6 l6 xl6">
+                        <input name="newCompanyName" type="text" id="change-company-name"  autocomplete="off" >
+                        <label for="change-company-name">Nowa nazwa firmy</label>
                     </div>
-                    
                 </div>
-              
-                <div class="center">
-                    <button type="submit">Edytuj</button>
-                </div >
+                <div class="button-styling-large center-button">
+                    <button type="submit" class="btn button-styling-large submit">Akutalizuj</button>
+                </div>
             </form>
         </div>
-        <div class="separate">
-            <div class="p-wrapper">
-                <p>Jeśli chcesz usunąć swoje konto nacisnij: </p>
-            </div>
+    </li>
+    <li>
+        <div class="collapsible-header"><i class="material-icons">filter_drama</i><p class="no-margin">Usuń konto<br>  <small>Jeśli usuniesz konto, wszystkie dane z nim związane zostaną usunięte.</small></p></div>
+        <div class="collapsible-body">
             <form action="/settings/delete-account?_method=DELETE" method="POST">
-              
-                <div class="center">
-                    <button type="submit">Edytuj</button>
-                </div >
+                <div class="button-styling-large center-button">
+                    <button type="submit" class="btn button-styling-large submit">Akutalizuj</button>
+                </div>
             </form>
         </div>
-    </div>
-</div>
-<div>
+    </li>
+</ul>
+
 

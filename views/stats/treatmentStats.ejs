@@ -8,11 +8,11 @@
             <label class="active" for="searchby-1">Klient</label>
         </div>
         <div class="input-field col s12 m6 l3 xl3">
-            <input class="datepicker"  name="dateFrom"  id="dateFrom" type="text"  value="<%=searchOptions.dateFrom%>"  autocomplete="off" list="options-1"  />
+            <input class="datepicker"  name="dateFrom"  id="dateFrom" type="text"  value="<%=searchOptions.dateFrom%>"  autocomplete="off" />
             <label class="active" for="dateFrom">Od</label>
         </div>
         <div class="input-field col s12 m6 l3 xl3">
-            <input class="datepicker"  name="dateTo" id="dateTo" type="text"  value="<%=searchOptions.dateTo%>"  autocomplete="off" list="options-1"  />
+            <input class="datepicker"  name="dateTo" id="dateTo" type="text"  value="<%=searchOptions.dateTo%>"  autocomplete="off"/>
             <label class="active" for="dateTo">Do</label>
         </div>
         <div class="row button-row">
@@ -30,15 +30,15 @@
                     <div class="card-content">
                         <div class="col s12 m12 l4">
                             <label>Zabieg</label>
-                            <p class="search-by" data-value="<%=t.treatmentName%>"> <%=t.treatmentName%></p>
+                            <p class="search-by" data-value="<%=t.name%>"> <%=t.name%></p>
                         </div>
                         <div class="col s12 m12 l4">
                             <label>Kwota wydana</label>
-                            <p> <%=t.sum%></p>
+                            <p> <%=t.price%></p>
                         </div>
                         <div class="col s12 m12 l4">
                             <label>Wykonane zabiegi</label>
-                            <p> <%=t.treatmentSum%></p>
+                            <p> <%=t.amount%></p>
                         </div>
                     </div>
                 </div>

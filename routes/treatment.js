@@ -60,7 +60,7 @@ router.post('/',ensureAuthenticated, async(req,res)=>{
        await treatment.save();
        if(req.body.products_needed_to_do_the_treatment.split(',').length > 1){
         await  req.body.products_needed_to_do_the_treatment.split(',').forEach(async(e) =>{
-            const product = await ProductsForTreatment.find({prodTreatmentName:e}).find({user:req.user.id});
+            const product = await ProductsForTreatment.find({user:req.user.id,prodTreatmentName:e})
             if(product.length === 0){
                 let productNew = new ProductsForTreatment({
                     user:req.user.id,
@@ -73,7 +73,7 @@ router.post('/',ensureAuthenticated, async(req,res)=>{
             }
         }) 
        }else{
-            const product = await ProductsForTreatment.find({prodTreatmentName: req.body.products_needed_to_do_the_treatment}).find({user:req.user.id});
+            const product = await ProductsForTreatment.find({user:req.user.id, prodTreatmentName: req.body.products_needed_to_do_the_treatment})
             if(product.length === 0){
                 let productNew = new ProductsForTreatment({
                     user:req.user.id,

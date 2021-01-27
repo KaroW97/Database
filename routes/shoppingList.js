@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const ShoppingList = require('../models/shoppingList')
 const BrandName = require('../models/brandName')
-const ObjectId = require('mongodb').ObjectId;
 const ListProducts = require('../models/listProducts')
 const {ensureAuthenticated} = require('../config/auth')
+
 /*
 * All shopping lists
 */
@@ -53,7 +53,7 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         brandName:req.body.brandName,
     })
     try{
-        const brands = await BrandName.find({name:req.body.brandName});
+        const brands = await BrandName.find({user:req.user.id,  name:req.body.brandName});
         await req.body.shoppingItem.split(',').forEach(async(item, index)=>{
             let split = item.toLowerCase().split('+')
             let name = split[0]
@@ -119,7 +119,6 @@ router.get('/list-view/:id',ensureAuthenticated,async(req,res)=>{
         res.redirect('/shopping-list');
     }
 })
-
 /*
 * Delete Shopping List Router
 */
@@ -196,7 +195,33 @@ router.put('/list-view/add-post/:id',ensureAuthenticated, async(req,res)=>{
     }
   
 })
+/*
+* Update info abotu list such as company, list name and date if realization
+*/
+router.put('/list-view/edit-list-info/:id', ensureAuthenticated, async(req,res)=>{
+    let list 
+    try{
+        list =  await ShoppingList.findById(req.params.id);
+        list.listName = req.body.listName
+        list.transactionDate = new Date(req.body.transactionDate) || ''
+        list.brandName =  req.body.brandName
+
+        await list.save()
+        req.flash('mess','Edytowano liste.')
+        req.flash('type','info-success')
+        res.redirect(`/shopping-list/list-view/${req.params.id}`)
+
+    }catch(err){
+        console.log(err)
+        req.flash('mess','Nie udało sie edytować listy.')
+        req.flash('type','info-alert')
+        res.redirect(`/shopping-list/list-view/${req.params.id}`)
+    }
+})
 //TODO: add merging elements if this element exists in list and then deleting it after marge
+/*
+* Update existing item on the list 
+*/
 router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
     let list;
     try{
@@ -306,6 +331,7 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
         res.redirect(`/shopping-list/list-view/${req.params.id}`)
     }
 })
+
 /*
 * Delete List Item
 */

@@ -1,87 +1,50 @@
 
-<div class="center-main-div ">
-    <div class="main-div toogleList">
-        <div class="content  ">
-            <div class="visit">
-                <form class="find-visit"  method="GET" action="/statistics/shopping">
-                    <div class="search-wrapper">
-                        <input type="text"class="myInputSearch shopping-search"placeholder="Szukaj Klienta">
+<%-include('../partials/shopping-list-extended.ejs')%>
+<%-include('../partials/shopping-list-names.ejs',{id_extention:1})%>  
 
-                    </div>
-                    <div class="data-input-from ">
-                        <input  id="dataFrom" name="dateFrom"  placeholder="Od" value="<%=searchOptions.dateFrom%>" autocomplete="off">
-                    </div>
-                    <div class="data-input-to">
-                        <input  id="dataTo" name="dateTo"  placeholder="Do"value="<%=searchOptions.dateTo%>" autocomplete="off">
-
-                    </div>
-                    <div class="search">
-                        <button type="submit" class="search-button" aria-label="search"><i class="fas fa-search"></i></button>
-                    </div>
-                </form>
-                
+<div class="row main-row z-depth-1">
+    <form class=" col s12" action="/statistics/shopping" method="GET">
+        <div class="input-field col s12 m12 l4 xl4">
+            <input class="myInputSearch" name="name" type="text"  list="options-1" id="searchby-1" autocomplete="off" />
+            <label class="active" for="searchby-1">Produkt</label>
+        </div>
+        <div class="input-field col s12 m6 l3 xl3">
+            <input class="datepicker"  name="dateFrom"  id="dateFrom" type="text"  value="<%=searchOptions.dateFrom%>"  autocomplete="off"   />
+            <label class="active" for="dateFrom">Od</label>
+        </div>
+        <div class="input-field col s12 m6 l3 xl3">
+            <input class="datepicker"  name="dateTo" id="dateTo" type="text"  value="<%=searchOptions.dateTo%>"  autocomplete="off"   />
+            <label class="active" for="dateTo">Do</label>
+        </div>
+        <div class="row button-row">
+            <div class="col s12 m1 l2 xl2 center-button-small">
+                <button type="submit" class="waves-effect waves-light btn-small  "aria-label="search-by-date"><i class="large material-icons">search</i></button>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
-<div class="main-div-full-content .main-div-toogle">
-    <div class="main-div-center ">
-            <div class="content-div">
-                <% companyDistinctShopping.forEach( distShopping=> {%>
-                    <div class="visit">
-                        <form method="post" action='/statistics/shopping/<%=distShopping%>?_method=DELETE'>
-                            <button type="submit" class="close" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        <% countAmountOfBoughtProducts=0; countPriceOfBoughtProducts=0 %> 
-                 
-                        <% companyShopping.forEach(shopping=>{ %>
-                            <% if(shopping.productName == distShopping ) {%> 
-                                <% countAmountOfBoughtProducts++ %> 
-                                <% countPriceOfBoughtProducts+=shopping.productPrice %> 
-                            <% } %>    
-                           
-                        <%}) %> 
-                        <div class="div-element" >
-                            <p class="header" >
-                                <%=distShopping %> </p>
-                            <div class="first-p-element">
-                                <p class="headerVisit">Cena</p>
-                                <p ><%=countPriceOfBoughtProducts %> zł</p>
-                            </div>
-                            <div class="sec-p-element">
-                                <p class="headerVisit">Ilość</p>
-                                <p ><%=countAmountOfBoughtProducts %></p>
-                            </div>
-                
+<div class="row information-row">
+    <div class="col s12 ">
+        <%companyShopping.forEach(product=>{%>
+            <div class="col s12 m12 l12  top-separator  top-separator-2">
+                <div class="card max-width-card">
+                    <div class="card-content">
+                        <div class="col s12 m12 l4">
+                            <label>Produkt</label>
+                            <p class="search-by" data-value="<%=product.name%>"> <%=product.name%></p>
                         </div>
-                    </div> 
-                    <% }); %>
+                        <div class="col s12 m12 l4">
+                            <label>Kwota</label>
+                            <p> <%=product.price%></p>
+                        </div>
+                        <div class="col s12 m12 l4">
+                            <label>Wykonane zabiegi</label>
+                            <p> <%=product.amount%></p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        <%})%>
     </div>
-</div>
-
-<div  class="statistics statistics-element">
-    <div class="stats-square"><p class="p-color">Statystyki</p></div>
-    <div class="stats-shadow"></div>
-    <div class="position-statistics">
-        <div class="content">
-                <div class="content-div-first-element">
-                    <p class="headerVisit">Kwota Całkowita</p>
-                    <p><%= totalPrice %>zł</p>
-                </div>
-                <div  class="content-div-sec-element">
-                    <p class="headerVisit">Ilość</p>
-                    <p><%=amount  %></p>
-                </div>
-        </div>
-    </div>
-</div>
-<ul class="shopping-elements-list">
-    <%companyDistinctShopping.forEach(distShopping => { %>
-        <li><%=distShopping%></li>
-    <% }) %> 
-</ul>
-
-<%-include('../partials/shopping-list.ejs')%>
+</div>   
