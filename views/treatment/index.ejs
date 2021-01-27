@@ -47,8 +47,8 @@
                         </div>    
                         <div class="col s12 m6 l12">
                             <label>Opis</label>
-                            <%if(treatments[i].treatmentDescription !=null){%>
-                                <p ><%=treatments[i].treatmentDescription.length <= 20 ? treatments[i].treatmentDescription :treatments[i].treatmentDescription.slice(0,20)+'...' %></p>
+                            <%if(treatments[i].treatmentDescription.length != 0){%>
+                                <p ><%= treatments[i].treatmentDescription.length <= 20  ? treatments[i].treatmentDescription :treatments[i].treatmentDescription.slice(0,20)+'...' %></p>
                             <%}else{%>
                                 <p>-</p>
                             <%}%>

@@ -10,22 +10,17 @@ const shoppingList = mongoose.Schema ({
         type:String,
         require:false
     },
-  
-    productName:{
-        type:[String],
-        require:false
-    },
-    price:{
-        type:[Number],
-        require:false
-    },
+    productListInfo:[
+
+    ],
     transactionDate:{
         type:Date,
         require:false
     },
     totalPrice:{
         type:Number,
-        require:false
+        require:false,
+        default:0
     },
     brandName:{
         type:String,

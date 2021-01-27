@@ -17,15 +17,17 @@
 
 <nav>
     <div class="nav-wrapper ">
-        <a href="/calendar" class="brand-logo"><%=user.companyName%></a>
+        
+        <a class="dropdown-trigger brand-logo right" href="#!" data-target="dropdown_settings">
+            <i class="material-icons">settings</i>
+        </a>
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-        <ul class="right hide-on-med-and-down">
+        <ul class="left hide-on-med-and-down">
+            <li><a href="/calendar" class="">Kalendarz</a> </li>
             <li> <a href="/clients">Klientki</a></li>
             <li><a class="dropdown-trigger" href="#!" data-target="dropdown_company_info"  >Dane Firmowe<i class="material-icons right">arrow_drop_down</i></a></li>
             <li><a class="dropdown-trigger" href="#!" data-target="dropdown_stats">Statystyki<i class="material-icons right">arrow_drop_down</i></a></li>
-            <li><a class="dropdown-trigger" href="#!" data-target="dropdown_settings"><i class="material-icons">
-                settings
-            </i></a></li>
+            
         </ul>
     </div>
 </nav>

@@ -2,12 +2,9 @@ const express = require('express');
 const router = express.Router();
 const ShoppingList = require('../models/shoppingList')
 const BrandName = require('../models/brandName')
-const CompanyShopping = require('../models/companyShoppingStats')
 const ObjectId = require('mongodb').ObjectId;
 const ListProducts = require('../models/listProducts')
 const {ensureAuthenticated} = require('../config/auth')
-
-//Main Page Shopping List
 /*
 * All shopping lists
 */
@@ -36,7 +33,8 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
             shopping:shopping,
             brandName:brandName,
             weekdays:weekdays,
-            searchOptions:req.query   
+            searchOptions:req.query  ,
+            listProducts:listProducts 
         });
     }catch(err){
         console.log(err)
@@ -45,21 +43,51 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
 })
 /*
 * Add Shopping List name and create brand 
+* Change array of dates and amount 
 */
 router.post('/', ensureAuthenticated,async(req,res)=>{
-
-    const listProducts = new ListProducts({
-        name: req.body.shoppingItem,
-        price:req.body.shoppingItem
-    })
-    const shoppingList = new ShoppingList({  
+    const shoppingList = new ShoppingList({
         listName:req.body.listName,
         transactionDate:req.body.transactionDate,
         user:req.user.id,
-        brandName:req.body.brandName
+        brandName:req.body.brandName,
     })
     try{
         const brands = await BrandName.find({name:req.body.brandName});
+        await req.body.shoppingItem.split(',').forEach(async(item, index)=>{
+            let split = item.toLowerCase().split('+')
+            let name = split[0]
+            let price =  Number(split[1]) || 0
+            let amount =  Number(split[2]) || 0
+            const items = await ListProducts.find({user:req.user.id , name:name});
+            shoppingList.productListInfo.push({
+                name:name,
+                price:price ,
+                amount:amount, 
+            })
+            shoppingList.totalPrice = shoppingList.totalPrice +   (price * amount)
+            if(items.length === 0){
+                const listProducts = new ListProducts({
+                    user:req.user.id,
+                    name: name,
+                    productInfo:[{
+                        date:req.body.transactionDate,
+                        price:price,
+                        amount:amount,
+                    }],
+                })
+                await listProducts.save()
+            }else{
+                items[0].productInfo.push({
+                    date:req.body.transactionDate,
+                    price:price ,
+                    amount:amount,
+                })
+                await items[0].save()
+            }
+            if(req.body.shoppingItem.split(',').length-1 == index ) 
+                await shoppingList.save();         
+        })
         if(brands.length === 0){
             const brandName = new BrandName({
                 user:req.user.id,
@@ -67,8 +95,8 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
             })
             await brandName.save()
         }
-        await shoppingList.save();
-        
+        req.flash('mess','Lista została dodana.')
+        req.flash('type','info-success')
         res.redirect(`/shopping-list`)
         //res.redirect(`/shopping-list/list-view/${shoppingList.id}`)
     }catch(err){
@@ -76,95 +104,25 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         res.redirect(`/clients`)
     }
 })
-
-//List View Router
+/*
+* List View Router
+*/
 router.get('/list-view/:id',ensureAuthenticated,async(req,res)=>{
     try{
         const shoppingList = await ShoppingList.findById(req.params.id)
+        const listProducts = await ListProducts.find({user:req.user.id})
         res.render('shoppingList/listView',{
-            list:shoppingList
+            list:shoppingList,
+            listProducts:listProducts 
         })
     }catch{
         res.redirect('/shopping-list');
     }
 })
 
-
-
-
-
-router.put('/list-view/:id',ensureAuthenticated,async(req,res)=>{
-    let totalPriceCalculate = 0;
-    let list;
-    try{
-       
-        list =  await ShoppingList.findById(req.params.id);
-        list.price.push(Number(req.body.price)),
-        list.productName.push(req.body.productName);
-        //if(list.transactionDate  == null)
-       // list.transactionDate = Date.parse(req.body.transactionDate)|| '';
-
-        list.price.forEach(element => {
-            totalPriceCalculate +=element;
-        });
-        list.totalPrice = totalPriceCalculate
-        const shoppingStatistics = new CompanyShopping({
-            productName:req.body.productName,
-            productPrice:req.body.price,
-            user:req.user.id,
-            transactionDate:Date.parse(req.body.transactionDate)||list.transactionDate
-        })    
-        req.flash('mess','Dodano element do listy')
-        req.flash('type','info-success')
-        await shoppingStatistics.save();
-        await list.save();
- 
-        res.redirect(`/shopping-list/list-view/${list.id}`)
- 
-
-    }catch(err){
-        const cssSheets =[]
-        const shopping  = await ShoppingList.findById(req.params.id)
-        const addedShoping = await ShoppingList.find({_id:shopping.id});
-        req.flash('mess','Coś poszło nie tak.')
-        req.flash('type','info-danger')
-        res.render('shoppingList/list-view',{
-            list:shopping,
-            addedShoping:addedShoping,
-            styles:cssSheets
-        })
-    }
-})
-//Delete Brands
-router.delete('/brand-name-delete',async(req,res)=>{
-    let brand_name;
-    try{
-        if(req.body.chackboxDeleteBrand!= null ){
-            if(Array.isArray(req.body.chackboxDeleteBrand)){
-              for(var i = 0; i < (req.body.chackboxDeleteBrand).length; i++){
-                brand_name = await BrandName.findById(ObjectId(req.body.chackboxDeleteBrand[i]));
-                await brand_name.remove();
-              } 
-              req.flash('mess','Nazwy firm zostały usunięte');
-              req.flash('type','info')
-            }else{
-                brand_name = await BrandName.findById(ObjectId(req.body.chackboxDeleteBrand));
-                await  brand_name.remove();
-                req.flash('mess','Nazwa firmy została usunięta');
-                req.flash('type','info')
-            }
-          }else{
-            req.flash('mess','Nie wybrano nazwy firmy do usunięcia');
-            req.flash('type','info')
-          }
-          res.redirect(`/shopping-list`)
-    }catch(err){
-        console.log(err)
-        res.redirect(`/shopping-list`)
-    }
-
-})
-//Delete Shopping List Router
+/*
+* Delete Shopping List Router
+*/
 router.delete('/:id',ensureAuthenticated,async(req,res)=>{
         var list
     try{
@@ -178,103 +136,237 @@ router.delete('/:id',ensureAuthenticated,async(req,res)=>{
     }catch(err){
         console.log(err)
         req.flash('mess','Nie udało się usunąć rekordu.')
-        req.flash('type','info-danger')
+        req.flash('type','info-alert')
         res.redirect(`/shopping-list`)   
     }
 })
-//Edit List Router
-router.get('/list-view/:id/edit',ensureAuthenticated, async(req,res)=>{
-    const cssSheets =[]
-
-    try{
-        const list = await ShoppingList.findById(req.params.id)
-        res.render('shoppingList/edit',{
-            list:list,
-            styles:cssSheets
-        })
-    }catch{
-        res.redirect(`/shopping-list/list-view/${list.id}`)
-    }
-  
-})
-//Edit List Item
-router.put('/list-view/:id/edit',ensureAuthenticated, async(req,res)=>{
+/*
+* Add new item to the list
+*/
+router.put('/list-view/add-post/:id',ensureAuthenticated, async(req,res)=>{
     let list
-    let totalPriceCalculate = 0;
     try{
+        let shoppingItems = req.body.shoppingItem.split(',')
         list = await ShoppingList.findById(req.params.id)
-        //list.listName = req.body.listName
-        if( req.body.price == null ||req.body.price =='' ||req.body.price =='0')
-            list.price.pull(req.body.price);
-        list.price = req.body.price
-        list.productName =req.body.productName
-        list.transactionDate = Date.parse(req.body.transactionDate)|| '';
+        shoppingItems.forEach(async(item, index) =>{
+            let split = item.toLowerCase().split('+')
+            let name = split[0]
+            let price = Number(split[1]) || 0
+            let amount =  Number(split[2]) ||0
+            const items = await ListProducts.find({user:req.user.id , name:name});
 
-        list.price.forEach(element =>totalPriceCalculate +=element);
-        list.totalPrice = totalPriceCalculate
-        req.flash('mess','Lista została zedytowana.')
+            list.totalPrice += price * amount
+            list.productListInfo.push({
+                name:name,
+                price:price,
+                amount:amount
+            })
+            if(items.length === 0){
+                const listProducts = new ListProducts({
+                    user:req.user.id,
+                    name: name,
+                    productInfo:[{
+                        date:list.transactionDate.toISOString().split('T')[0],
+                        price:price,
+                        amount:amount,
+                    }],
+                })
+                await listProducts.save()
+            }else{
+                items[0].productInfo.push({
+                    date:list.transactionDate.toISOString().split('T')[0],
+                    price:price ,
+                    amount:amount,
+                })
+                await items[0].save()
+            }
+            if(req.body.shoppingItem.split(',').length-1 === index ) 
+                await list.save();   
+        })
+
+        req.flash('mess','Produkt został dodany do listy.')
         req.flash('type','info-success')
-        await list.save();
-  
         res.redirect(`/shopping-list/list-view/${list.id}`);
 
     }catch{
-        req.flash('mess','Nie udało się zedytować listy.')
-        req.flash('type','info-danger')
+        console.log(err)
+        req.flash('mess','Nie udało się dodać elementu do listy.')
+        req.flash('type','info-alert')
         res.redirect(`/shopping-list`);
     }
   
 })
-//Delete List Item
-router.delete('/list-view/:id',ensureAuthenticated, async(req,res)=>{
-   
-    var list
+//TODO: add merging elements if this element exists in list and then deleting it after marge
+router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
+    let list;
     try{
-        if(req.body.chackboxDelete==null){
-            req.flash('mess','Nie wybrano produktów do usunięcia')
-            req.flash('type','info')
-            res.redirect(`/shopping-list/list-view/${req.params.id}`);
-        }
+        list =  await ShoppingList.findById(req.params.id);
+        list.markModified('productListInfo');
 
-        if(Array.isArray(req.body.chackboxDelete)){
-            list  = await ShoppingList.findById(req.params.id);
-            let sorted = (req.body.chackboxDelete).sort().reverse();
-            for(var i=0;i<sorted.length ; i++){
-                let elem = sorted[i];
-                list.totalPrice -= list.price[elem]
-                list.price.splice(elem,1)
-                list.productName.splice(elem,1 )    
-            }
-            req.flash('mess','Rekordy zostały usunięte')
-            req.flash('type','info-success')
-        }else{
-            
-            let elem = req.body.chackboxDelete;
-            list = await ShoppingList.findById(req.params.id);
-            
-            list.totalPrice -= list.price[elem]
-            list.price.splice(elem,1)
-            list.productName.splice(elem,1)
-            
-            req.flash('mess','Rekord został usunięty')
-            req.flash('type','info-success')
+        let beforeEdit = list.productListInfo[req.params.itemIndex]
+        list.totalPrice -= beforeEdit.price * beforeEdit.amount
+  
+      /*  let elem = list.productListInfo.reduce((elem, arrayItem, index)=>{
+            console.log(arrayItem)
+            if(arrayItem.name == req.body.itemName)
+                elem.push(index)
+            return elem
+        },[])
+            */
+      
+        list.productListInfo[req.params.itemIndex] = {
+            name:req.body.itemName,
+            price:Number(req.body.itemPrice) || 0,
+            amount:Number(req.body.itemAmount) || 0
         }
-        if(list.price == 0 || list.productName == ''||list.productName == []){
-            list.remove()
-            res.redirect(`/shopping-list`);
-        }else{
-            list.save();
-            res.redirect(`/shopping-list/list-view/${list.id}`);
-        }
-       
+        let afterEdit =  list.productListInfo[req.params.itemIndex]
+        list.totalPrice += afterEdit.price * afterEdit.amount
         
-       
- }catch(err){
-     console.log(err)
-         res.redirect('/shopping-list')
- }
-})
 
+        const list_products_before = await ListProducts.find({user:req.user.id, name:beforeEdit.name})
+        if(beforeEdit.name != afterEdit.name){
+            const list_products = await ListProducts.find({user:req.user.id, name:afterEdit.name})
+            let index  =list_products_before[0].productInfo.findIndex(item=>{
+                if(item.date === list.transactionDate.toISOString().split('T')[0] && beforeEdit.price === item.price && beforeEdit.amount === item.amount)
+                    return item
+            }) 
+        
+            list_products_before[0].productInfo = [
+                ...list_products_before[0].productInfo.splice(0, index),
+                ...list_products_before[0].productInfo.splice(index + 1)
+            ]
+            list_products_before[0].productInfo.length === 0 ? 
+                await list_products_before[0].deleteOne() : 
+                await list_products_before[0].save()
+            
+            if(list_products.length != 0){
+                list_products[0].productInfo.push({
+                    date:list.transactionDate.toISOString().split('T')[0],
+                    price:Number(req.body.itemPrice) || 0,
+                    amount:Number(req.body.itemAmount) || 0
+                })     
+                await list_products[0].save()  
+            }else{
+                const new_list_item = new ListProducts({
+                    user:req.user.id,
+                    name: afterEdit.name,
+                    productInfo:[{
+                        date:list.transactionDate.toISOString().split('T')[0],
+                        price:afterEdit.price,
+                        amount:afterEdit.amount,
+                    }],
+                })
+                await new_list_item.save()
+            }
+        }else{
+            list_products_before[0].markModified('productInfo');
+            let index  =list_products_before[0].productInfo.findIndex(item=>{
+                if(item.date === list.transactionDate.toISOString().split('T')[0] && beforeEdit.price === item.price && beforeEdit.amount === item.amount)
+                    return item
+            })
+           /* if(elem.length != 0 && list.productListInfo[elem[0]].price === Number(req.body.itemPrice)){
+                list_products_before[0].productInfo[index] = {
+                    date:list.transactionDate.toISOString().split('T')[0],
+                    price:Number(req.body.itemPrice),
+                    amount:Number(req.body.itemAmount)
+                }
+            }*/
+                list_products_before[0].productInfo[index] = {
+                    date:list.transactionDate.toISOString().split('T')[0],
+                    price:Number(req.body.itemPrice) || 0,
+                    amount:Number(req.body.itemAmount) || 0
+                }
+            
+         
+            await list_products_before[0].save()
+        }
+
+        /*if(elem.length != 0 && list.productListInfo[elem[0]].price === Number(req.body.itemPrice)){
+            list.productListInfo[req.params.itemIndex] = {
+                name:req.body.itemName,
+                price:Number(req.body.itemPrice) + (Number(list.productListInfo[elem[0]].price)* Number(list.productListInfo[elem[0]].amount)) ,
+                amount:Number(req.body.itemAmount) + Number(list.productListInfo[elem[0]].amount)
+            }
+            list.productListInfo = [
+                ...list.productListInfo.splice(0, elem[0]),
+                ...list.productListInfo.splice(elem[0] + 1)
+            ]
+            console.log(list)
+        }*/
+        list.set('productListInfo', list.productListInfo)
+        await list.save();
+
+        req.flash('mess','Dodano element do listy')
+        req.flash('type','info-success')
+        res.redirect(`/shopping-list/list-view/${req.params.id}`)
+    }catch(err){
+        console.log(err)
+        req.flash('mess','Coś poszło nie tak.')
+        req.flash('type','info-alert')
+        res.redirect(`/shopping-list/list-view/${req.params.id}`)
+    }
+})
+/*
+* Delete List Item
+*/
+router.delete('/list-view/:id/:item',ensureAuthenticated, async(req,res)=>{
+    let list, statsListProducts
+    try{    
+        let split = req.params.item.toLowerCase().split('+')
+        let name = split[0]
+        let price = Number(split[1])
+        let amount = Number(split[2])
+       
+        list = await ShoppingList.findById(req.params.id);
+        statsListProducts = await ListProducts.find({user:req.user.id,name:name })
+   
+        let indexStatsList = statsListProducts[0].productInfo.findIndex(item =>{
+            if(item.date === list.transactionDate.toISOString().split('T')[0] && item.price === price && item.amount === amount)
+                return item
+        })
+        let indexList = list.productListInfo.findIndex(item=>{
+            if(item.name === name && item.price === price && item.amount === amount)
+                return item
+        })
+        list.totalPrice -= (list.productListInfo[indexList].price * list.productListInfo[indexList].amount)
+        statsListProducts[0].productInfo = [
+            ...statsListProducts[0].productInfo.splice(0,indexStatsList),
+            ...statsListProducts[0].productInfo.splice(indexStatsList + 1)
+        ]
+        let newList = list.productListInfo.filter((item, index)=>{
+            if(index != indexList)
+                return item
+        })
+
+        if(statsListProducts[0].productInfo.length != 0)
+            await statsListProducts[0].save()
+        else
+            await statsListProducts[0].deleteOne()
+        await list.set('productListInfo',newList).save();
+
+        req.flash('mess','Element został usunięty z listy')
+        req.flash('type','info-success') 
+        res.redirect(`/shopping-list/list-view/${list.id}`);   
+    }catch(err){
+        console.log(err)
+        req.flash('mess','Nie udało sie usunąć elementu')
+        req.flash('type','info-alert')
+        res.redirect('/shopping-list')
+    }
+})
+/*
+* Get data about one item from the list 
+*/
+router.get('/list-view/:id/:itemIndex', async(req,res)=>{
+    let list
+    try{
+        list = await ShoppingList.findById(req.params.id)
+        res.send(list.productListInfo[req.params.itemIndex])
+    }catch{
+        req.flash('mess','Nie udało sie usunąć elementu')
+        req.flash('type','info-alert')
+    }
+})
 
 
 module.exports = router

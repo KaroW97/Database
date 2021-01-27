@@ -5,10 +5,15 @@ const listProducts = mongoose.Schema({
         type:String,
         required:false
     },
-    price:{
-        type:Number,
-        required:false
-    }
+    user:{
+        type:String,
+        required:true
+    },
+    productInfo:[
+
+    ],
+
+    
 })
 
 module.exports = mongoose.model('ListProducts', listProducts)

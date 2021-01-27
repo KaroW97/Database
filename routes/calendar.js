@@ -36,7 +36,6 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
         const treatment = await Treatment.find({user:req.user.id});
         const clients =  await Client.find({user:req.user.id});
         const futureVisit = await visit.sort({visitDate:'asc'}).exec();
-       
         if(req.user.isUser())
             res.render('calendar/index',{
                 
@@ -129,8 +128,8 @@ router.get('/:id', async(req, res)=>{
 
         visitToFind = await FutureVisit.findById(req.params.id)
         res.send(visitToFind)
-    }catch{
-        console.log('prob')
+    }catch(err){
+        console.log(err)
     }
 })
 

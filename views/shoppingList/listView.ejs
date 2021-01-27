@@ -1,99 +1,154 @@
-
-<div class="center-element">
-    <div class="element">
-        <div class="go-back">
-            <a href="/shopping-list"><i class="fas fa-arrow-left"></i></a>
+<div class="row top-separation-3">
+    <div class="col s12 m12 l12 xl12 vertical-align">
+        <div class="switch col s12 m12 l3 xl3">
+            <label>
+                Off
+                <input type="checkbox" id="getvalue">
+                <span class="lever" id="getlever"></span>
+                On
+            </label>
         </div>
-        
-            <div class="list-header">
-                <p name="listName" > <%=list.listName%></p>
-                <% if(list.transactionDate!= null){ %> 
-                    <p name="transactionDate"> <%=list.transactionDate.toISOString().split('T')[0] %> </p>
-                <% } %> 
-            </div>
-            <form method="post" action="/shopping-list/list-view/<%=list.id%>?_method=DELETE">
-                <button class ="delte-button"type="submit" aria-label="delete-button"><i class="far fa-trash-alt"></i></button>       
-                <div class="list-content"   >
-                    
-                        <div class="element-font-size showForm" >
-                            <% list.productName.forEach(element => { %>
-                                <p><%= element %></p>
-                            <% }); %> 
-                        </div>
-                        <div class="element-font-size">
-                            <% list.price.forEach((element, index) => { %>
-                                <div class="flex ">
-                                    <div class="showForm">
-                                        <p><%= element %>zł</p> 
-                                    </div>
-                                    <input class="checkbox" type="checkbox" name="chackboxDelete" value="<%=index%>"> 
-                                </div>   
-                            <% }); %> 
-                        </div>
-                </div>
-            </form>
-          
-            <div class="total-price">
-                <%if(list.totalPrice != 0) {%> 
-                    <p >Do zapłaty: <%=list.totalPrice == null ? '0zł':list.totalPrice+'zł'%></p>
-                <% } %>
-            </div>
-           
-            <form method="POST" action="/shopping-list/list-view/<%=list.id%>?_method=PUT">
-                <div class="list-form">
-                    <%- include('./_form_fields_new') %> 
-                </div>
-                <div class="add-button-wrapper">
-                    <button class="add-button"aria-label="add-button" type="submit">Dodaj</button>
-
-                </div>
-               
-            </form>
-     
+        <div class="side-by-side col s12 m12 l9 xl9">
+            <button aria-label ="go-to-oneClient-visits " class="small-button-styling  btn-small btn modal-trigger" href="#create-new-list-item">
+                <i class="material-icons">playlist_add</i></button>   
+        </div>
     </div>
-  
-    
-    
-</div>
+</div> 
 
-<div class="create-visit-form  create-form close-form" id="list-edit-form">
-    <form method="POST" action="/shopping-list/list-view/<%=list.id%>/edit?_method=PUT" class="center-form">
-        <div  id ="comapnyForm" class="form">
-            <!--onclick="closeForm()"-->
-            <span id ="close"class="close" >&times;</span>
-            <div class="form-content">
-                <input id="datapickerAddEdit" name="transactionDate"   autocomplete="off" value="<%=list.transactionDate==null ? '' : list.transactionDate.toISOString().split('T')[0]%>" />
-                <div  class="list-content">
-                    <div class="list-element-padding">
-                        <% list.productName.forEach(element => { %>
-                            <div class="list-element-margin">
-                                <input type="text" placeholder="nazwa produktu" name="productName" value="<%=element%>" >
-                            </div>
-                        <% }); %> 
-                    </div>
-                    <div class="list-element-padding" >
-                        <% list.price.forEach(element => { %>
-                            <div class="list-element-margin">
-                                <input type="number" placeholder="cena"  name="price"  value="<%=element%>" >
-                            </div>
-                        <% }); %> 
-                    </div>
+<div class="col s12 m12 l12 xl12">
+    <form method="post" class="top-separation-3 " action="/list-view/<%=list._id%>?_method=PUT">
+        <div class="row header  header-content-samll ">
+            <div class="add-input-field  treatmentName col s12 m6 l4 xl4">
+                <label for="price">Nazwa Listy</label>
+                <p class="pTag " id="price" name="totalPrice" type="text"><%=list.listName%></p>
+            </div>
+            <div class="add-input-field  treatmentName col s12 m6 l4 xl4">
+                <label for="price">Nazwa Firmy</label>
+                <p class="pTag " id="price" name="totalPrice" type="text"><%=list.brandName%></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="add-input-field col s12 m6 l4 xl4">
+                    <label for="price">Cena</label>
+                    <p id="price" name="totalPrice" type="text"><%=list.totalPrice%></p>
                 </div>
-                
-                
-                <div class="submit-button">
-                    <button type="submit"aria-label="edit-button">Edytuj</button>
-
+                <div class="add-input-field col s12 m6 l4 xl4">
+                    <label for="transactionDate">Data</label>
+                    <p class="pTag dateTag " id="transactionDate" name="transactionDate" type="text"><%=list.transactionDate.toISOString().split('T')[0] %></p>
+                </div>
+                <div class="add-input-field col s12 m6 l4 xl4">
+                    <label for="capacity">Ilość</label>
+                    <p  id="capacity" type="text"><%=list.productListInfo.length %></p>
                 </div>
             </div>
-   
         </div>
     </form>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-<script src="../../public/dataTimePicker.js"></script>
+
+<div class="row information-row separate-80" >
+    <div class="col s12 ">
+        <%list.productListInfo.forEach((item, index) => {%>
+            <div class="col s12 m12 l6 top-separator  top-separator-2">
+                <div class="border-bottom">
+                    <form method="post" action="/shopping-list/list-view/<%=list.id%>/<%=item.name%>+<%=item.price%>+<%=item.amount%>?_method=DELETE">
+                        <button type="submit" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </form>
+                    <div class="row modal-trigger" href="#edit-list-item" onclick="edit_list_item('<%=list.id%>','<%=index%>')">
+                        <div class="col s12 padding">
+                         
+                        <div class="col s12 m6 l6">
+                            <label>Produkt</label>
+                            <p class="search-by" data-value="<%=item.name%>"> <%=item.name%></p>
+                        </div>
+                        <div class="col s12 m6 l4">
+                            <label>Cena</label>
+                            <p> <%=item.price%></p>
+                        </div>
+                        <div class="col s12 m6 l4">
+                            <label>Ilość</label>
+                            <p> <%=item.amount%></p>
+                        </div>
+                      
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <%})%>
+        
+    </div>
+</div>
+
+<div id="create-new-list-item" class="modal form-styling-the-smallest">
+    <form class="modal-content content-form-styling " action="/shopping-list/list-view/add-post/<%=list.id%>?_method=PUT" method="POST">
+        <div class="input-field col s12 chips-icon">
+            <i class="material-icons prefix">list</i>
+            <div  class="chips chips-autocomplete width-chips-input"    >
+                <input class="chips-input"  list="options-2" id="searchby-2" autocomplete="off" >
+            </div>
+        </div>
+        <datalist id="searchTemplate1-2" >
+            <%listProducts.forEach(product=>{%>
+                <option value='<%=product.name%>'>
+            <%})%>
+        </datalist>
+        <datalist  id="options-2"></datalist>
+        <input id="chips-input-list-product" class="hiden-input"  value="" name="shoppingItem" >
+        <div class="center-button button-padding">
+            <button type="submit" class="btn  submit submit-button ">Dodaj</button>
+        </div>
+    </form>
+</div>
+
+<div id="edit-list-item" class="modal form-styling-smaller">
+    <form method="POST" id="edit-item"class="modal-content content-form-styling "  action="">
+        <div class="input-field col s6">
+            <i class="material-icons prefix">filter_list</i>
+            <input  class="validate" type="text" list="options-1" name ="itemName" id="searchby-1"  autocomplete="off" required>
+            <label for="searchby-1">Nazwa Zabiegu</label>
+        </div>
+        <datalist id="searchTemplate1-1" >
+            <%listProducts.forEach(product=>{%>
+                <option value='<%=product.name%>'>
+            <%})%>
+        </datalist>
+        <datalist  id="options-1"></datalist>
+
+        <div class="input-field col s6">
+            <i class="material-icons prefix">filter_list</i>
+            <input  class="validate" type="number"  name ="itemPrice" id="itemPrice"  autocomplete="off" required>
+            <label for="itemPrice">Cena</label>
+        </div>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">filter_list</i>
+            <input  class="validate" type="number" name ="itemAmount" id="itemAmount"  autocomplete="off" required>
+            <label for="itemAmount">Ilość</label>
+        </div>
+        <div class="center-button button-padding">
+            <button type="submit" class="btn  submit submit-button ">Dodaj</button>
+        </div>
+    </form>
+</div>
 <script>
-
+    const edit_list_item = (id, index) =>{
+        fetch(`/shopping-list/list-view/${id}/${index}`)
+        .then(res=>res.json())
+        .then(data =>{
+            console.log(data)
+            console.log(index)
+            let name = getElementById('searchby-1')
+            let price =  getElementById('itemPrice')
+            let amount = getElementById('itemAmount')
+            let edit_item = getElementById('edit-item')
+            edit_item.action = `/shopping-list/list-view/${id}/${index}?_method=PUT`
+            name.value = data.name
+            price.value = data.price
+            amount.value = data.amount 
+            amount.select();
+            price.select();
+            name.select();     
+        })
+    }
 </script>
-

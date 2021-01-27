@@ -93,16 +93,22 @@ const getElementById = (elementId) => document.getElementById(elementId)
             onChipAdd: (event, chip) => {
                 input_value =[];
                 event[0].M_Chips.chipsData.forEach(elem=>{
-                    input_value.push(elem.tag)
+                    let name = elem.tag.split(',')[0];
+                    let price = elem.tag.split(',')[1]
+                    let amount = elem.tag.split(',')[2]
+                    input_value.push(name+'+'+price+'+'+amount)
                 })
-                input.setAttribute('value',input_value)
+                input_list.setAttribute('value',input_value)
             },
             onChipDelete:(event, chip)=>{
                 input_value =[];
                 event[0].M_Chips.chipsData.forEach(elem=>{
-                    input_value.push(elem.tag)
+                    let name = elem.tag.split(',')[0];
+                    let price = elem.tag.split(',')[1]
+                    let amount = elem.tag.split(',')[2]
+                    input_value.push(name+'+'+price+'+'+amount)
                 })
-                input.setAttribute('value',input_value)
+                input_list.setAttribute('value',input_value)
             }
         });
     }
@@ -111,25 +117,29 @@ const getElementById = (elementId) => document.getElementById(elementId)
     */
     let searchby1 = document.querySelector('#searchby-1') 
     let searchby2 = document.querySelector('#searchby-2')
+    let searchby3 = document.querySelector('#searchby-3')
     let search2 = document.querySelector('#search2') 
     let client1 = document.querySelector('#search-1')
     let client_search = document.querySelector('#client-search')
   
     if(searchby1){
         let searchedElement = document.querySelector('#options-1');
-        let templateContent = document.querySelector('#searchTemplate1-1').options;
-        searchby1.addEventListener('keyup', function handler(event) {
-            
-            autocomplete(searchby1, searchedElement, templateContent, false, false )
-        });
-        searchby1.addEventListener('click', function handler(event) {
-            autocomplete(searchby1, searchedElement, templateContent, false, true )
-        })
-        searchby1.addEventListener('keypress', (e)=>{
-            if(e.key === 'Enter'){
-                searchedElement.blur()
-            }
-        })
+        let templateContent = document.querySelector('#searchTemplate1-1');
+        if(templateContent){
+            searchby1.addEventListener('keyup', function handler(event) {
+                event.key == undefined ? searchedElement.id = '' : searchedElement.id = 'options-1';
+                autocomplete(searchby1, searchedElement, templateContent.options, false, false )
+            });
+            searchby1.addEventListener('click', function handler(event) {
+                autocomplete(searchby1, searchedElement, templateContent.options, false, true )
+            })
+            searchby1.addEventListener('keypress', (e)=>{
+                if(e.key === 'Enter'){
+                    searchedElement.blur()
+                }
+            })
+        }
+  
         let price = getElementById('price-1')
         if(price){
             searchby1.addEventListener('input', function(e){
@@ -145,18 +155,21 @@ const getElementById = (elementId) => document.getElementById(elementId)
     }
     if(searchby2){
         let searchedElement = document.querySelector('#options-2');
-        let templateContent = document.querySelector('#searchTemplate1-2').options;
-        searchby2.addEventListener('keyup', function handler(event) {
-            autocomplete(searchby2, searchedElement, templateContent, false, false )
-        });
-        searchby2.addEventListener('click', function handler(event) {
-            autocomplete(searchby2, searchedElement, templateContent, false, true )
-        })
-        searchby2.addEventListener('keypress', (e)=>{
-            if(e.key === 'Enter'){
-                searchedElement.blur()
-            }
-        })
+        let templateContent = document.querySelector('#searchTemplate1-2');
+        if(templateContent){
+            searchby2.addEventListener('keyup', function handler(event) {
+                event.key == undefined ? searchedElement.id = '' : searchedElement.id = 'options-2';
+                autocomplete(searchby2, searchedElement, templateContent.options, false, false )
+            });
+            searchby2.addEventListener('click', function handler(event) {
+                autocomplete(searchby2, searchedElement, templateContent.options, false, true )
+            })
+            searchby2.addEventListener('keypress', (e)=>{
+                if(e.key === 'Enter'){
+                    searchedElement.blur()
+                }
+            })
+        }
         let price2 = getElementById('price-2')
         if(price2){
             searchby2.addEventListener('input', function(e){
@@ -170,37 +183,58 @@ const getElementById = (elementId) => document.getElementById(elementId)
             
         }
     }
+    if(searchby3){
+        let searchedElement = document.querySelector('#options-3');
+        let templateContent = document.querySelector('#searchTemplate1-3');
+        if(templateContent){
+            searchby3.addEventListener('keyup', function handler(event) {
+                event.key == undefined ? searchedElement.id = '' : searchedElement.id = 'options-3';
+                autocomplete(searchby3, searchedElement, templateContent.options, false, false )
+            });
+            searchby3.addEventListener('click', function handler(event) {
+           
+                autocomplete(searchby3, searchedElement, templateContent.options, false, true )
+            })
+          
+        }
+    }
     if(search2){
         let searchedElement = document.querySelector('#searchedElement2');
-        let templateContent = document.querySelector('#searchTemplate2').options;
-        search2.addEventListener('keyup', function handler(event) {
-            autocomplete(search2, searchedElement, templateContent, false, false )
-        });
-        search2.addEventListener('click', function handler(event) {
-            autocomplete(search2, searchedElement, templateContent, false, true )
-        })
-        search2.addEventListener('keypress', (e)=>{
-            if(e.key === 'Enter'){
-                searchedElement.blur()
-            }
-        })
+        let templateContent = document.querySelector('#searchTemplate2');
+        if(templateContent){
+            search2.addEventListener('keyup', function handler(event) {
+                event.key == undefined ? searchedElement.id = '' : searchedElement.id = 'searchedElement2';
+                autocomplete(search2, searchedElement, templateContent.options, false, false )
+            });
+            search2.addEventListener('click', function handler(event) {
+                autocomplete(search2, searchedElement, templateContent.options, false, true )
+            })
+            search2.addEventListener('keypress', (e)=>{
+                if(e.key === 'Enter'){
+                    searchedElement.blur()
+                }
+            })
+        }
+
     }
     if(client1 || client_search){
         var searchedElement = document.querySelector('#clientOptions-1');
-        var templateContent = document.querySelector('#searchTemplate-1').options;
-        if(client_search){
+        var templateContent = document.querySelector('#searchTemplate-1');
+        if(client_search && templateContent){
             client_search.addEventListener('keyup', function handler(event) {
-                autocomplete(client_search, searchedElement, templateContent, false, false )
+                event.key == undefined ? searchedElement.id = '' : searchedElement.id = 'clientOptions-1';
+                autocomplete(client_search, searchedElement, templateContent.options, false, false )
             })
             client_search.addEventListener('click', function handler(event) {
-                autocomplete(client_search, searchedElement, templateContent, false, true )
+                autocomplete(client_search, searchedElement, templateContent.options, false, true )
             })
-        } else{
+        } else if(client1 && templateContent){
             client1.addEventListener('keyup', function handler(event) {
-                autocomplete(client1, searchedElement, templateContent, true, false )
+                event.key == undefined ? searchedElement.id = '' : searchedElement.id = 'clientOptions-1';
+                autocomplete(client1, searchedElement, templateContent.options, true, false )
             })
             client1.addEventListener('click', function handler(event) {
-                autocomplete(client1, searchedElement, templateContent, true, true)
+                autocomplete(client1, searchedElement, templateContent.options, true, true)
             })
             client1.addEventListener('input', function(e){
                 add_number_to_input(e, 1)
@@ -245,7 +279,6 @@ const add_number_to_input = (e, nr) =>{             //take care of adding number
 */ 
 const add_price_to_input = (e, nr) =>{
     const val = document.querySelectorAll(`#searchTemplate1-${nr}  option[value="${e.target.value}"]`)
- 
     if(val[0] !=undefined){
         getElementById(`price-${nr}`).setAttribute('value',val[0].getAttribute('data-value'))
     }
@@ -265,6 +298,7 @@ const autocomplete = (element, searchedElement, templateContent, addInnerHtml, c
                 if(addInnerHtml === true){
                     option.innerText = e.innerText
                     option.setAttribute('data-value', e.getAttribute('data-value'))
+                 
                 }
                     
                 searchedElement.append(option);
@@ -287,9 +321,8 @@ const autocomplete = (element, searchedElement, templateContent, addInnerHtml, c
             }
         })
     }
-   
-
 }
+
 /* 
  * Fetch data about prev created visit CALENDAR
 */

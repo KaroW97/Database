@@ -5,7 +5,8 @@ Used technologies:
 - HTML
 - EJS
 - SASS
-- JQuery
+- Vanilla JS
+- Materialize css
 - MongoDB
 
 Link to aplication: https://beauty-base.herokuapp.com/

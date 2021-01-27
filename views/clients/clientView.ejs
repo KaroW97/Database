@@ -30,7 +30,7 @@
                 <div class="name add-input-field">
                     <p class=" pTag separate-right" name="name" id="client-name"><%=oneClient.name%> </p>
                 </div>
-                <div class="name  add-input-field">
+                <div class="name add-input-field">
                     <p class=" pTag" name="lastName" id="lastname"><%=oneClient.lastName%></p>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                 </button>
             </form>
             <div class="row   modal-trigger" href="#edit_visit" onclick="edit_form_client_visit(`<%=element._id%>`, 2)">
-                <div class="col s12">
+                <div class="col s12 padding">
         
                     <div class="col s12 m6 l6 xl6">
                         <label>Data wizyty</label>
@@ -136,12 +136,12 @@
     <%});%>
 </div>
 
-<div class=" form-styling-the-smallest modal" id="create-new-visit">
+<div class=" form-styling-smaller modal" id="create-new-visit">
     <form class="modal-content content-form-styling " action='/clients/client-view/<%=oneClient.id%>' method="POST">
        <%-include('./edit-create-visit.ejs',{id_extention:1}) %>
     </form>
 </div>   
-<div class=" form-styling-the-smallest modal" id="edit_visit">
+<div class="form-styling-smaller modal" id="edit_visit">
     <form class="modal-content content-form-styling"id="edit_client_visit" action='' method="POST">
        <%-include('./edit-create-visit.ejs',{id_extention:2}) %>
 
