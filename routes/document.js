@@ -33,7 +33,9 @@ var storage = new GridFsStorage({
     }
   });
 const upload = multer({ storage });
-//Document Main Page
+/*
+ * Document main page
+*/
 router.get('/', ensureAuthenticated,async(req, res) => {
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
 
@@ -71,7 +73,9 @@ router.get('/', ensureAuthenticated,async(req, res) => {
         res.redirect('/document')
     }
 })
-//Get One Document
+/*
+ * Get document
+*/
 router.get('/:filename', ensureAuthenticated,async(req, res) => {
     try{
         req.app.locals.gfs.files.findOne({ filename: req.params.filename}, (err, file)=>{
@@ -89,7 +93,9 @@ router.get('/:filename', ensureAuthenticated,async(req, res) => {
     }
     
 })
-//Upload File
+/*
+ * Upload file
+*/
 router.post('/',ensureAuthenticated,upload.array('file'),async(req,res)=>{
     try{
         req.flash('mess','Dodano plik');
@@ -98,12 +104,14 @@ router.post('/',ensureAuthenticated,upload.array('file'),async(req,res)=>{
     }catch(err){
        
         req.flash('mess','Nie udało się dodac plik');
-        req.flash('type','info-danger')
+        req.flash('type','info-alert')
         res.redirect('/document')
     }
 
 })
-//Delete File
+/*
+ * Delete file
+*/
 router.delete('/:id',ensureAuthenticated,async(req,res)=>{
     try{
         await  req.app.locals.gfs.remove({_id:ObjectId(req.params.id),root:'uploads'}, function (err, gridStore) {
@@ -115,7 +123,7 @@ router.delete('/:id',ensureAuthenticated,async(req,res)=>{
         res.redirect('/document') 
     }catch(err){
         req.flash('mess','Nie udało się usunąć plik');
-        req.flash('type','info-danger')
+        req.flash('type','info-alert')
         res.redirect('/document') 
     }
 

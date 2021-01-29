@@ -240,7 +240,7 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
                 ...findTreatmentStat[0].transactionDate.splice(0,dateStatToDelete),
                 ...findTreatmentStat[0].transactionDate.splice(dateStatToDelete + 1)
             ]
-            findTreatmentStat[0].transactionDate.length === 0 ?  findTreatmentStat[0].remove() : await findTreatmentStat[0].save()
+            findTreatmentStat[0].transactionDate.length === 0 ?  findTreatmentStat[0].deleteOne() : await findTreatmentStat[0].save()
         }
        
         let visitToDelte =  clientt.clientVisits.findIndex(v =>{
@@ -255,7 +255,7 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
             ]
         
         await clientt.save()
-        await visit.remove();
+        await visit.deleteOne();
     
         req.flash('mess','Wizyta została usunięta');
         req.flash('type','info-success')
@@ -325,7 +325,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
                 ...findTreatmentStat[0].transactionDate.splice(updateTreatmentStats + 1)
             ]
             findTreatmentStat[0].transactionDate.push(date)
-            findTreatmentStat[0].transactionDate.length === 1 ?  await findTreatmentStat[0].remove() : await  findTreatmentStat[0].save()    
+            findTreatmentStat[0].transactionDate.length === 1 ?  await findTreatmentStat[0].deleteOne() : await  findTreatmentStat[0].save()    
          }
          /*
          * If name of the treatment is diferent and lenght of the treatment after updating does exist
@@ -338,7 +338,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
                ...findTreatmentStat[0].transactionDate.splice(updateTreatmentStats + 1)
            ]
            findTreatmentStatAfter[0].transactionDate.push(date)
-           findTreatmentStat[0].transactionDate.length === 0 ?   await findTreatmentStat[0].remove() :  await  findTreatmentStat[0].save()
+           findTreatmentStat[0].transactionDate.length === 0 ?   await findTreatmentStat[0].deleteOne() :  await  findTreatmentStat[0].save()
        
            await findTreatmentStatAfter[0].save()
         }
@@ -361,7 +361,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
                 await findTreatmentStat[0].save()
             }
             if(findTreatmentStat[0].transactionDate.length <= 1){
-              await  findTreatmentStat[0].remove()
+              await  findTreatmentStat[0].deleteOne()
             }
             await treatmentStats.save()
          }
@@ -480,7 +480,6 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
 })
 /*
 * Delete client
-* TODO: add deleting also from stats 
 */
 router.delete('/:id', ensureAuthenticated,async(req,res)=>{
     try{

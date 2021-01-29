@@ -32,15 +32,16 @@
     <div class="col s12 ">
         <% if(files) {%> 
             <% for(var i = 0 ; i< files.length ; i++){%>
-                <div class="col s12 m12 l4 top-separator ">
+                <div class="col s12 m12 l4 top-separator width-50 ">
                     <div class="card max-width-card">
                         <div class="card-header ">
                             <form method="post"action="/document/<%=files[i]._id %>?_method=DELETE">
-                                <button type="submit" class="close" aria-label="Close">
+                                <button type="submit" class="close close-absolute" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </form>
-                            <p  class="col search-by" data-value="<%=files[i].metadata.initialFilename%>"><%=files[i].metadata.initialFilename.length > 16 ?files[i].metadata.initialFilename.slice(0,16) +'...' :files[i].metadata.initialFilename %></p>
+                            
+                            <p class="col search-by elipsis" data-value="<%=files[i].metadata.initialFilename%>"><%=files[i].metadata.initialFilename %></p>
                         </div>
                         <div class="card-content"  onclick="window.open('document/<%=files[i].filename%>','_blank')">
                             <div class="col s12 m6 l12">

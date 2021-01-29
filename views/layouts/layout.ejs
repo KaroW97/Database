@@ -21,7 +21,7 @@
 <body >
 
     <div class="pageContentWrapper">
-        <% if(user) { %>
+        <% if(user !== null && user.role !=='admin') { %>
             <%-include('../partials/header')%>
         <% }else{%>
             <%-include('../partials/initialHeader')%>
@@ -31,9 +31,11 @@
             <%- body %> 
         </div>
     </div>
-    <footer class='footer' name="footer">
-        <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
-    </footer>
+    <% if(user === null ) { %>
+        <footer class='footer' name="footer">
+            <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
+        </footer>
+    <% }%>
     <script type="text/javascript"  src="../../public/js/index.js"  charset="utf-8"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>

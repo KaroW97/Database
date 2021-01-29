@@ -8,7 +8,9 @@ const Client = require('../models/clients')
 const User = require('../models/user')
 const ObjectId = require('mongodb').ObjectId;
 const {ensureAuthenticated} = require('../config/auth')
-//Show Calendar Page
+/*
+ * Calendar page
+*/
 router.get('/',ensureAuthenticated,async (req,res)=>{
    
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
@@ -16,7 +18,6 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
     let visit = FutureVisit.find({user:req.user.id})
     let todayDate = new Date(),weekDate=new Date();
    
-    //let shoppingForWeek =  ShoppingList.find({user:req.user.id}).populate('listName')
     if(req.query.visitAfter != null &&  req.query.visitAfter !='')
         visit = visit.gte('visitDate', req.query.visitAfter)  
     else
@@ -58,7 +59,9 @@ router.get('/',ensureAuthenticated,async (req,res)=>{
     }
     
 })
-//Delete Visit
+/*
+ * Delete visit
+*/
 router.delete('/:id',ensureAuthenticated, async (req,res)=>{
     try {
         let futureVisit= await FutureVisit.findById(req.params.id);
@@ -73,19 +76,20 @@ router.delete('/:id',ensureAuthenticated, async (req,res)=>{
         res.redirect('/calendar')
     }
 })
-//Create New Visit
+
+/*
+ * Create new visit
+*/
 router.post('/visit',ensureAuthenticated, async(req,res)=>{
     const cssSheets =[];
     cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     let futureVisit  = new FutureVisit({
         user:req.user.id,
         clientName:req.body.clients,
-        //newClient:req.body.newClient,
         visitDate :new Date(req.body.visitDate),
         timeFrom:req.body.timeFrom,
         timeTo:req.body.timeTo,
         treatment:req.body.treatment ,
-        //newTreatment:req.body.newTreatment,
         phoneNumber:req.body.phone,
     });
    
@@ -100,6 +104,9 @@ router.post('/visit',ensureAuthenticated, async(req,res)=>{
         res.redirect('/clients')
     }
 })
+/*
+ * Edit visit
+*/
 router.put('/edit/:id', async(req,res)=>{
     let futureVisit;
   
@@ -107,9 +114,9 @@ router.put('/edit/:id', async(req,res)=>{
         futureVisit = await FutureVisit.findById(Object(req.params.id)).exec()
         futureVisit.clientName = req.body.clients
         futureVisit.treatment = req.body.treatment
-        futureVisit.visitDate =new Date(req.body.visitDate)//visitDateEdit)
-        futureVisit.timeFrom = req.body.timeFrom///Edit
-        futureVisit.timeTo = req.body.timeTo//Edit
+        futureVisit.visitDate =new Date(req.body.visitDate)
+        futureVisit.timeFrom = req.body.timeFrom
+        futureVisit.timeTo = req.body.timeTo
         futureVisit.phoneNumber = req.body.phone
     
         await futureVisit.save();
@@ -122,6 +129,9 @@ router.put('/edit/:id', async(req,res)=>{
         res.redirect('/calendar')
     }
 })
+/*
+ * Handle request from js and send info about visit
+*/
 router.get('/:id', async(req, res)=>{
     let visitToFind;
     try{

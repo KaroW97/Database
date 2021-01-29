@@ -1,21 +1,19 @@
-<div class="header-bar">
-<header>
-    <nav>
-        <div class="menu">
-            <div class="left-side-bar">
-                <a href="/admin">Admin Panel</a>
-            </div>
-            <div class="dropdown">
-                <div class="user-circle"><i class="far fa-user"></i></div>
-                <ul class="dropdown-menu">
-                    
-                    <li><a href="/admin/settings">Ustawienia</a></li>
-                    <li><a href="/admin-logout">Wyloguj</a></li>
-                </ul>
-            </div>
+
+<nav>
+    <div class="nav-wrapper ">
         
-        </div>  
-    
-    </nav>
-</header>
-</div>
+        <a class="brand-logo right" href="/logout" >
+            <i class="material-icons">keyboard_tab</i>
+        </a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="left hide-on-med-and-down">
+            <li><a href="/admin">Admin Panel</a></li>
+        
+        </ul>
+    </div>
+</nav>
+<ul class="sidenav" id="mobile-demo">
+    <li><a href="/admin">Admin Panel</a></li>
+    <li><a href="/logout">Wyloguj</a></li>
+
+</ul>

@@ -1,53 +1,54 @@
-<%-include('../partials/infoMessages.ejs')%>
+<!--Search Bar-->
+<div class="row main-row z-depth-1 small-search-bar">
+    <form class="col s12" method="GET">
+        <div class="input-field col s12 m9 l9 xl9">
+            <input class="myInputSearch" type="text" id="search-1" list="clientOptions-1"  name="treatmentName"  autocomplete="off">
+            <label for="search-1" class="active">Nazwa użytkownika</label>
+        </div>
+        <datalist id="searchTemplate-1" >
+            <%user.forEach(user=>{%>
+                <option value='<%=user.email%>' data-value="<%=user.companyName%>"><%=user.companyName%></option>
+            <%})%>
+        </datalist>
+        <datalist  id="clientOptions-1"></datalist>
+        <div class="row button-row">
+            <div class="col s12 m1 l2 xl2 center-button-small">
+                <button type="submit" class="waves-effect waves-light btn-small  "aria-label="search-by-date"><i class="large material-icons">search</i></button>
 
-<div class="center-main-div">
-    <div class="main-div">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row information-row">
+    <div class="col s12 ">
+        <% user.forEach(user => {%> 
+          
+            <div class="col s12 m12 l12 top-separator-long-div top-separator"  >
+                <div class="card max-width-card"  >
+                    <div class="card-content " >
+                        <form method="post" action='/admin/<%=user._id%>?_method=DELETE'>
+                            <button type="submit" class="close close-absolute" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </form> 
+                        <div class="col s12 m6 l4">
+                            <label>Email</label>
+                            <p class="search-by elipsis" data-value="<%=user.email%>"><%= user.email %></p>
+                        </div>
+                        <div class="col s12 m6 l4">
+                            <label>Nazwa Firmy</label>
+                            <p class="elipsis"><%=user.companyName%></p>
+                        </div> 
+                        <div class="col s12 m6 l4">
+                            <label>Status</label>
+                            <p><%=user.active == true ? 'Zweryfikowany' : 'Nie zweryfiowany'%></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>   
+    <%}) %> 
      
-        <div class="div-top">
-            <input type="text" placeholder="Użytkownik">
-            <form method="POST" action="/admin?_method=DELETE">
-            <button type="submit" value="Usuń">  <i class="far fa-trash-alt"></i></button>
-        </div>
-       
-                <table id="myTable">
-                    <thead>
-                        <tr>
-                            <th>Nazwa Firmy</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        <% user.forEach(user => {%> 
-                                <tr>
-                                    <td> <%=user.companyName%></td>
-                                    <td ><%=user.email%></td>
-                                    <td><%=user.active == true ? 'Zweryfikowany' : 'Nie zweryfiowany'%></td>
-                                    <td><input type="checkbox" name="chackboxDelet" value="<%=user.id%>"></td>
-                                </tr>
-                        <% }); %> 
-                    </tbody>
-                </table>
-            </form>
-        </div>
     </div>
-<script>
-   
-     let lenght = $('#myTable >tbody >tr').length;
-    if(lenght < 10) {
-      
-        for(var i=0; i <10-lenght; i++) {
-            $("#myTable>tbody").append(`   
-            <tr style="height:44px">
-                <td style="color:transparent"></td>
-                <td ></td>
-                <td></td>
-                <td></td>
-            </tr>`)
-        }
-    }
-     
- 
-</script>
+</div>
+

@@ -1,17 +1,20 @@
-
-
-<% if(messages.error){ %>
-    <div  id="hideAlert" class="alert alert-<%=messages.danger%>"><%= messages.error%></div>
-<% } %>
-<div class="center-main-div">
-    <div class="main-div">
-        <form method="POST"  action="/verify?_method=PUT">
-            <h1>Weryfikacja</h1>
-            <label for="secretToken"></label>
-            <input type="text" id="secretToken"name="secretToken" placeholder="Klucz Weryfikacyjny"  required autofocus>
-        
-            <button type="submit">Zweryfikuj</button>
-        </form>
+<div class="row max-width-row top-separation-3">
+    <div class="col s12 m12 l12  " >
+        <div class="card  ">
+            <div class="card-content">
+                <h2 class="text-align">Weryfikacja</h2>
+                <form  method="POST" action="/verify?_method=PUT">
+                    <div class="input-field input-field-color-change col s12  ">
+                        <input id="secretToken" type="text" name="secretToken" class="validate" required>
+                        <label for="secretToken">Klucz Weryfikacyjny</label>
+                    </div>
+                    <div class="center-button">
+                        <button class="btn waves-effect submit-button teal lighten-2
+                        " type="submit" aria-label="create-visit-form">Zweryfikuj</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 

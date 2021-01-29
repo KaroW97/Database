@@ -101,7 +101,7 @@ router.delete('/:id',ensureAuthenticated, async(req,res)=>{
     var treatment;
     try{
         treatment = await Treatment.findById(req.params.id);
-        await treatment.remove() 
+        await treatment.deleteOne() 
         req.flash('mess','Udało się usunąć zabieg')
         req.flash('type','info-success')
         

@@ -15,26 +15,34 @@ const FutureVisit = require('../models/clientFutureVisit')
 const ClientVisits = require('../models/clientsVisits')
 const ListProducts = require('../models/listProducts')
 const ProductsForTreatment = require('../models/treatmentProducts')
-// TODO: Get Files to de lete 
 const {ensureAuthenticated} = require('../config/auth')
 
-//Show current options
+/*
+ * Show options
+*/
 router.get('/',ensureAuthenticated, async(req,res)=>{
     try{
-        const cssSheets =[]
-        cssSheets.push(" ../../public/css/user/settings/index.css");
+
         const user   = await User.findById(req.user.id);
+        const brandName = await BrandName.find({user:req.user.id})
+        const listProducts = await ListProducts.find({user:req.user.id})
+        const productsForTreatment = await ProductsForTreatment.find({user:req.user.id})
         res.render('settings/index',{
             user:user,
-            styles:cssSheets
+            brandName:brandName,
+            listProducts:listProducts,
+            productsForTreatment:productsForTreatment
         });
     }catch(err){
         console.log(err)
-        req.flash('created','Nie udało się otworzyć Ustawień');
-        req.flash('success', 'danger');
+        req.flash('mess','Nie udało się otworzyć Ustawień');
+        req.flash('type', 'info-alert');
         res.redirect('/calendar')
     } 
 })
+/*
+ * Change password request
+*/
 router.put('/change-password',ensureAuthenticated, async(req,res)=>{
     let user
     try{
@@ -70,8 +78,8 @@ router.put('/change-password',ensureAuthenticated, async(req,res)=>{
                  path: './public/logo2.JPG',
                  cid:'logo'
              })
-            req.flash('error','Hasło zostało zmienione')
-            req.flash('danger','success')
+            req.flash('mess','Hasło zostało zmienione')
+            req.flash('type','info-success')
             res.redirect('/settings')
             return
         }else{
@@ -91,6 +99,9 @@ router.put('/change-password',ensureAuthenticated, async(req,res)=>{
         res.redirect('/settings')
     }
 })
+/*
+ * Change email request
+*/
 router.put('/change-email',ensureAuthenticated, async(req,res)=>{
     let user
     try{
@@ -124,7 +135,7 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
            
 
             req.flash('mess',"Podano różne email'e")
-            req.flash('type','info-danger')
+            req.flash('type','info-alert')
             res.redirect('/settings')
             return;
         }
@@ -133,7 +144,9 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
         res.redirect('/settings')
     }
 })
-
+/*
+ * Change company name request
+*/
 router.put('/change-company-name',ensureAuthenticated, async(req,res)=>{
     let user
     try{
@@ -161,6 +174,9 @@ router.put('/change-company-name',ensureAuthenticated, async(req,res)=>{
         res.redirect('/settings')
     }
 })
+/*
+ * delete account request
+*/
 router.delete('/delete-account',ensureAuthenticated, async(req,res)=>{
     try {
         let user = await User.findById(req.user.id);
@@ -203,6 +219,91 @@ router.delete('/delete-account',ensureAuthenticated, async(req,res)=>{
         res.redirect('/settings');
     }
 })
+/*
+ * Delete brands request
+*/
+router.delete('/brand-name-delete',async(req,res)=>{
+    let brand_id ;
+    if(typeof(req.body.selectedBrand) === "string")
+        brand_id = req.body.selectedBrand.split(' ')
+    else
+        brand_id = req.body.selectedBrand
+  
+    try{
+        brand_id.forEach(async(item)=>{
+            let brand = await BrandName.findById(item)
+            if(brand)
+                await brand.deleteOne();
+        })
+        if(brand_id.length > 1)
+            req.flash('mess','Nazway firm zostały usunięte')
+        else
+            req.flash('mess','Nazwa firmy została usunięta')
+        req.flash('type','info-success')
+        res.redirect('/settings')
+    }catch(err){
+        req.flash('mess','Coś poszło nie tak, spróbuj jeszcze raz.')
+        req.flash('type','info-alert')
+        res.redirect('/settings')
+    }
 
+})
+/*
+ * Delete products request
+*/
+router.delete('/delete-product',async(req,res)=>{
+    let products_id ;
+    if(typeof(req.body.selectedProduct) === "string")
+        products_id = req.body.selectedProduct.split(' ')
+    else
+        products_id = req.body.selectedProduct
+  
+    try{
+        products_id.forEach(async(item)=>{
+            let product = await ListProducts.findById(item)
+            if(product)
+                await product.deleteOne();
+        })
+        if(products_id.length > 1)
+            req.flash('mess','Nazway produktów zostały usunięte')
+        else
+            req.flash('mess','Nazwa produktu została usunięta')
+        req.flash('type','info-success')
+        res.redirect('/settings')
+    }catch(err){
+        req.flash('mess','Coś poszło nie tak, spróbuj jeszcze raz.')
+        req.flash('type','info-alert')
+        res.redirect('/settings')
+    }
 
+})
+/*
+ * Delete products needed for the treatments
+*/
+router.delete('/delete-product-for-treatments',async(req,res)=>{
+    let productsForTreatment_id ;
+    if(typeof(req.body.selectedProductForTreatment) === "string")
+        productsForTreatment_id = req.body.selectedProductForTreatment.split(' ')
+    else
+        productsForTreatment_id = req.body.selectedProductForTreatment
+    try{
+        productsForTreatment_id.forEach(async(item)=>{
+            let productsForTreatment = await ProductsForTreatment.findById(item)
+            if(productsForTreatment)
+                await productsForTreatment.deleteOne();
+        })
+        if(productsForTreatment_id.length > 1)
+            req.flash('mess','Nazway produktów zostały usunięte')
+        else
+            req.flash('mess','Nazwa produktu została usunięta')
+        req.flash('type','info-success')
+        res.redirect('/settings')
+    }catch(err){
+        req.flash('mess','Coś poszło nie tak, spróbuj jeszcze raz.')
+        req.flash('type','info-alert')
+       
+        res.redirect('/settings')
+    }
+
+})
 module.exports = router;

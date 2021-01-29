@@ -1,13 +1,22 @@
-
-
-<div class="center-main-div">
-    <div class="main-div">
-        <form method="POST" action="/forgot">
-            <h1>Zapomniałeś Hasła?</h1>
-            <label for="forgotPassword"></label>
-            <input type="text" id="forgotPassword"name="forgotPassword" placeholder="Podaj swój email"  required autofocus>
-        
-            <button type="submit">Resetuj</button>
-        </form>
+<div class="row max-width-row top-separation-3">
+    <div class="col s12 m12 l12  " >
+        <div class="card  ">
+            <div class="card-content">
+                <h2 class="text-align">Zapomniałeś Hasła?</h2>
+                <form  method="POST" action="/forgot">
+                    <div class="input-field input-field-color-change col s12  ">
+                        <input id="forgotPassword" type="text" name="forgotPassword" class="validate" required>
+                        <label for="forgotPassword">Podaj swój email</label>
+                    </div>
+                    <div class="center-button">
+                        <button class="btn waves-effect submit-button teal lighten-2
+                        " type="submit" aria-label="create-visit-form">Zweryfikuj</button>
+                    </div>
+                </form>
+                <div class="top-separation-2 padding-text">
+                    <a class="text-color" href="/">Nie masz konta? Zarejestruj się!</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

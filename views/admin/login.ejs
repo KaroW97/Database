@@ -1,22 +1,34 @@
+<% if(messages.error){ %>
+    <section class="info-alert">
+        <p> <%= messages.error%>  </p>  
+    </section>        
+<% } %>
+<% if(messages.logged){ %>
+    <section class="info-success">
+        <p> <%= messages.logged%>  </p>  
+    </section>        
+<% } %>
 
-<%-include('../partials/indexMessage.ejs')%>
-<div class="center-main-div">
-    <div class="main-div" >
-            <h1>Logowanie</h1>
-            <form method="POST" action="/admin-login">
-                <label for="loginEmail"></label>
-                <input type="email" id="loginEmail"name="email" placeholder="Email"  >
-            
-                <label for="loginPassword"></label>
-                <input type="password" id="loginPassword"name="password" placeholder="Hasło">
-            
-                <button type="submit">Zaloguj</button>
-            </form>
-            <div class="href-div">
-                <a href="/admin-register">Nie masz konta? Zarejestruj się!</a><br>
-                <a href="/admin-forgot">Nie pamiętasz hasła?</a>
+    <div class="row max-width-row top-separation-3">
+        <div class="col s12 m12 l12  " >
+            <div class="card  ">
+                <div class="card-content">
+                    <h2 class="text-align">Logowanie</h2>
+                    <form  method="POST" action="/admin-login">
+                        <div class="input-field input-field-color-change col s12  ">
+                            <input id="loginEmail" type="text" name="email" class="validate" autocomplete="off">
+                            <label for="loginEmail">Email</label>
+                        </div>
+                        <div class="input-field input-field-color-change col s12  ">
+                            <input id="loginPassword" type="password" name="password" class="validate" autocomplete="off">
+                            <label for="loginPassword">Hasło</label>
+                        </div>
+                        <div class="center-button">
+                            <button class="btn waves-effect submit-button teal lighten-2
+                            " type="submit" aria-label="create-visit-form">Logowanie</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    
-

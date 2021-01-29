@@ -43,7 +43,6 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
 })
 /*
 * Add Shopping List name and create brand 
-* Change array of dates and amount 
 */
 router.post('/', ensureAuthenticated,async(req,res)=>{
     const shoppingList = new ShoppingList({
@@ -69,7 +68,7 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
             if(items.length === 0){
                 const listProducts = new ListProducts({
                     user:req.user.id,
-                    name: name,
+                    name: name || 'brak nazwy',
                     productInfo:[{
                         date:req.body.transactionDate,
                         price:price,
@@ -98,7 +97,6 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         req.flash('mess','Lista została dodana.')
         req.flash('type','info-success')
         res.redirect(`/shopping-list`)
-        //res.redirect(`/shopping-list/list-view/${shoppingList.id}`)
     }catch(err){
         console.log(err)
         res.redirect(`/clients`)
@@ -127,7 +125,7 @@ router.delete('/:id',ensureAuthenticated,async(req,res)=>{
     try{
    
         list = await ShoppingList.findById(req.params.id);
-        await list.remove();
+        await list.deleteOne();
         req.flash('mess','Usunięto liste zakupów.')
         req.flash('type','info-success')
         
@@ -218,7 +216,6 @@ router.put('/list-view/edit-list-info/:id', ensureAuthenticated, async(req,res)=
         res.redirect(`/shopping-list/list-view/${req.params.id}`)
     }
 })
-//TODO: add merging elements if this element exists in list and then deleting it after marge
 /*
 * Update existing item on the list 
 */
@@ -231,14 +228,6 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
         let beforeEdit = list.productListInfo[req.params.itemIndex]
         list.totalPrice -= beforeEdit.price * beforeEdit.amount
   
-      /*  let elem = list.productListInfo.reduce((elem, arrayItem, index)=>{
-            console.log(arrayItem)
-            if(arrayItem.name == req.body.itemName)
-                elem.push(index)
-            return elem
-        },[])
-            */
-      
         list.productListInfo[req.params.itemIndex] = {
             name:req.body.itemName,
             price:Number(req.body.itemPrice) || 0,
@@ -289,13 +278,7 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
                 if(item.date === list.transactionDate.toISOString().split('T')[0] && beforeEdit.price === item.price && beforeEdit.amount === item.amount)
                     return item
             })
-           /* if(elem.length != 0 && list.productListInfo[elem[0]].price === Number(req.body.itemPrice)){
-                list_products_before[0].productInfo[index] = {
-                    date:list.transactionDate.toISOString().split('T')[0],
-                    price:Number(req.body.itemPrice),
-                    amount:Number(req.body.itemAmount)
-                }
-            }*/
+
                 list_products_before[0].productInfo[index] = {
                     date:list.transactionDate.toISOString().split('T')[0],
                     price:Number(req.body.itemPrice) || 0,
@@ -305,19 +288,6 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
          
             await list_products_before[0].save()
         }
-
-        /*if(elem.length != 0 && list.productListInfo[elem[0]].price === Number(req.body.itemPrice)){
-            list.productListInfo[req.params.itemIndex] = {
-                name:req.body.itemName,
-                price:Number(req.body.itemPrice) + (Number(list.productListInfo[elem[0]].price)* Number(list.productListInfo[elem[0]].amount)) ,
-                amount:Number(req.body.itemAmount) + Number(list.productListInfo[elem[0]].amount)
-            }
-            list.productListInfo = [
-                ...list.productListInfo.splice(0, elem[0]),
-                ...list.productListInfo.splice(elem[0] + 1)
-            ]
-            console.log(list)
-        }*/
         list.set('productListInfo', list.productListInfo)
         await list.save();
 
@@ -331,7 +301,6 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
         res.redirect(`/shopping-list/list-view/${req.params.id}`)
     }
 })
-
 /*
 * Delete List Item
 */

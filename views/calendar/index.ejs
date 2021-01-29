@@ -31,12 +31,12 @@
                 
             <% } %> 
           
-            <div class="col s12 m12 l12 top-separator"  >
+            <div class="col s12 m12 l12 top-separator-long-div"  >
          
             <div class="card max-width-card <%=newVisit[i-1] != undefined && newVisit[i-1].visitDate.toISOString().split('T')[0] === newVisit[i].visitDate.toISOString().split('T')[0]&& (newVisit[i-1].timeTo >= newVisit[i].timeFrom || newVisit[i-1].timeFrom >= newVisit[i].timeFrom )?'alert-red' :''%>"  >
                 <div class="card-header no-pointer "   >
                     <form method="post" action='/calendar/<%=newVisit[i]._id%>?_method=DELETE'>
-                        <button type="submit" class="close" aria-label="Close">
+                        <button type="submit" class="close close-absolute" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </form> 
@@ -51,9 +51,9 @@
                         <label>Kontakt</label>
                         <p><%= newVisit[i].phoneNumber%></p>
                     </div> 
-                    <div class="col s12 m6 l4">
+                    <div class="col s12 m12 l4">
                         <label>Zabieg</label>
-                        <p><%= newVisit[i].treatment%> </p>
+                        <p class="elipsis"><%= newVisit[i].treatment%> </p>
                     </div>
                 </div>
           

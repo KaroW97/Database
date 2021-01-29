@@ -1,21 +1,57 @@
-<% if(messages.logged){ %>
-    <div id="hideAlert" class="alert alert-<%=messages.success%>"> <%=messages.logged%> </div>
-<% } %>
-
-
-
-<div class="main-div">
-        <h1>BEAUTY BASE</h1>
-        <div class="text-content">
-            <p>Prowadź statystyki, kalendarz, karte klienta i wiele więcej. 
-                Dzięki BEAUTY BASE organizacja gabinetem będzie prosta jak nigdy wcześniej!
-            </p>
-            <p>Jeśli nie masz konta zarejestruj się!</p>
+<div class="row top-separation-3">
+    <div class="col s12 m12 l12  " >
+        <div class="card row disable-paddings">
+            <div class="card-content row ">
+                <div class="col s11 m12 s6 section-left" >
+                    <div class="inside-left-secction">
+                        <h2 class="text-align">Witaj ponownie!</h2>
+                        <p class="font-size-text">
+                            W miejscu gdzie możesz prowadzić kalendarz, karte klienta, statystyki i wiele więcej.
+                        </p>
+                        <p class="font-size-text">Dzięki BEAUTY BASE organizacja gabinetem jest prosta jak nigdy wcześniej!</p>
+                       
+                        <div class="center-button top-separation-3">
+                            <a class="waves-effect waves-light submit-button btn  button-border" href="/login">Logowanie</a>
+                        </div>
+                     
+                    </div>
+                  
+                </div>
+                <div class="col s12 section-right">
+                    <div class="inside-right-secction">
+                        <h2 class="text-align">Rejestracja</h2>
+                        <form  method="POST" action="/registration">
+                            <div class="input-field col s12  ">
+                                <input id="companyName" type="text" name="companyName" class="validate">
+                                <label for="companyName">Nazwa firmy</label>
+                            </div>
+                            <div class="input-field  col s12  ">
+                                <input id="email" type="email" name="email" class="validate">
+                                <label for="email">Email</label>
+                            </div>
+                            <div class="input-field  col s12  ">
+                                <input id="password" type="password" name="password" class="validate">
+                                <label for="password">Hasło</label>
+                            </div>
+                            <div class="input-field  col s12  ">
+                                <input id="ConfirmPassword" type="password" name="ConfirmPassword" class="validate">
+                                <label for="ConfirmPassword">Potwierdź hasło</label>
+                            </div>
+                        
+                            <div class="center-button top-separation-3">
+                                <button class="btn waves-effect submit-button red accent-1" type="submit" aria-label="create-visit-form">
+                                    Zarejestruj
+                                </button>
+                            </div>
+                           
+                        </form>
+                        <div class="top-separation-2 padding-text">
+                            <a class="text-color" href="/login">Masz konto? Zaloguj się!</a>
+                        </div>
+                    </div>
+                </div>
+         
+            </div>
         </div>
-    
-        <div class="display-wrap">
-            <a href="/login">Logowanie</a>
-            <a href="/registration">Rejestracja</a>
-        </div>
+    </div>
 </div>
-

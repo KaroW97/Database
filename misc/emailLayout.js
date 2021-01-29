@@ -3,28 +3,36 @@ const emailLook = (secretToken='', header='',paragrafFirst='',paragrafTh='', lin
     const html =   `
     <head>
     <style type="text/css">
+    @font-face {
+        font-family: 'Montserrat';
+        src: url('../public/font/Montserrat-Regular.ttf');
+    }
     .main-div{
         width: 889px;
         height: 538px;
         margin:0 auto ;
-        background: rgb(39, 39, 39);
+        background:#e0f2f1 ;
         border-radius: 6px;
     }
     .imgStyle{
+        margin-top:30px;
         width: 250px;
     }
+    p{
+        padding: 0 30px;
+    }
+
     .sharedProp{
-        text-underline:none;
+        font-family: 'Montserrat';
         text-decoration: none;
         margin: 0 auto;
         text-align: center;
-        color:#c3aa5b;
-        src: local('Robotor'), local('Roboto'), url(https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap) format('woff');
+        color:#ff8a80;
     }
     .sharedProp>a{
         text-underline:none;
         text-decoration: none;
-        color:#c3aa5b;
+        color:#ff8a80;
     }
     .header{
         margin-top:60px;
@@ -35,20 +43,17 @@ const emailLook = (secretToken='', header='',paragrafFirst='',paragrafTh='', lin
         font-size:21px;
     }
     .paragrafFirst{
-      
         margin-top:50px;
+    }
+    .paragrafSec,
+    .paragrafFirst,
+    .paragrafTh,
+    .footer{
         line-height: 200%;
     }
-    .paragrafSec{
-        line-height: 200%;
-    }
-    .paragrafTh{
-    
-        line-height: 200%;
-    }
+
     .footer{
         margin-top:50px;
-        line-height: 200%;
     }
     </style>
     </head>

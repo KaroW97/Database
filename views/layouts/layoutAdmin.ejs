@@ -5,23 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>Database</title>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../public/fontAwesome/css/all.css">
-    <% for(var i=0; i < styles.length; i++) { %>
-        <link href="<%= styles[i] %>" rel="stylesheet"  type="text/css">
-    <% } %> 
-
+    <link defere rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="../../public/css/index.css">
 </head>
-<body onload="checkIfNull()" >
-     
-      <%  if(user) { %> 
-        <%-include('../partials/headerAdmin')%>
-    <% }%> 
+<body >
+    <div class="pageContentWrapper">
+   
+        <%  if(user) { %> 
+            <%-include('../partials/headerAdmin')%>
+        <% }%> 
+        <%-include('../partials/infoMessages.ejs')%>
+        <div class="container" id="container">
+            <%- body %> 
+        </div>
+      
+    </div>
+    
 
-    <%- body %> 
+    <footer class='footer' name="footer">
+        <p>Copyright ® All rights reserved 2020  Karolina Wiaderek </p>
+    </footer>
+    <script type="text/javascript"  src="../../public/js/index.js"  charset="utf-8"></script> 
 
-    <script type="text/javascript"  src="../../public/index.js"  charset="utf-8"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

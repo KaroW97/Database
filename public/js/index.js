@@ -4,6 +4,11 @@ const deleteClass = (id) =>{
 }
 const getElementById = (elementId) => document.getElementById(elementId)
  document.addEventListener('DOMContentLoaded', function() {
+    var select = document.querySelectorAll('select');
+    M.FormSelect.init(select,{
+        isMultiple:true,
+    });
+
     var modal = document.querySelectorAll('.modal');
     M.Modal.init(modal, {});
     var datepicker  = document.querySelectorAll('.datepicker');
@@ -39,6 +44,7 @@ const getElementById = (elementId) => document.getElementById(elementId)
     */
     let myInputSearch = document.getElementsByClassName('myInputSearch')[0]
     if(myInputSearch){
+
         const filterRow = ()=>{
             let info_card = document.querySelectorAll('.top-separator');
             [...info_card].filter(e=>{
@@ -236,9 +242,10 @@ const getElementById = (elementId) => document.getElementById(elementId)
             client1.addEventListener('click', function handler(event) {
                 autocomplete(client1, searchedElement, templateContent.options, true, true)
             })
-            client1.addEventListener('input', function(e){
-                add_number_to_input(e, 1)
-            })
+            if(getElementById(`phoneNumber-1`))
+                client1.addEventListener('input', function(e){
+                    add_number_to_input(e, 1)
+                })
         }
     }
 });
@@ -252,8 +259,7 @@ const add_number_to_input = (e, nr) =>{             //take care of adding number
     if(val.length === 1 ){
         getElementById(`phoneNumber-${nr}`).select();
         getElementById(`phoneNumber-${nr}`).value = val[0].getAttribute('data-value')
-    }else if(val.length > 1 ){          
-                                        //if there is more clients with the same name informa about that and force to choose number 
+    }else if(val.length > 1 ){                                               //if there is more clients with the same name informa about that and force to choose number 
             getElementById(`phoneNumber-${nr}`).select()                    //select number input atiomaticly
             getElementById(`phoneNumber-${nr}`).value =''
             alert_box('Wykryto więcej klientów o tym imieniu')  
@@ -283,20 +289,19 @@ const add_price_to_input = (e, nr) =>{
 * Autocomplete Function
 */
 const autocomplete = (element, searchedElement, templateContent, addInnerHtml, clicked) =>{
+    const autocompleteCommonElements = (option, searchedElement, e) =>{
+        option.value = e.value
+        if(addInnerHtml === true){
+            option.innerText = e.getAttribute('data-value')
+            option.setAttribute('data-value', e.getAttribute('data-value'))
+        }
+        searchedElement.append(option);
+    }
     if(clicked === true){
-       
         Array.from(templateContent).forEach(e=>{
             let option = document.createElement('option')
-         
-            if(searchedElement.options.length < 4 && searchedElement.options.length < templateContent.length){
-                option.value = e.value
-                if(addInnerHtml === true){
-                    option.innerText = e.getAttribute('id')
-                    option.setAttribute('data-value', e.getAttribute('data-value'))
-                 
-                }
-                searchedElement.append(option); 
-            }
+            if(searchedElement.options.length < 4 && searchedElement.options.length < templateContent.length)
+                autocompleteCommonElements(option, searchedElement, e)
         })
     }else{  
         while (searchedElement.children.length) searchedElement.removeChild(searchedElement.firstChild);
@@ -304,16 +309,11 @@ const autocomplete = (element, searchedElement, templateContent, addInnerHtml, c
         Array.from(templateContent).forEach(e=>{
             let eToLower = e.value.toLowerCase();
             let option = document.createElement('option')
-            if(searchedElement.options.length < 4 && eToLower.includes(inputVal)){
-                option.value = e.value
-                if(addInnerHtml === true)
-                option.setAttribute('data-value', e.getAttribute('data-value'))
-                searchedElement.append(option);
-            }
+            if(searchedElement.options.length < 4 && eToLower.includes(inputVal))
+                autocompleteCommonElements(option, searchedElement, e)  
         })
     }
 }
-
 /* 
  * Fetch data about prev created visit CALENDAR
 */
@@ -357,9 +357,7 @@ const edit_form = (id) =>{
     
     })
 }  
-/*
-* Edit client form CLIENT
-*/
+
 const datapicker = (d) =>{
     d.classList.add('datepicker')
     var elems = document.querySelectorAll('.datepicker');
@@ -370,6 +368,9 @@ const datapicker = (d) =>{
         format: 'yyyy-mm-dd',
     }); 
 }
+/*
+* Edit client form CLIENT
+*/
 var value = false
 const edit_client = (arg) =>{
     value = !value
@@ -448,7 +449,71 @@ const edit_client = (arg) =>{
         })
     }
 }
+/*
+* Edit list information
+*/
+const edit_list = () =>{
+    value = !value
+    let e = document.getElementsByClassName('pTag')
+    let add_input_field = document.getElementsByClassName('add-input-field')
+    let button = document.getElementsByClassName('submit')
+    if(value === true){
+        button[0].style.display = 'block'
+        Array.from(e).forEach(tag =>{
+            var d = document.createElement('input');
+            d.value = tag.innerText;
+            d.classList = tag.classList
+            d.id = tag.id
+            d.name = tag.getAttribute('name')
+            d.type="text"
+            d.setAttribute('autocomplete','off')
+            tag.parentNode.replaceChild(d, tag)
+    
+            if(d.classList.contains('dateTag')){
+                datapicker(d)   
+            }
+            
+        }); 
+        add_input_field[0].getElementsByTagName('input')[0].select()
+    } else{
+        alert_box( 'Jeśli nie zapisałeś danych zostaną one usunięte '  )
+        button[0].style.display = 'none'
+        let input_field = document.getElementsByClassName('input-field')
+        input_field[0].classList.remove('col','s12','input-field')
+        input_field[0].classList.add('flex-content')
+        Array.from(e).forEach(tag =>{
+        if(tag.getAttribute('type') === 'text' ){
+            var d = document.createElement('p');
+            tag.value === '' ?  d.innerText ='-' :  d.innerText = tag.value;
+            d.classList = tag.classList
+            d.id = tag.id
+            tag.parentNode.replaceChild(d, tag)
+      
+        }  
+    });
+    }
 
+}
+/*
+* Fetch data and add it to edit list item form
+*/
+const edit_list_item = (id, index) =>{
+    fetch(`/shopping-list/list-view/${id}/${index}`)
+    .then(res=>res.json())
+    .then(data =>{
+        let name = getElementById('searchby-1')
+        let price =  getElementById('itemPrice')
+        let amount = getElementById('itemAmount')
+        let edit_item = getElementById('edit-item')
+        edit_item.action = `/shopping-list/list-view/${id}/${index}?_method=PUT`
+        name.value = data.name
+        price.value = data.price
+        amount.value = data.amount 
+        amount.select();
+        price.select();
+        name.select();     
+    })
+}
 /* 
 * Dynamic Alert box
 */
@@ -460,7 +525,6 @@ const alert_box = (message) =>{
         create_section.classList.add('info')     
         getElementById('container').prepend(create_section)
 }
-
 /*
  * Fetch client data CLIENT
  */

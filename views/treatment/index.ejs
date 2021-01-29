@@ -25,30 +25,30 @@
 <div class="main-div-full-content row information-row">
     <div class="col s12">
         <% for(var i = 0 ; i< treatments.length ; i++){%>
-            <div class="col s12 m12 l4 top-separator">
+            <div class="col s12 m12 l4 top-separator width-50">
                 <div class="card max-width-card">
                     <div class="card-header ">
                         <form method="post" action='/treatment/<%=treatments[i]._id%>?_method=DELETE'>
-                            <button type="submit" class="close" aria-label="Close">
+                            <button type="submit" class="close close-absolute" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </form>  
-                        <p  class="col search-by" data-value="<%=treatments[i].treatmentName%>"><%=treatments[i].treatmentName.length <= 15 ? treatments[i].treatmentName:treatments[i].treatmentName.slice(0,15)+'...'%></p>
+                        <p  class="col search-by elipsis" data-value="<%=treatments[i].treatmentName%>"><%=treatments[i].treatmentName.length <= 15 ? treatments[i].treatmentName:treatments[i].treatmentName.slice(0,15)+'...'%></p>
                     </div>
                     <!---->
-                    <div class="card-body" onclick="window.location='/treatment/<%=treatments[i]._id%>'" >
+                    <div class="card-content" onclick="window.location='/treatment/<%=treatments[i]._id%>'" >
                         <div class="col s12 m6 l12">
                             <label>Cena</label>
                             <p ><%=treatments[i].treatmentPrice != null ? treatments[i].treatmentPrice +'zł' : ''%></p>
                         </div>
                         <div class="col s12 m6 l12">
                             <label>Czas trwania</label>
-                            <p ><%=treatments[i].duration != null ? treatments[i].duration +'min' : '-'%></p>
+                            <p  ><%=treatments[i].duration != null ? treatments[i].duration +'min' : '-'%></p>
                         </div>    
-                        <div class="col s12 m6 l12">
+                        <div class="col s12 m12 l12">
                             <label>Opis</label>
                             <%if(treatments[i].treatmentDescription.length != 0){%>
-                                <p ><%= treatments[i].treatmentDescription.length <= 20  ? treatments[i].treatmentDescription :treatments[i].treatmentDescription.slice(0,20)+'...' %></p>
+                                <p class="elipsis"><%=  treatments[i].treatmentDescription %></p>
                             <%}else{%>
                                 <p>-</p>
                             <%}%>

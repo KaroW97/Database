@@ -1,6 +1,9 @@
 
+
 <% if(messages.mess){ %>
-    <section class="<%=messages.type%>">
-        <p> <%= messages.mess%>  </p>  
-    </section>        
+    <section class="<%= messages.type%>">
+        <%messages.mess.toString().split(',').forEach((message, index)=>{ %>
+            <p > <%= message%>.</p>
+        <%})%> 
+    </section>
 <% } %>

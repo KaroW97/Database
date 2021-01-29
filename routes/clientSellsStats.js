@@ -77,7 +77,7 @@ router.get('/treatment', ensureAuthenticated,async(req,res)=>{
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
 
     try{
-        const companyShopping = await ClientsShoppingsStats.find();
+        const companyShopping = await ClientsShoppingsStats.find({user:req.user.id});
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
@@ -122,8 +122,6 @@ router.get('/treatment', ensureAuthenticated,async(req,res)=>{
     }
    
 })
-
-//
 /* 
  * Products shoppings statistics
 */

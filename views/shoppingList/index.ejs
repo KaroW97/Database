@@ -61,15 +61,15 @@
 <div class="row information-row">
     <div class="col s12 ">
         <% for(var i = 0 ; i< shopping.length ; i++){%>
-            <div class="col s12 m12 l4 top-separator ">
+            <div class="col s12 m12 l4 top-separator width-50">
                 <div class="card max-width-card">
                     <div class="card-header ">
                         <form method="post" action='/shopping-list/<%=shopping[i]._id%>?_method=DELETE'>
-                            <button type="submit" class="close" aria-label="Close">
+                            <button type="submit" class="close close-absolute" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </form>  
-                        <p  class="col search-by" data-value="<%=shopping[i].listName%>"><%=shopping[i].listName%> </p>
+                        <p  class="col search-by elipsis" data-value="<%=shopping[i].listName%>"><%=shopping[i].listName%> </p>
                     </div>
                     <div class="card-content" onclick="window.location='/shopping-list/list-view/<%=shopping[i]._id%>'">
                         <div class="col s12 m6 l12">

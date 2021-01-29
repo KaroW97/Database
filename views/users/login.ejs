@@ -1,25 +1,42 @@
+<% if(messages.error){ %>
+    <section class="info-alert">
+        <p> <%= messages.error%>  </p>  
+    </section>        
+<% } %>
+<% if(messages.logged){ %>
+    <section class="info-success">
+        <p> <%= messages.logged%>  </p>  
+    </section>        
+<% } %>
 
-
-    <div class="center-main-div">
-        <div class="main-div" >
-            
-                <h1>Logowanie</h1>
-                <form method="POST" action="/login">
-                        <label for="loginEmail"></label>
-                        <input type="email" id="loginEmail"name="email" placeholder="Email"  >
-                    
-                        <label for="loginPassword"></label>
-                        <input type="password" id="loginPassword"name="password" placeholder="Hasło">
-                    <button type="submit">Logowanie</button>
+<div class="row max-width-row top-separation-3">
+    <div class="col s12 m12 l12  " >
+        <div class="card  ">
+            <div class="card-content">
+                <h2 class="text-align">Logowanie</h2>
+                <form  method="POST" action="/login">
+                    <div class="input-field input-field-color-change col s12  ">
+                        <input id="loginEmail" type="text" name="email" class="validate">
+                        <label for="loginEmail">Email</label>
+                    </div>
+                    <div class="input-field input-field-color-change col s12  ">
+                        <input id="loginPassword" type="password" name="password" class="validate">
+                        <label for="loginPassword">Hasło</label>
+                    </div>
+                    <div class="center-button">
+                        <button class="btn waves-effect submit-button teal lighten-2
+                        " type="submit" aria-label="create-visit-form">Logowanie</button>
+                    </div>
                 </form>
-                <div class="href-div">
-                    <a href="/registration">Nie masz konta? Zarejestruj się!</a><br>
-                    <a href="/forgot">Nie pamiętasz hasła?</a>
+                <div class="top-separation-2 padding-text">
+                    <a class="text-color" href="/">Nie masz konta? Zarejestruj się!</a><br>
+                    <a class="text-color"href="/forgot">Nie pamiętasz hasła?</a>
                 </div>
-           
-       
+            </div>
         </div>
     </div>
+</div>
+
 
 
 
