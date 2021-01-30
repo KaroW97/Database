@@ -1,11 +1,11 @@
 <div class="row main-row z-depth-1">
     <form class=" col s12"  action="/calendar" method="GET">
         <div class="input-field col s12 m6 l4 xl5">
-            <input class="datepicker" name="visitAfter" type="text"  autocomplete="off" value="<%=searchOptions.visitAfter%>"  />
+            <input class="datepicker" id="dataFrom" name="visitAfter" type="text"  autocomplete="off" value="<%=searchOptions.visitAfter%>"  />
             <label class="active" for="dataFrom">Od</label>
         </div>
         <div class="input-field col s12 m6 l4 xl5">
-            <input value="<%=searchOptions.visitBefore%>" class="datepicker"  type="text"  name="visitBefore"   autocomplete="off" />
+            <input value="<%=searchOptions.visitBefore%>" id="dataTo"class="datepicker"  type="text"  name="visitBefore"   autocomplete="off" />
             <label class="active" for="dataTo">Do</label>
         </div>
         <div class="row button-row">

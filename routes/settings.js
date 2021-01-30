@@ -17,6 +17,7 @@ const ListProducts = require('../models/listProducts')
 const ProductsForTreatment = require('../models/treatmentProducts')
 const {ensureAuthenticated} = require('../config/auth')
 
+
 /*
  * Show options
 */
@@ -35,7 +36,7 @@ router.get('/',ensureAuthenticated, async(req,res)=>{
         });
     }catch(err){
         console.log(err)
-        req.flash('mess','Nie udało się otworzyć Ustawień');
+        req.flash('mess','Nie udało się otworzyć ustawień');
         req.flash('type', 'info-alert');
         res.redirect('/calendar')
     } 
@@ -47,24 +48,36 @@ router.put('/change-password',ensureAuthenticated, async(req,res)=>{
     let user
     try{
         user  = await User.findById(req.user.id);
+        bcrypt.compare(req.body.newPassword, user.password,(err, isMatch)=>{
+            if(isMatch){
+                req.flash('mess','Obecne hasło jest takie samo! Wprowadź inne.')
+                req.flash('type','info-alert')
+                res.redirect('/settings')
+            }
+        })
+      
         if(req.body.newPassword == ''|| req.body.confirmNewPassword == ''){
-
-            req.flash('mess','Wypełnij wszystkie pola ')
+            req.flash('mess','Wypełnij wszystkie pola.')
             req.flash('type','info-alert')
             res.redirect('/settings')
-            return
         }
-        else if(req.body.newPassword.length < 3 || req.body.confirmNewPassword.length < 3){
-            req.flash('mess','Hasło musi mieć przynajmniej 3 znaki')
+        
+        if(req.body.newPassword.length < 8 || req.body.confirmNewPassword.length < 8){
+            req.flash('mess','Hasło musi mieć przynajmniej 8 znaki.')
             req.flash('type','info-alert')
             res.redirect('/settings')
-            return
+         
         }
-        else if(user != null &&req.body.newPassword == req.body.confirmNewPassword){
+        if(req.body.newPassword !== req.body.confirmNewPassword){
+            req.flash('mess','Hasła się różnią.')
+            req.flash('type','info-alert')
+            res.redirect('/settings') 
+        }
+        if(user != null && req.body.newPassword === req.body.confirmNewPassword && req.body.newPassword.length >= 8 || req.body.confirmNewPassword.length >= 8){
+            
             let hashed = await bcrypt.hash(req.body.newPassword,10)
             user.password = hashed;
            
-            //(secretToken='', header='',paragrafFirst='',paragrafTh='', link='', footer='')
             let email= emailLook(``,
                 'Witaj!',
                 `Twoje hasło Beauty Base powiązane z kontem`,`${user.email} ` 
@@ -74,22 +87,15 @@ router.put('/change-password',ensureAuthenticated, async(req,res)=>{
             await user.save();
             await mailer.sendEmail('beautybasehelp@gmail.com',user.email,'Zmieniono hasło Beauty Base!',email,
              {
-                 file:'logo2.JPG',
-                 path: './public/logo2.JPG',
+                 file:'Beauty Base.png',
+                 path: './public/Beauty Base.png',
                  cid:'logo'
              })
-            req.flash('mess','Hasło zostało zmienione')
+            
+            req.flash('mess','Hasło zostało zmienione.')
             req.flash('type','info-success')
             res.redirect('/settings')
-            return
-        }else{
-         
-
-            req.flash('mess','Hasła się różnią.')
-            req.flash('type','info-alert')
-            res.redirect('/settings')
         
-            return;
         }
         
     }catch(err){
@@ -107,7 +113,7 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
     try{
         user = await User.findById(req.user.id);
         if( req.body.newEmail=='' ||req.body.confirmNewEmail==''){
-            req.flash('mess','Wypełnij wszystkie pola potrzebne do zmiany hasła')
+            req.flash('mess','Wypełnij wszystkie pola potrzebne do zmiany hasła.')
             req.flash('type','info-alert')
             res.redirect('/settings')
         }
@@ -124,8 +130,8 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
             await user.save();
             await mailer.sendEmail('beautybasehelp@gmail.com',user.email,'Zmieniono email Beauty Base!',email,
             {
-                file:'logo2.JPG',
-                path: './public/logo2.JPG',
+                file:'Beauty Base.png',
+                path: './public/Beauty Base.png',
                 cid:'logo'
             })
             req.flash('mess','Email został zmieniony.')
@@ -134,13 +140,14 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
         }else{
            
 
-            req.flash('mess',"Podano różne email'e")
+            req.flash('mess',"Podano różne adresy email.")
             req.flash('type','info-alert')
             res.redirect('/settings')
             return;
         }
     }catch(err){
-        console.log(err)
+        req.flash('mess','Nie udało się edytować adresu email.')
+        req.flash('type','info-alert')
         res.redirect('/settings')
     }
 })
@@ -151,26 +158,29 @@ router.put('/change-company-name',ensureAuthenticated, async(req,res)=>{
     let user
     try{
         user  = await User.findById(req.user.id);
-        user.companyName = req.body.newCompanyName;
-        await user.save();
+        user.companyName = req.body.newCompanyName.trim();
+        
         let email= emailLook(``,
         'Witaj!',
         `Nazwa twojej firmy została zmieniona na`,`"${user.companyName}"` 
         ,  ``,
         'Miłego dnia!'
         )
-    
+        await user.save();
         await mailer.sendEmail('beautybasehelp@gmail.com',user.email,'Zmieniono nazwe firmy Beauty Base!',email,
         {
-            file:'logo2.JPG',
-            path: './public/logo2.JPG',
+            file:'Beauty Base.png',
+            path: './public/Beauty Base.png',
             cid:'logo'
         })
-
-        req.flash('mess','Nazwa firmy została zmieniona')
+   
+        req.flash('mess','Nazwa firmy została zmieniona.')
         req.flash('type','info-success')
         res.redirect('/settings')
-    }catch{
+    }catch(err){
+        console.log(err)
+        req.flash('mess','Nie udało się edytować nazwy firmy.')
+        req.flash('type','info-alert')
         res.redirect('/settings')
     }
 })
@@ -213,7 +223,7 @@ router.delete('/delete-account',ensureAuthenticated, async(req,res)=>{
         req.flash('mess','Konto użytkownika zostało usunięte')
         req.flash('type','info')
         await user.deleteOne();
-        res.redirect('/login'); //TODO: Redirect on Main Page Maybe
+        res.redirect('/');
     }catch(err){
         console.log(err)
         res.redirect('/settings');
@@ -236,10 +246,10 @@ router.delete('/brand-name-delete',async(req,res)=>{
                 await brand.deleteOne();
         })
         if(brand_id.length > 1)
-            req.flash('mess','Nazway firm zostały usunięte')
+            req.flash('mess','Nazway firm zostały usunięte.')
         else
-            req.flash('mess','Nazwa firmy została usunięta')
-        req.flash('type','info-success')
+            req.flash('mess','Nazwa firmy została usunięta.')
+        req.flash('type','info')
         res.redirect('/settings')
     }catch(err){
         req.flash('mess','Coś poszło nie tak, spróbuj jeszcze raz.')
@@ -265,10 +275,10 @@ router.delete('/delete-product',async(req,res)=>{
                 await product.deleteOne();
         })
         if(products_id.length > 1)
-            req.flash('mess','Nazway produktów zostały usunięte')
+            req.flash('mess','Nazway produktów zostały usunięte.')
         else
-            req.flash('mess','Nazwa produktu została usunięta')
-        req.flash('type','info-success')
+            req.flash('mess','Nazwa produktu została usunięta.')
+        req.flash('type','info')
         res.redirect('/settings')
     }catch(err){
         req.flash('mess','Coś poszło nie tak, spróbuj jeszcze raz.')
@@ -293,9 +303,9 @@ router.delete('/delete-product-for-treatments',async(req,res)=>{
                 await productsForTreatment.deleteOne();
         })
         if(productsForTreatment_id.length > 1)
-            req.flash('mess','Nazway produktów zostały usunięte')
+            req.flash('mess','Nazway produktów zostały usunięte.')
         else
-            req.flash('mess','Nazwa produktu została usunięta')
+            req.flash('mess','Nazwa produktu została usunięta.')
         req.flash('type','info-success')
         res.redirect('/settings')
     }catch(err){

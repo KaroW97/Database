@@ -9,7 +9,7 @@
         </div>
         <%-include('../partials/clients-list.ejs', {id_extention:1})%>
         <div class="input-field col s12 m6 l4 xl5">
-            <input value="<%=searchOptions.visitBefore%>" class="datepicker"  type="text"  name="visitAfter"   autocomplete="off" />
+            <input value="<%=searchOptions.birthday%>" class="datepicker" id="dataTo"  type="text"  name="birthday"   autocomplete="off" />
             <label class="active" for="dataTo">Urodziny</label>
         </div>
         <div class="row button-row">

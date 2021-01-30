@@ -2,10 +2,6 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user')
 const {ensureAuthenticatedAdmin} = require('../config/auth')
-const bcrypt = require('bcryptjs')
-const mailer  = require('../misc/mailer')
-const emailLook = require('../misc/emailLayout')
-
 const ObjectId = require('mongodb').ObjectId;
 const Client = require('../models/clients');
 const ClientsShoppingsStats = require('../models/clientsShoppingsStats')
@@ -75,13 +71,13 @@ router.delete('/:id',ensureAuthenticatedAdmin,async(req,res)=>{
             }       
         })
 
-          req.flash('mess','Konto użytkownika zostało usunięte')
+          req.flash('mess','Konto użytkownika zostało usunięte.')
           req.flash('type','info-success')
           await user.deleteOne();
           res.redirect('/admin') 
     }catch(err){
         console.log(err);
-        req.flash('mess','Nie udało się usunąć klienta')
+        req.flash('mess','Nie udało się usunąć klienta.')
         req.flash('type','info-alert') 
         res.redirect('/admin')       
     }

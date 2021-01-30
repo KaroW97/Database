@@ -24,7 +24,7 @@
         <% user.forEach(user => {%> 
           
             <div class="col s12 m12 l12 top-separator-long-div top-separator"  >
-                <div class="card max-width-card"  >
+                <div class="card max-width-card <%=user.active !== true ? 'alert-red' :''%>""   >
                     <div class="card-content " >
                         <form method="post" action='/admin/<%=user._id%>?_method=DELETE'>
                             <button type="submit" class="close close-absolute" aria-label="Close">
@@ -41,7 +41,7 @@
                         </div> 
                         <div class="col s12 m6 l4">
                             <label>Status</label>
-                            <p><%=user.active == true ? 'Zweryfikowany' : 'Nie zweryfiowany'%></p>
+                            <p><%=user.active === true ? 'Zweryfikowany' : 'Nie zweryfiowany'%></p>
                         </div>
                     </div>
                 </div>

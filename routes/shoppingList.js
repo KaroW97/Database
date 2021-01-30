@@ -46,16 +46,16 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
 */
 router.post('/', ensureAuthenticated,async(req,res)=>{
     const shoppingList = new ShoppingList({
-        listName:req.body.listName,
+        listName:req.body.listName.trim(),
         transactionDate:req.body.transactionDate,
         user:req.user.id,
-        brandName:req.body.brandName,
+        brandName:req.body.brandName.trim(),
     })
     try{
         const brands = await BrandName.find({user:req.user.id,  name:req.body.brandName});
         await req.body.shoppingItem.split(',').forEach(async(item, index)=>{
             let split = item.toLowerCase().split('+')
-            let name = split[0]
+            let name = split[0].trim()
             let price =  Number(split[1]) || 0
             let amount =  Number(split[2]) || 0
             const items = await ListProducts.find({user:req.user.id , name:name});
@@ -90,7 +90,7 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
         if(brands.length === 0){
             const brandName = new BrandName({
                 user:req.user.id,
-                name:req.body.brandName,
+                name:req.body.brandName.trim(),
             })
             await brandName.save()
         }
@@ -147,7 +147,7 @@ router.put('/list-view/add-post/:id',ensureAuthenticated, async(req,res)=>{
         list = await ShoppingList.findById(req.params.id)
         shoppingItems.forEach(async(item, index) =>{
             let split = item.toLowerCase().split('+')
-            let name = split[0]
+            let name = split[0].trim()
             let price = Number(split[1]) || 0
             let amount =  Number(split[2]) ||0
             const items = await ListProducts.find({user:req.user.id , name:name});
@@ -200,9 +200,9 @@ router.put('/list-view/edit-list-info/:id', ensureAuthenticated, async(req,res)=
     let list 
     try{
         list =  await ShoppingList.findById(req.params.id);
-        list.listName = req.body.listName
+        list.listName = req.body.listName.trim()
         list.transactionDate = new Date(req.body.transactionDate) || ''
-        list.brandName =  req.body.brandName
+        list.brandName =  req.body.brandName.trim()
 
         await list.save()
         req.flash('mess','Edytowano liste.')
@@ -229,7 +229,7 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
         list.totalPrice -= beforeEdit.price * beforeEdit.amount
   
         list.productListInfo[req.params.itemIndex] = {
-            name:req.body.itemName,
+            name:req.body.itemName.trim(),
             price:Number(req.body.itemPrice) || 0,
             amount:Number(req.body.itemAmount) || 0
         }
@@ -263,7 +263,7 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
             }else{
                 const new_list_item = new ListProducts({
                     user:req.user.id,
-                    name: afterEdit.name,
+                    name: afterEdit.name.trim(),
                     productInfo:[{
                         date:list.transactionDate.toISOString().split('T')[0],
                         price:afterEdit.price,
@@ -291,7 +291,7 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
         list.set('productListInfo', list.productListInfo)
         await list.save();
 
-        req.flash('mess','Dodano element do listy')
+        req.flash('mess','Dodano element do listy.')
         req.flash('type','info-success')
         res.redirect(`/shopping-list/list-view/${req.params.id}`)
     }catch(err){
@@ -308,7 +308,7 @@ router.delete('/list-view/:id/:item',ensureAuthenticated, async(req,res)=>{
     let list, statsListProducts
     try{    
         let split = req.params.item.toLowerCase().split('+')
-        let name = split[0]
+        let name = split[0].trim()
         let price = Number(split[1])
         let amount = Number(split[2])
        
@@ -339,12 +339,12 @@ router.delete('/list-view/:id/:item',ensureAuthenticated, async(req,res)=>{
             await statsListProducts[0].deleteOne()
         await list.set('productListInfo',newList).save();
 
-        req.flash('mess','Element został usunięty z listy')
+        req.flash('mess','Element został usunięty z listy.')
         req.flash('type','info-success') 
         res.redirect(`/shopping-list/list-view/${list.id}`);   
     }catch(err){
         console.log(err)
-        req.flash('mess','Nie udało sie usunąć elementu')
+        req.flash('mess','Nie udało sie usunąć elementu.')
         req.flash('type','info-alert')
         res.redirect('/shopping-list')
     }
@@ -358,7 +358,7 @@ router.get('/list-view/:id/:itemIndex', async(req,res)=>{
         list = await ShoppingList.findById(req.params.id)
         res.send(list.productListInfo[req.params.itemIndex])
     }catch{
-        req.flash('mess','Nie udało sie usunąć elementu')
+        req.flash('mess','Nie udało sie usunąć elementu.')
         req.flash('type','info-alert')
     }
 })

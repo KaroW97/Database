@@ -17,9 +17,44 @@ const getElementById = (elementId) => document.getElementById(elementId)
         autoClose:true,
         firstDay:1,
         format: 'yyyy-mm-dd',
-      //  disableDayFn:(e)=>{
-       //   return e.toString().slice(0,3) === 'Sun'
-       // }
+        i18n:{
+            months:	[
+              'Styczeń',
+              'Luty',
+              'Mrzec',
+              'Kwiecień',
+              'Maj',
+              'Czerwiec',
+              'Lipiec',
+              'Sierpień',
+              'Wrzesień',
+              'Październik',
+              'Listopad',
+              'Grudzień'],
+            weekdaysShort: [
+                'Niedz',
+                'Pon',
+                'Wt',
+                'Śr',
+                'Czw',
+                'Pt',
+                'Sob'],
+            monthsShort:	[
+              'Sty',
+              'Lut',
+              'Mar',
+              'Kwi',
+              'Maj',
+              'Cze',
+              'Lip',
+              'Sie',
+              'Wrz',
+              'Paź',
+              'Lis',
+              'Gru'],
+            weekdaysAbbrev:	['N','P','W','Ś','CZ','P','S']
+            
+        }
     });
     var timepicker = document.querySelectorAll('.timepicker');
     M.Timepicker.init(timepicker, {
@@ -361,11 +396,50 @@ const edit_form = (id) =>{
 const datapicker = (d) =>{
     d.classList.add('datepicker')
     var elems = document.querySelectorAll('.datepicker');
-    var instances = M.Datepicker.init(elems, {
+    M.Datepicker.init(elems, {
         container:document.getElementsByTagName("BODY")[0],
         autoClose:true,
         firstDay:1,
         format: 'yyyy-mm-dd',
+        i18n:{
+            months:	[
+              'Styczeń',
+              'Luty',
+              'Mrzec',
+              'Kwiecień',
+              'Maj',
+              'Czerwiec',
+              'Lipiec',
+              'Sierpień',
+              'Wrzesień',
+              'Październik',
+              'Listopad',
+              'Grudzień'],
+            weekdaysShort: [
+                'Niedz',
+                'Pon',
+                'Wt',
+                'Śr',
+                'Czw',
+                'Pt',
+                'Sob'],
+            monthsShort:	[
+              'Sty',
+              'Lut',
+              'Mar',
+              'Kwi',
+              'Maj',
+              'Cze',
+              'Lip',
+              'Sie',
+              'Wrz',
+              'Paź',
+              'Lis',
+              'Gru'],
+            weekdaysAbbrev:	['N','P','W','Ś','CZ','P','S']
+            
+        }
+        
     }); 
 }
 /*

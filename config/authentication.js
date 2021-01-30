@@ -2,47 +2,41 @@
 const randomstring=require('randomstring');
 const bcrypt = require('bcryptjs')
 const User = require('../models/user')
-
 const emailLook = require('../misc/emailLayout')
 const mailer  = require('../misc/mailer')
 
-
-const userRegistry = async (userDetails,role,res,req,registerSuccess, registerFailed, cssStyles) => {
- 
+const userRegistry = async (role,res,req,registerSuccess, registerFailed) => {
     try{
-        const findUser = await User.findOne({email:userDetails.email})
-        const hashedPassword = await bcrypt.hash(userDetails.password,10)
-        if(!userDetails.email || !userDetails.companyName || !userDetails.password || !userDetails.ConfirmPassword){
-            req.flash('mess', 'Prosze uzupełnij wszystkie pola admin');
+        const findUser = await User.findOne({email:req.body.email})
+        const hashedPassword = await bcrypt.hash(req.body.password,10)
+        if(!req.body.email || !req.body.companyName || !req.body.password || !req.body.ConfirmPassword){
+            req.flash('mess', 'Prosze uzupełnij wszystkie pola.');
           
         }
         //Check Password
-        if(userDetails.password !=userDetails.ConfirmPassword){
-            req.flash('mess', 'Wprowadzono różne hasła');
+        if(req.body.password !== req.body.ConfirmPassword){
+            req.flash('mess', 'Wprowadzono różne hasła.');
            
         }
         //Check password lenght
-        if(userDetails.password.length < 3){
-            req.flash('mess', 'Hasło powinno zawierac 3 znaków');
+        if(req.body.password.length < 8){
+            req.flash('mess', 'Hasło powinno zawierac 8 znaków');
           
         }
         if(findUser){
-           req.flash('mess', 'Email istnieje w bazie danych');
+           req.flash('mess', 'Email juz istnieje w bazie danych.');
            
         }
-        if(findUser || userDetails.password.length < 3 || userDetails.password !=userDetails.ConfirmPassword 
-            ||!userDetails.email || !userDetails.companyName || !userDetails.password || !userDetails.ConfirmPassword)
-            req.flash('type', 'info-alert')
-        if(findUser || userDetails.password.length < 3 || userDetails.password !=userDetails.ConfirmPassword){
-            res.render(registerFailed)
-            return;
+        if(findUser ||  req.body.ConfirmPassword.length < 8  ||req.body.password.length < 8 || req.body.password != req.body.ConfirmPassword ||!req.body.email || !req.body.companyName || !req.body.password || !req.body.ConfirmPassword){
+                req.flash('type', 'info-alert')
+                res.render(registerFailed)
         }
         else {
                //Flag account inactive
             const secretToken =randomstring.generate();  //email verify
             var newUser = new User({
-                companyName:userDetails.companyName || 'Admin',
-                email:userDetails.email,
+                companyName:req.body.companyName,
+                email:req.body.email,
                 password:hashedPassword,
                 secretToken:secretToken,
                 active:false,
@@ -50,15 +44,8 @@ const userRegistry = async (userDetails,role,res,req,registerSuccess, registerFa
             })
            await newUser.save();
            let email
-            if(role=='admin'){
-                 email= emailLook(secretToken,'Konto Administratora zostało utworzone', 
-                'Proszę zweryfikuj swoje konto za pomocą kodu:',
-                'Na stronie:',
-                'https://beauty-base.herokuapp.com/admin-verify',
-                'Miłego dnia!'
-                )
-            }else{
-                 email= emailLook(secretToken,'Dziękujemy za rejestrację', 
+            if(role=='user'){
+                email= emailLook(secretToken,'Dziękujemy za rejestrację', 
                 'Proszę zweryfikuj swoje konto za pomocą kodu:',
                 'Na stronie:',
                 'https://beauty-base.herokuapp.com/verify',
@@ -67,7 +54,7 @@ const userRegistry = async (userDetails,role,res,req,registerSuccess, registerFa
             }
        
             //send mailer
-           await mailer.sendEmail('beautybasehelp@gmail.com',userDetails.email,'Zweryfikuj swoje konto Beauty Base!',email,
+           await mailer.sendEmail('beautybasehelp@gmail.com',req.body.email,'Zweryfikuj swoje konto Beauty Base!',email,
             {
                 file:'Beauty Base.png',
                 path: './public/Beauty Base.png',
@@ -75,27 +62,27 @@ const userRegistry = async (userDetails,role,res,req,registerSuccess, registerFa
             })
            
            req.flash('mess', 'Sprawdź swój email!');
-           req.flash('type', 'info')
+           req.flash('type', 'info-success')
            res.redirect(registerSuccess)
         }
        
     }catch(err){
         console.log(err)
       
-        req.flash('mess', 'Spróbuj ponownie');
+        req.flash('mess', 'Spróbuj ponownie.');
         req.flash('type', 'info-alert')
         res.render(registerFailed)
     }  
 }
 
-const userVerify = async (userDetails,res,req,redirectSuccess, redirectFailure)=>{
+const userVerify = async (res,req,redirectSuccess, redirectFailure)=>{
     let user
     try{
-        const secretTokenn = userDetails.secretToken
+        const secretTokenn = req.body.secretToken
         user = await User.findOne({secretToken:secretTokenn})
         if(!user){
            
-            req.flash('mess', 'Nie znaleźliśmy użytkownika o podanym kluczu.');
+            req.flash('mess', 'Nie znaleźliśmy użytkownika o podanym kluczu w bazie danych.');
             req.flash('type', 'info-alert')
             res.redirect(redirectFailure);
             return;
@@ -112,22 +99,16 @@ const userVerify = async (userDetails,res,req,redirectSuccess, redirectFailure)=
         res.redirect('/')
     }
 }
-const userChangePassword =async(verify,res,req,role,redirectSuccess,redirectFailure)=>{
+const userChangePassword =async(res,req,role,redirectSuccess,redirectFailure)=>{
     let searchUser
+    console.log(role)
     try{
-        searchUser = await User.findOne({email:verify.forgotPassword})
+        searchUser = await User.findOne({email:req.body.forgotPassword})
         if(searchUser!=null && searchUser!='' ){
             const secretTokenn =randomstring.generate();
             var email
-           if(role=='admin'){
-             email= emailLook(secretTokenn,
-                'Witaj!',
-                `Otrzymaliśmy prośbę dotyczącą zresetowania Twojego hasła Administratora.
-                Wprowadź następujący kod resetowania hasła:`,` Na stronie: ` 
-                ,'https://beauty-base.herokuapp.com/admin-change-password',
-                'Miłego dnia!'
-            )
-           }else{
+         
+           if(role==='user'){
             email= emailLook(secretTokenn,
                 'Witaj!',
                 `Otrzymaliśmy prośbę dotyczącą zresetowania Twojego hasła Beauty Base.
@@ -141,23 +122,14 @@ const userChangePassword =async(verify,res,req,role,redirectSuccess,redirectFail
             searchUser.active = false;
             //send mailer
            await searchUser.save();
-           if(role=='admin'){
-            await mailer.sendEmail('beautybasehelp@gmail.com',verify.forgotPassword,'Zmień hasło Administratora!',email,
-            {
-                file:'Beauty Base.png',
-                path: './public/Beauty Base.png',
-                cid:'logo'
-            })
-           }else{
-            await mailer.sendEmail('beautybasehelp@gmail.com',verify.forgotPassword,'Zmień hasło Beauty Base!',email,
+           if(role=='user'){
+            await mailer.sendEmail('beautybasehelp@gmail.com',req.body.forgotPassword,'Zmień hasło Beauty Base!',email,
             {
                 file:'Beauty Base.png',
                 path:'./public/Beauty Base.png',
                 cid:'logo'
             })
            }
-           
-       
             req.flash('mess', 'Sprawdź swoją skrzynkę email.');
             req.flash('type', 'info-success')
             res.redirect(redirectSuccess)
@@ -172,12 +144,12 @@ const userChangePassword =async(verify,res,req,role,redirectSuccess,redirectFail
         res.redirect('/')
     }
 }
-const changePassword = async (verify,res,req,redirectSuccess,redirectFailure)=>{
+const changePassword = async (res,req,redirectSuccess,redirectFailure)=>{
     let searchUser
     try{
-        searchUser  = await User.findOne({secretToken:verify.secretToken})
-        if(searchUser!=null && searchUser!='' && verify.password == verify.passwordConfirm){
-            const hashedPassword = await bcrypt.hash(verify.password,10)
+        searchUser  = await User.findOne({secretToken:req.body.secretToken})
+        if(searchUser!=null && searchUser!='' && req.body.password == req.body.passwordConfirm){
+            const hashedPassword = await bcrypt.hash(req.body.password,10)
             searchUser.password = hashedPassword
             searchUser.secretToken ='';
             searchUser.active = true;
@@ -186,7 +158,7 @@ const changePassword = async (verify,res,req,redirectSuccess,redirectFailure)=>{
             req.flash('mess', 'Zmieniono hasło możesz się zalogować!');
             req.flash('type', 'info-success')
             res.redirect(redirectSuccess)
-        }else if(verify.password != verify.passwordConfirm){
+        }else if(req.body.password != req.body.passwordConfirm){
             req.flash('mess', 'Wprowadź takie same hasła.');
             req.flash('type', 'info-alert')
             res.render(redirectFailure)

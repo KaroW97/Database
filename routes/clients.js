@@ -12,23 +12,21 @@ const {ensureAuthenticated} = require('../config/auth')
 * All Clients Route
 */
 router.get('/', ensureAuthenticated,async(req,res)=>{
-    let searchOptions ={},searchClientLastName ={}, todayDate = new Date(),weekDate=new Date();
+    let clientBirthday, todayDate = new Date(),weekDate=new Date();
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
     todayDate.setDate(todayDate.getDate() - 1)
     weekDate.setDate(todayDate.getDate() + 8)
 
-    if(req.query.name!= null && req.query.name !==''){
-        searchOptions.name = new RegExp(req.query.name, 'i')
-        searchClientLastName.lastName =  new RegExp(req.query.name, 'i')
-    }
+   
+    clientBirthday = Client.find({user:req.user.id})
+    
+  
+    if(req.query.birthday != null &&  req.query.birthday !='')
+        clientBirthday = clientBirthday.gte('dateOfBirth', req.query.birthday)  
+      
     try{
-        const treatments = await Treatment.find({});
-        const clients =  Client.find(searchOptions); //we have no conditions 
-        const clientLastName =  Client.find(searchClientLastName); 
+        const clients =  Client.find(clientBirthday); 
         let clientFind =await clients.find({user:req.user.id}).exec();
-       
-        if(clientFind =='')
-            clientFind = await clientLastName.find({user:req.user.id}).exec(); 
 
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
         $gt:todayDate,
@@ -37,10 +35,8 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
         res.render('clients/index',{
             shoppingAll:shoppingList,
             clients:clientFind,
-            oneClient:new Client(),
             searchOptions:req.query,
             weekdays:weekdays,
-   
         });
     }catch(err){
         console.log(err)
@@ -115,9 +111,9 @@ router.post('/new', ensureAuthenticated,async(req,res)=>{
         },
         visitDate:Date.parse(req.body.visitDate) || '',
         nextVisitDate:Date.parse(req.body.nextVisitDate)||'',
-        name:req.body.name,
-        lastName:req.body.lastName,
-        phoneNumber:req.body.phoneNumber,
+        name:req.body.name.trim(),
+        lastName:req.body.lastName.trim(),
+        phoneNumber:req.body.phoneNumber.trim(),
         dateOfBirth:Date.parse(req.body.dateOfBirth)||'',
         //Diagnoza skory
         other:req.body.other,
@@ -201,7 +197,7 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
         if(findTreatmentStat.length === 0){
              const treatmentStats = new ClientsShoppingsStats({
                 user:req.user.id,
-                treatment: req.body.treatmentName,
+                treatment: req.body.treatmentName.trim(),
                 totalPrice:req.body.price,
             })
             treatmentStats.transactionDate.push(date)
@@ -213,12 +209,12 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
 
         await clientt.save()
         await visit.save();
-        req.flash('mess','Dodano wizyte');
+        req.flash('mess','Wizyta została dodana.');
         req.flash('type','info-success')
         res.redirect( `/clients/client-view/${req.params.id}`)
     }catch(err){
         console.log(err)
-        req.flash('mess','Nie udało się dodać wizyty');
+        req.flash('mess','Nie udało się dodać wizyty.');
         req.flash('type','info-alert')
         res.redirect( `/clients/client-view/${req.params.id}`)
     }
@@ -257,7 +253,7 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
         await clientt.save()
         await visit.deleteOne();
     
-        req.flash('mess','Wizyta została usunięta');
+        req.flash('mess','Wizyta została usunięta.');
         req.flash('type','info-success')
         res.redirect(`/clients/client-view/${clientt._id}`)
     }catch(err){
@@ -296,7 +292,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
          visit.client=visit.client
          visit.comment= req.body.comment
          visit.clientVisitDate= date 
-         visit.treatment= req.body.treatmentName
+         visit.treatment= req.body.treatmentName.trim()
          visit.shopping = req.body.shopping
       
          clientt  = await Client.findById(visit.client.id)
@@ -308,7 +304,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
 
          clientt.clientVisits.set(updateClientVisits,{
             visit: visit.id,
-            treatment : req.body.treatmentName,
+            treatment : req.body.treatmentName.trim(),
             clientVisitDate : new Date( req.body.clientVisitDate),
             price : req.body.price
          })
@@ -348,7 +344,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
         else if(findTreatmentStatAfter.length === 0 ){
             const treatmentStats = new ClientsShoppingsStats({
                 user:req.user.id,
-                treatment: req.body.treatmentName,
+                treatment: req.body.treatmentName.trim(),
                 totalPrice:req.body.price,
             })
             treatmentStats.transactionDate.push(date)
@@ -370,13 +366,13 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
         await clientt.save();
         await visit.save();
         
-         req.flash('mess','Wizyta została edytowana');
+         req.flash('mess','Wizyta została edytowana.');
          req.flash('type','info-success')
          return res.redirect(`/clients/client-view/${visit.client.id}`)
     }catch(err){
         console.log(err)
         visit = await ClientVisits.findById(req.params.id).populate('client').exec()
-        req.flash('mess','Nie udało się edytować wizyty');
+        req.flash('mess','Nie udało się edytować wizyty.');
         req.flash('type','info-alert')
         return res.redirect(`/clients/client-view/${visit.client.id}`)
     }
@@ -449,8 +445,8 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
         }
 
         clients.skinDiagnoseAll.other =req.body.other
-        clients.name=req.body.name,
-        clients.lastName=req.body.lastName,
+        clients.name=req.body.name.trim(),
+        clients.lastName=req.body.lastName.trim(),
         clients.phoneNumber=req.body.phoneNumber,
         clients. dateOfBirth= Date.parse(req.body.dateOfBirth)||'',
         clients.washingFace =req.body.washingFace
@@ -485,13 +481,13 @@ router.delete('/:id', ensureAuthenticated,async(req,res)=>{
     try{
         let client =  await Client.findById(req.params.id);
         await client.deleteOne();
-        req.flash('mess','Udało się usunąć klienta')
+        req.flash('mess','Udało się usunąć klienta.')
         req.flash('type','info-success') 
         res.redirect('/clients') 
 
     }catch(err){
         console.log(err);
-        req.flash('mess','Nie udało się usunąć klienta')
+        req.flash('mess','Nie udało się usunąć klienta.')
         req.flash('type','info-alert') 
         res.redirect('/clients')       
     }

@@ -98,12 +98,12 @@ router.get('/:filename', ensureAuthenticated,async(req, res) => {
 */
 router.post('/',ensureAuthenticated,upload.array('file'),async(req,res)=>{
     try{
-        req.flash('mess','Dodano plik');
+        req.flash('mess','Plik został dodany.');
         req.flash('type','info-success')
         res.redirect('/document')
     }catch(err){
        
-        req.flash('mess','Nie udało się dodac plik');
+        req.flash('mess','Nie udało się dodac plik!');
         req.flash('type','info-alert')
         res.redirect('/document')
     }
@@ -117,12 +117,12 @@ router.delete('/:id',ensureAuthenticated,async(req,res)=>{
         await  req.app.locals.gfs.remove({_id:ObjectId(req.params.id),root:'uploads'}, function (err, gridStore) {
             if (err) throw(err);
         });
-        req.flash('mess','Usunięto plik');
+        req.flash('mess','Plik został usunięty.');
         req.flash('type','info-success')
             
         res.redirect('/document') 
     }catch(err){
-        req.flash('mess','Nie udało się usunąć plik');
+        req.flash('mess','Nie udało się usunąć plik!');
         req.flash('type','info-alert')
         res.redirect('/document') 
     }

@@ -6,16 +6,13 @@
 <div class="row main-row z-depth-1 small-search-bar">
     <form class="col s12" method="GET">
         <div class="input-field col s12 m9 l9 xl9">
-            <input class="myInputSearch" type="text" id="searchby-1" list="options-1"  name="treatmentName" value="<%=searchOptions.name  %>" autocomplete="off">
+            <input class="myInputSearch" type="text" id="searchby-1" list="options-1"   autocomplete="off">
             <label for="searchby-1" class="active">Nazwa Zabiegu</label>
         </div>
         <%-include('../partials/treatments-list.ejs',{id_extention:1}) %>
         <div class="row button-row-flex-all">
-            <div class="col s12 m1 l1 center-button-small-flex-all"> 
-                <button type="submit" class="waves-effect waves-light search-button btn-small  "aria-label="search-by-date"><i class="large material-icons">search</i></button>
-
-            </div>
-            <div class="col s12 m1 l1  center-button-small-flex-all">
+      
+            <div class="col s12 m1 l1 center-button-small  ">
                 <button href="#create-treatment" class="waves-effect waves-light modal-trigger btn-small  " ><i class="large material-icons">add</i></button>
             </div> 
         </div>

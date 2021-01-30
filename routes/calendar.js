@@ -66,13 +66,13 @@ router.delete('/:id',ensureAuthenticated, async (req,res)=>{
     try {
         let futureVisit= await FutureVisit.findById(req.params.id);
         await futureVisit.deleteOne();
-        req.flash('mess','Wizyta została usunięta');
+        req.flash('mess','Wizyta została usunięta.');
         req.flash('type','info');
         res.redirect('/calendar')
     }catch(err){
         console.log(err)
-        req.flash('mess', 'Wizyta została usunięta!');
-        req.flash('type', 'info')
+        req.flash('mess', 'Nie udało się usunąć wizyty!');
+        req.flash('type', 'info-alert')
         res.redirect('/calendar')
     }
 })
@@ -96,11 +96,12 @@ router.post('/visit',ensureAuthenticated, async(req,res)=>{
     try{
         await futureVisit.save();
        
-        req.flash('mess', 'Dodano wyzyte!');
+        req.flash('mess', 'Wizyta została dodana.');
         req.flash('type', 'info-success')
         res.redirect('/calendar')
     }catch(err){
-        console.log(err)
+        req.flash('mess', 'Nie udało się dodana wizyty!');
+        req.flash('type', 'info-alert')
         res.redirect('/clients')
     }
 })
@@ -120,7 +121,7 @@ router.put('/edit/:id', async(req,res)=>{
         futureVisit.phoneNumber = req.body.phone
     
         await futureVisit.save();
-        req.flash('mess', 'Edytowano wizyte!');
+        req.flash('mess', 'Edytowano wizytę!');
         req.flash('type', 'info-success')
         res.redirect('/calendar')
     }catch(err){

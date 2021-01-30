@@ -6,15 +6,15 @@
           <form action="/settings/change-password?_method=PUT" method="POST">
             <div class="row">
                 <div class="input-field col s12 m6 l4 xl4">
-                    <input  value="<%=user.password%>" type="password" id="password"  autocomplete="off" >
+                    <input  value="<%=user.password.slice(0,15)%>" type="password" id="password"  autocomplete="off" >
                     <label for="password">Bieżące hasło</label>
                 </div>
                 <div class="input-field col s12 m6 l4 xl4">
-                    <input name="newPassword" type="password" id="change-password"  autocomplete="off" >
+                    <input name="newPassword" type="password" minlength="8" id="change-password"  autocomplete="off" >
                     <label for="change-password">Nowe hasło</label>
                 </div>
                 <div class="input-field col s12 m6 l4 xl4">
-                    <input name="confirmNewPassword" type="password" id="confirm-password"  autocomplete="off" >
+                    <input name="confirmNewPassword" type="password" minlength="8" id="confirm-password"  autocomplete="off" >
                     <label for="confirm-password">Potwierdź hasło</label>
                 </div>
             </div>

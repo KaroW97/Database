@@ -3,7 +3,7 @@
 <% if(messages.mess){ %>
     <section class="<%= messages.type%>">
         <%messages.mess.toString().split(',').forEach((message, index)=>{ %>
-            <p > <%= message%>.</p>
+            <p ><%= message%></p>
         <%})%> 
     </section>
 <% } %>

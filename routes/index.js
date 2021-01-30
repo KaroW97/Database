@@ -30,7 +30,7 @@ router.get('/',async (req, res)=>{
  * Register Form
 */
 router.post('/registration',async(req,res)=>{
-    await userRegistry(req.body,'user',res,req,'/login','users/index')
+    await userRegistry('user',res,req,'/verify','users/index')
 })
 /*
  * Verify Registration Page
@@ -47,7 +47,7 @@ router.get('/verify',async(req,res)=>{
  * Verify Registration Send request
 */
 router.put('/verify',async(req,res)=>{
-    await userVerify(req.body,res,req,'/login', '/verify');
+    await userVerify(res,req,'/login', '/verify');
 })
 /*
  * Login Page
@@ -93,12 +93,10 @@ router.get('/logout',ensureAuthenticated, (req,res)=>{
  * Forgot password page
 */
 router.get('/forgot' ,async(req,res)=>{
-    
     try{
-
         res.render('users/forgot')
     }catch{
-        req.flash('mess','Coś poszło nie tak');
+        req.flash('mess','Coś poszło nie tak.');
         req.flash('type','info-alert',)
         res.render('users/forgot')
     }
@@ -107,27 +105,25 @@ router.get('/forgot' ,async(req,res)=>{
  * Forgot password request
 */
 router.post('/forgot',async(req,res)=>{
-    await userChangePassword(req.body,res,req,'user','/login','users/forgot') 
+    await userChangePassword(res,req,'user','/login','users/forgot') 
 })
 /*
  * Reset password page
 */
 router.get('/change-password' ,async(req,res)=>{
-
     try{
         res.render('users/changePassword')
     }catch{
-        req.flash('mess','Coś poszło nie tak ')
+        req.flash('mess','Coś poszło nie tak.')
         req.flash('type','info-alert ')
         res.render('users/changePassword')
     }
-  
 })
 /*
  * Reset password request
 */
 router.post('/change-password' ,async(req,res)=>{
-    await changePassword(req.body,res,req,'/login','users/changePassword')
+    await changePassword(res,req,'/login','users/changePassword')
 })
 /*
  * Login admin page
@@ -153,7 +149,7 @@ router.get('/admin-login',async (req, res)=>{
 router.post('/admin-login', function(req, res, next){
     if(req.body.email=='' || req.body.password ==''){
      
-        req.flash('mess','Uzupełnij wszystkie pola')
+        req.flash('mess','Uzupełnij wszystkie pola.')
         req.flash('type','info-alert ')
         res.render('admin/login')
       }else{
@@ -169,7 +165,7 @@ router.post('/admin-login', function(req, res, next){
 */
 router.get('/admin-logout',ensureAuthenticated, (req,res)=>{
     req.logOut();
-    req.flash('mess', 'Do zobaczenia!!');
+    req.flash('mess', 'Do zobaczenia!');
     req.flash('type', 'info-success')
     res.redirect('/admin-login')
 })
