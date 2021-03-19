@@ -38,66 +38,66 @@ const clientSchema = new mongoose.Schema({
     },
  
    
-    skinDiagnoseAll:{
-        drySkin:{
-            name:String,
-            value:Boolean
-        },
-        wrinkless:{
-            name:String,
-            value:Boolean
-        },
-        lackfirmnes:{
-            name:String,
-            value:Boolean
-        },
-        nonuniformColor:{
-            name:String,
-            value:Boolean
-        },
-        tiredness:{
-            name:String,
-            value:Boolean
-        },
-        acne:{
-            name:String,
-            value:Boolean
-        },
-        smokerSkin:{
-            name:String,
-            value:Boolean
-        },
-        fatSkin:{
-            name:String,
-            value:Boolean
-        },
-        discoloration:{
-            name:String,
-            value:Boolean
-        },
-        blackheads:{
-            name:String,
-            value:Boolean
-        },
-        darkCirclesEyes:{
-            name:String,
-            value:Boolean
-        },
-        dilatedCapillaries:{
-            name:String,
-            value:Boolean
-        },
-        papularPustularAcne:{
-            name:String,
-            value:Boolean
-        },
-        externallyDrySkin:{  
-            name:String,
-            value:Boolean
-        },
+   skinDiagnoseAll:{
+        drySkin:Boolean,
+        wrinkless:Boolean,
+        lackfirmnes:Boolean,
+        nonuniformColor:Boolean,
+        tiredness:Boolean,
+        acne:Boolean,
+        smokerSkin:Boolean,
+        fatSkin:Boolean,
+        discoloration:Boolean,
+        blackheads:Boolean,
+        darkCirclesEyes:Boolean,
+        dilatedCapillaries:Boolean,
+        papularPustularAcne:Boolean,
+        externallyDrySkin:Boolean,
         other:String
     },
-   
+    scalpCondition:{
+        scalyScalp:Boolean,
+        normalScalp:Boolean,
+        oilyScalp:Boolean,
+        dandruff:Boolean,
+        psoriasis:Boolean, //luszczyca
+        alopecia:Boolean,  //lysienie
+        parasites:Boolean,
+        reddedScalp:Boolean,
+        scratchedWounds:Boolean,
+        scarsOnTheScalp:Boolean,
+      
+
+    },
+
+    hairTypeAndTexture:{
+        straightHair:Boolean,
+        wavyHair:Boolean,
+        curlyHair:Boolean,
+        woollyHair:Boolean,
+
+        fineHair:Boolean,
+        proneHair:Boolean,
+        thickHair:Boolean,
+        glassyHair:Boolean
+    },
+    hairCondition:{
+        dryHair:Boolean,
+        oilyHair:Boolean,
+        normalHair:Boolean,
+
+        healthyHair:Boolean,
+        overlyGlowingHair:Boolean,
+        dullHair:Boolean,
+        tangleHair:Boolean,
+    },
+    hairAfterChemicalTreatments:{
+        coloredHair:Boolean,
+        lightenedHair:Boolean,
+        shadedHair:Boolean,
+        permHair:Boolean,
+    },
+    
  
     //Wywiad
     washingFace:{

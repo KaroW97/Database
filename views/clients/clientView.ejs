@@ -1,7 +1,5 @@
 
 
-<%-include('./pdfTemplate.ejs') %>
-<%-include('./pdfVisitsTemplate.ejs') %>
 <div class="row top-separation-3">
     <div class="col s12 m12 l12 xl12 vertical-align">
         <div class="switch col s12 m12 l3 xl3">
@@ -53,47 +51,77 @@
             </div>
     
         </div>
-        <div class="col s12 m12 l12 xl12 top-separation-2">
-            <%-include('./skin_condition_fields.ejs') %>
-        </div>
+        <%if(user.beautySalon){%>
+            <div class="col s12 m12 l12 xl12 top-separation-2">
+                <%-include('./skin_condition_fields.ejs') %>
+            </div>
+        <%}%>
+     
         
-        <ul class="collapsible">
-            <li>
-            <div class="collapsible-header"><i class="material-icons">notification_important</i>Wywiad</div>
-                <div class="collapsible-body">
-                    <div class="input-field col s12">
-                        <textarea readonly  id="washingFace" name="washingFace" class="materialize-textarea textarea"><%=oneClient.washingFace != ''?oneClient.washingFace:''  %></textarea>
-                        <label for="washingFace">Czym myta twarz</label>
-                    </div> 
-                    <div class="input-field col s12">
-                        <textarea readonly id="faceTension" name="faceTension" class="materialize-textarea textarea"><%=oneClient.faceTension != ''?oneClient.faceTension:''  %></textarea>
-                        <label for="faceTension">Czy występuje napięcie twarzy</label>
-                    </div> 
-                    <div class="input-field col s12">
-                        <textarea readonly id="currentFaceCreams" name="currentFaceCreams"class="materialize-textarea textarea"><%=oneClient.currentFaceCreams != ''?oneClient.currentFaceCreams :'' %></textarea>
-                        <label for="currentFaceCreams">Obecnie używane kremy</label>
-                    </div> 
-                    <div class="input-field col s12">
-                        <textarea readonly  id="shopping" name="shopping" class="materialize-textarea textarea"><%=oneClient.shopping != ''?oneClient.shopping:'' %></textarea>
-                        <label for="shopping">Zakupy</label>
-                    </div> 
-                    <div class="input-field col s12">
-                        <textarea readonly  id="diagnose1" name="diagnose1" class="materialize-textarea textarea"><%=oneClient.diagnose1 != ''?oneClient.diagnose1:''  %></textarea>
-                        <label for="diagnose1">Wstępna diagnoza</label>
+            <ul class="collapsible">
+                <%if(user.hairdresser){%>
+                <li class="active">
+                    <div class="collapsible-header"><i class="material-icons">notification_important</i>Stan skóry głowy</div>
+                    <div class="collapsible-body">
+                        <%-include('./hair_condition_fields_scalpConditions.ejs') %>
                     </div>
-                    <div class="input-field col s12">
-                        <textarea readonly  id="teraphyPlan" name="teraphyPlan" class="materialize-textarea textarea"><%=oneClient.teraphyPlan != ''?oneClient.teraphyPlan:''  %></textarea>
-                        <label for="teraphyPlan">Plan zabiegów:</label>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">notification_important</i>Rodzaj i gatunek włosów</div>
+                    <div class="collapsible-body">
+                        <%-include('./hair_condition_fields_hairTypes.ejs') %>
                     </div>
-                    <div class="input-field col s12">
-                        <textarea id="recommendedCare" name="recommendedCare" class="materialize-textarea textarea"><%=oneClient.recommendedCare != ''?oneClient.recommendedCare:''  %></textarea>
-                        <label for="recommendedCare">Zalecana pilęgnacja:</label>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">notification_important</i>Stan i kondycja włosów</div>
+                    <div class="collapsible-body">
+                        <%-include('./hair_condition_fields_hairCondition.ejs') %>
                     </div>
-                
-                
-                </div>
-            </li>
-        </ul>
+                </li>
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">notification_important</i>Włosy po zabiegach chemicznych</div>
+                    <div class="collapsible-body">
+                        <%-include('./hair_condition_fields_hairAfterChemical.ejs') %>
+                    </div>
+                </li>
+                <%}%>
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">notification_important</i>Wywiad</div>
+                        <div class="collapsible-body">
+                            <div class="input-field col s12">
+                                <textarea readonly  id="washingFace" name="washingFace" class="materialize-textarea textarea"><%=oneClient.washingFace != ''?oneClient.washingFace:''  %></textarea>
+                                <label for="washingFace">Czym myta twarz</label>
+                            </div> 
+                            <div class="input-field col s12">
+                                <textarea readonly id="faceTension" name="faceTension" class="materialize-textarea textarea"><%=oneClient.faceTension != ''?oneClient.faceTension:''  %></textarea>
+                                <label for="faceTension">Czy występuje napięcie twarzy</label>
+                            </div> 
+                            <div class="input-field col s12">
+                                <textarea readonly id="currentFaceCreams" name="currentFaceCreams"class="materialize-textarea textarea"><%=oneClient.currentFaceCreams != ''?oneClient.currentFaceCreams :'' %></textarea>
+                                <label for="currentFaceCreams">Obecnie używane kremy</label>
+                            </div> 
+                            <div class="input-field col s12">
+                                <textarea readonly  id="shopping" name="shopping" class="materialize-textarea textarea"><%=oneClient.shopping != ''?oneClient.shopping:'' %></textarea>
+                                <label for="shopping">Zakupy</label>
+                            </div> 
+                            <div class="input-field col s12">
+                                <textarea readonly  id="diagnose1" name="diagnose1" class="materialize-textarea textarea"><%=oneClient.diagnose1 != ''?oneClient.diagnose1:''  %></textarea>
+                                <label for="diagnose1">Wstępna diagnoza</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <textarea readonly  id="teraphyPlan" name="teraphyPlan" class="materialize-textarea textarea"><%=oneClient.teraphyPlan != ''?oneClient.teraphyPlan:''  %></textarea>
+                                <label for="teraphyPlan">Plan zabiegów:</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <textarea id="recommendedCare" name="recommendedCare" class="materialize-textarea textarea"><%=oneClient.recommendedCare != ''?oneClient.recommendedCare:''  %></textarea>
+                                <label for="recommendedCare">Zalecana pilęgnacja:</label>
+                            </div>
+                        
+                        
+                        </div>
+                    </li>
+            </ul> 
+     
         <div class="button-styling-large center-button">
             <button type="submit" style="display: none;" class="btn button-styling-large  submit">Akutalizuj</button>
         </div>
@@ -146,3 +174,16 @@
 
     </form>
 </div> 
+<script>
+//TODO:
+  /*  const pdff = () =>{
+        let win = window.open('','PrintWindow','height=700,width=700')
+        win.document.write('<html><head>')
+        win.document.write('</head>')
+        win.document.write('<body>')
+        win.document.write('Jestem')
+        win.document.write('</body>')
+        win.document.close(); 
+        win.print();
+    }*/
+</script>

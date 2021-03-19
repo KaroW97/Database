@@ -27,6 +27,7 @@ router.get('/',ensureAuthenticated,async(req,res)=>{
         const shopping =  await shoppingList.sort({transactionDate:'asc'}).exec();
         const shoppingDist = await shoppingList.sort({transactionDate:'asc'}).distinct('listName')
         const listProducts = await ListProducts.find({user:req.user.id})
+
         res.render('shoppingList/index',{
             shoppingAll:shoppingListShort,
             shoppingDist:shoppingDist,
@@ -65,23 +66,20 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
                 amount:amount, 
             })
             shoppingList.totalPrice = shoppingList.totalPrice +   (price * amount)
+            let list = {
+                date:req.body.transactionDate,
+                price:price,
+                amount:amount,
+            }
             if(items.length === 0){
                 const listProducts = new ListProducts({
                     user:req.user.id,
                     name: name || 'brak nazwy',
-                    productInfo:[{
-                        date:req.body.transactionDate,
-                        price:price,
-                        amount:amount,
-                    }],
+                    productInfo:[list],
                 })
                 await listProducts.save()
             }else{
-                items[0].productInfo.push({
-                    date:req.body.transactionDate,
-                    price:price ,
-                    amount:amount,
-                })
+                items[0].productInfo.push(list)
                 await items[0].save()
             }
             if(req.body.shoppingItem.split(',').length-1 == index ) 
@@ -106,13 +104,16 @@ router.post('/', ensureAuthenticated,async(req,res)=>{
 * List View Router
 */
 router.get('/list-view/:id',ensureAuthenticated,async(req,res)=>{
+    let shoppingList, listProducts
     try{
-        const shoppingList = await ShoppingList.findById(req.params.id)
-        const listProducts = await ListProducts.find({user:req.user.id})
+        shoppingList = await ShoppingList.findById(req.params.id)
+        listProducts = await ListProducts.find({user:req.user.id})
+    
         res.render('shoppingList/listView',{
             list:shoppingList,
             listProducts:listProducts 
         })
+    
     }catch{
         res.redirect('/shopping-list');
     }
@@ -158,23 +159,20 @@ router.put('/list-view/add-post/:id',ensureAuthenticated, async(req,res)=>{
                 price:price,
                 amount:amount
             })
+            let product = {
+                date:list.transactionDate.toISOString().split('T')[0],
+                price:price,
+                amount:amount,
+            }
             if(items.length === 0){
                 const listProducts = new ListProducts({
                     user:req.user.id,
                     name: name,
-                    productInfo:[{
-                        date:list.transactionDate.toISOString().split('T')[0],
-                        price:price,
-                        amount:amount,
-                    }],
+                    productInfo:[product],
                 })
                 await listProducts.save()
             }else{
-                items[0].productInfo.push({
-                    date:list.transactionDate.toISOString().split('T')[0],
-                    price:price ,
-                    amount:amount,
-                })
+                items[0].productInfo.push(product)
                 await items[0].save()
             }
             if(req.body.shoppingItem.split(',').length-1 === index ) 
@@ -229,9 +227,9 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
         list.totalPrice -= beforeEdit.price * beforeEdit.amount
   
         list.productListInfo[req.params.itemIndex] = {
-            name:req.body.itemName.trim(),
-            price:Number(req.body.itemPrice) || 0,
-            amount:Number(req.body.itemAmount) || 0
+            name:req.body.name.trim(),
+            price:Number(req.body.price) || 0,
+            amount:Number(req.body.amount) || 0
         }
         let afterEdit =  list.productListInfo[req.params.itemIndex]
         list.totalPrice += afterEdit.price * afterEdit.amount
@@ -256,8 +254,8 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
             if(list_products.length != 0){
                 list_products[0].productInfo.push({
                     date:list.transactionDate.toISOString().split('T')[0],
-                    price:Number(req.body.itemPrice) || 0,
-                    amount:Number(req.body.itemAmount) || 0
+                    price:Number(req.body.price) || 0,
+                    amount:Number(req.body.amount) || 0
                 })     
                 await list_products[0].save()  
             }else{
@@ -281,8 +279,8 @@ router.put('/list-view/:id/:itemIndex',ensureAuthenticated,async(req,res)=>{
 
                 list_products_before[0].productInfo[index] = {
                     date:list.transactionDate.toISOString().split('T')[0],
-                    price:Number(req.body.itemPrice) || 0,
-                    amount:Number(req.body.itemAmount) || 0
+                    price:Number(req.body.price) || 0,
+                    amount:Number(req.body.amount) || 0
                 }
             
          
@@ -358,7 +356,7 @@ router.get('/list-view/:id/:itemIndex', async(req,res)=>{
         list = await ShoppingList.findById(req.params.id)
         res.send(list.productListInfo[req.params.itemIndex])
     }catch{
-        req.flash('mess','Nie udało sie usunąć elementu.')
+        req.flash('mess','Nie udało sie odnaleźć elementu.')
         req.flash('type','info-alert')
     }
 })

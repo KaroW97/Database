@@ -14,16 +14,20 @@ const userSchema = mongoose.Schema({
         type:String,
         require:true
     },
-    resetLink:{
-        data:String,
-        default:''
-    },
     //Email send
     secretToken:{
         type: String,
         require:false
     },
     active:{
+        type:Boolean,
+        require:false
+    },
+    beautySalon:{
+        type:Boolean,
+        require:false
+    },
+    hairdresser:{
         type:Boolean,
         require:false
     },

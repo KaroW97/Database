@@ -11,35 +11,34 @@ const userRegistry = async (role,res,req,registerSuccess, registerFailed) => {
         const hashedPassword = await bcrypt.hash(req.body.password,10)
         if(!req.body.email || !req.body.companyName || !req.body.password || !req.body.ConfirmPassword){
             req.flash('mess', 'Prosze uzupełnij wszystkie pola.');
-          
         }
-        //Check Password
         if(req.body.password !== req.body.ConfirmPassword){
             req.flash('mess', 'Wprowadzono różne hasła.');
-           
         }
-        //Check password lenght
         if(req.body.password.length < 8){
-            req.flash('mess', 'Hasło powinno zawierac 8 znaków');
-          
+            req.flash('mess', 'Hasło powinno zawierac 8 znaków.');
+        }
+        if(req.body.beautySalon === undefined && req.body.hairdresser === undefined){
+            req.flash('mess', 'Nie wybrano rodzaju działalności.');
         }
         if(findUser){
            req.flash('mess', 'Email juz istnieje w bazie danych.');
-           
         }
-        if(findUser ||  req.body.ConfirmPassword.length < 8  ||req.body.password.length < 8 || req.body.password != req.body.ConfirmPassword ||!req.body.email || !req.body.companyName || !req.body.password || !req.body.ConfirmPassword){
-                req.flash('type', 'info-alert')
-                res.render(registerFailed)
+        if(findUser ||  req.body.ConfirmPassword.length < 8  ||req.body.password.length < 8 || req.body.password != req.body.ConfirmPassword ||!req.body.email || !req.body.companyName || !req.body.password || !req.body.ConfirmPassword || (req.body.beautySalon === undefined && req.body.hairdresser === undefined)){
+            req.flash('type', 'info-alert')
+            res.render(registerFailed)
         }
+        
         else {
-               //Flag account inactive
             const secretToken =randomstring.generate();  //email verify
-            var newUser = new User({
+            let newUser = new User({
                 companyName:req.body.companyName,
                 email:req.body.email,
                 password:hashedPassword,
                 secretToken:secretToken,
                 active:false,
+                beautySalon:req.body.beautySalon === 'on' ? true : false,
+                hairdresser:req.body.hairdresser === 'on' ? true : false,
                 role:role
             })
            await newUser.save();
@@ -101,7 +100,6 @@ const userVerify = async (res,req,redirectSuccess, redirectFailure)=>{
 }
 const userChangePassword =async(res,req,role,redirectSuccess,redirectFailure)=>{
     let searchUser
-    console.log(role)
     try{
         searchUser = await User.findOne({email:req.body.forgotPassword})
         if(searchUser!=null && searchUser!='' ){
@@ -135,7 +133,7 @@ const userChangePassword =async(res,req,role,redirectSuccess,redirectFailure)=>{
             res.redirect(redirectSuccess)
         }
         else{
-            req.flash('mess', 'Nie znaleźliśmy konta z podanym kluczem weryfikacujnym.');
+            req.flash('mess', 'Nie znaleźliśmy konta z podanym kluczem weryfikacyjnym.');
             req.flash('type', 'info-alert')
             res.render(redirectFailure)
         }
@@ -147,8 +145,10 @@ const userChangePassword =async(res,req,role,redirectSuccess,redirectFailure)=>{
 const changePassword = async (res,req,redirectSuccess,redirectFailure)=>{
     let searchUser
     try{
+       
         searchUser  = await User.findOne({secretToken:req.body.secretToken})
-        if(searchUser!=null && searchUser!='' && req.body.password == req.body.passwordConfirm){
+        if(searchUser!=null && searchUser!='' && req.body.password === req.body.passwordConfirm 
+        && req.body.password.length >= 8 && req.body.passwordConfirm.length >= 8){
             const hashedPassword = await bcrypt.hash(req.body.password,10)
             searchUser.password = hashedPassword
             searchUser.secretToken ='';
@@ -158,8 +158,12 @@ const changePassword = async (res,req,redirectSuccess,redirectFailure)=>{
             req.flash('mess', 'Zmieniono hasło możesz się zalogować!');
             req.flash('type', 'info-success')
             res.redirect(redirectSuccess)
-        }else if(req.body.password != req.body.passwordConfirm){
+        }else if(req.body.password !== req.body.passwordConfirm){
             req.flash('mess', 'Wprowadź takie same hasła.');
+            req.flash('type', 'info-alert')
+            res.render(redirectFailure)
+        }else if(req.body.password.length < 8 || req.body.passwordConfirm.length < 8){
+            req.flash('mess', 'Wprowadzone hasło jest za krótkie.');
             req.flash('type', 'info-alert')
             res.render(redirectFailure)
         }else{

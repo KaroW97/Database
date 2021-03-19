@@ -49,7 +49,7 @@
         </div>
     </li>
     <li>
-        <div class="collapsible-header"><i class="material-icons">apartment</i><p class="no-margin">Zmień nazwe firmy<br></p></div>
+        <div class="collapsible-header"><i class="material-icons">apartment</i><p class="no-margin">Zmień nazwe i zakres działalności firmy<br></p></div>
         <div class="collapsible-body">
             <form action="/settings/change-company-name?_method=PUT" method="POST">
                 <div class="row">
@@ -61,6 +61,17 @@
                         <input name="newCompanyName" type="text" id="change-company-name"  autocomplete="off" >
                         <label for="change-company-name">Nowa nazwa firmy</label>
                     </div>
+                </div>
+                <div class="col s12 check-box-bottom-margin ">
+                    <label class="separate check-box-right-margin ">
+                        <input type="checkbox"  <%=user.beautySalon==true? 'checked="checked" ' :''%>   name="beautySalon" >
+                        <span>Salon Kosmetyczny</span>
+                    </label>
+
+                    <label class="separate">
+                        <input type="checkbox" <%=user.hairdresser==true? 'checked="checked" ' :''%>   name="hairdresser" >
+                        <span>Salon Fryzjerski</span>
+                    </label>
                 </div>
                 <div class="button-styling-large center-button">
                     <button type="submit" class="btn button-styling-large submit">Akutalizuj</button>

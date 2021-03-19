@@ -1,69 +1,28 @@
-<!--Search bar-->
-<%-include('./search-bar.ejs')%>
+
+ <div class="margin-top margin-bottom-3" id='calendar'></div>
+
+
 <!--create new visit-->
 <div class="form-styling-small modal" id="createVisit">
     <form method="POST" action="/calendar/visit" class="modal-content content-styling" id="create-visit-form">
         <%-include('../calendar/create-visit.ejs', {id_extention:1})%>
+        <div class="center-button">
+            <button id="button-1" class="btn waves-effect submit-button" type="submit" aria-label="create-visit-form">Dodaj</button>
+        </div>
     </form>
 </div>
 <!--edit visit gdy tego nie ma to datalist działa-->
 <div class="form-styling-small modal "  id="visit">
     <form method="POST"  action="" class="modal-content content-styling"  id="visit-form">
             <%-include('../calendar/create-visit.ejs',{id_extention:2})%>
+            <div class="center-button">
+                <button id="edit" class="btn waves-effect submit-button-small" type="submit" aria-label="create-visit-form">Edytuj</button>
+                <button id="delete" class="btn waves-effect submit-button-small" type="submit" aria-label="create-visit-form">Usuń</button>
+            </div>
     </form>
 
 </div>
-<div class="row information-row">
-    <div class="col s12 ">
-        <% for(var i = 0 ; i< newVisit.length ; i++){%>
-            <%if(newVisit[i-1]!= undefined &&newVisit[i-1].visitDate.toISOString().split('T')[0] <newVisit[i].visitDate.toISOString().split('T')[0] ){%>
-                <div class="col s12 m12 l12">
-                    <div class="z-depth-1 day-header"  >
-                        <h5><%=weekdays[newVisit[i].visitDate.getDay()]%> <%=newVisit[i].visitDate.toISOString().split('T')[0]%></h5>
-                    </div>
-                </div>
-            <% } else if(i==0){%>
-                <div class=" col s12 m12 l12 ">
-                    <div class="z-depth-1 day-header  "  >
-                        <h5><%=weekdays[newVisit[i].visitDate.getDay()]%> <%=newVisit[i].visitDate.toISOString().split('T')[0]%></h5>
-                    </div>
-                </div>
-                
-            <% } %> 
-          
-            <div class="col s12 m12 l12 top-separator-long-div"  >
-         
-            <div class="card max-width-card <%=newVisit[i-1] != undefined && newVisit[i-1].visitDate.toISOString().split('T')[0] === newVisit[i].visitDate.toISOString().split('T')[0]&& (newVisit[i-1].timeTo >= newVisit[i].timeFrom || newVisit[i-1].timeFrom >= newVisit[i].timeFrom )?'alert-red' :''%>"  >
-                <div class="card-header no-pointer "   >
-                    <form method="post" action='/calendar/<%=newVisit[i]._id%>?_method=DELETE'>
-                        <button type="submit" class="close close-absolute" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </form> 
-                    <p  class="col"><%= newVisit[i].timeFrom %> - <%=newVisit[i].timeTo%>  </p>  
-                </div>
-                <div class="card-content modal-trigger " href="#visit" onclick="edit_form(`<%=newVisit[i]._id%>`)" >
-                    <div class="col s12 m6 l4">
-                        <label>Klient</label>
-                        <p><%= newVisit[i].clientName %></p>
-                    </div>
-                    <div class="col s12 m6 l4">
-                        <label>Kontakt</label>
-                        <p><%= newVisit[i].phoneNumber%></p>
-                    </div> 
-                    <div class="col s12 m12 l4">
-                        <label>Zabieg</label>
-                        <p class="elipsis"><%= newVisit[i].treatment%> </p>
-                    </div>
-                </div>
-          
-            </div>
-        </div>   
-    <%} %> 
-     
-    </div>
-</div>
-<%-include('../partials/shopping-list.ejs')%>
-<script>
 
-</script>
+<%-include('../partials/shopping-list.ejs')%>
+<script  src='/modules/fullcalendar/main.js'></script>
+<script  type="text/javascript"  src="../../public/js/calendarAPI.js"  charset="utf-8"></script> 

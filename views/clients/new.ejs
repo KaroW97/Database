@@ -2,159 +2,306 @@
 
 
 
-<ul class="collapsible">
-    <li class="active">
-        <div class="collapsible-header"><i class="material-icons">person_pin</i>Informacje kontaktowe</div>
-        <div class="collapsible-body">
-      
-            <div class="input-field col s6">
-                <i class="material-icons prefix">date_range</i>
-                <input class="datepicker" name="visitDate" type="text" id="visitDate"  autocomplete="off" >
-                <label for="visitDate">pierwsza wizyta</label>
-            </div>
-            <div class="col s6 l6 m6 input-field">
-                <i class="material-icons prefix">account_circle</i>
-                <input  class="validate " type="text" name ="name"  id="nameClient"  autocomplete="off" required>
-                <label  for="nameClient">Imie</label>
-            </div>
-            <div class="col s6 l6 m6 input-field">
-                <i class="material-icons prefix">account_circle</i>
-                <input  class="validate " type="text" name ="lastName" id="clientLastName"  autocomplete="off" required>
-                <label  for="clientLastName">Nazwisko</label>
-            </div>
-      
 
-            <div class="input-field col s6">
-                <i class="material-icons prefix">phone</i>
-                <input class="validate" name="phoneNumber" type="tel" id="phoneNumber"  autocomplete="off" minlength="9" required>
-                <label for="phoneNumber">Numer Telefonu</label>
-            </div>
-            
-            <div class="input-field col s6">
-                <i class="material-icons prefix">date_range</i>
-                <input class="datepicker" name="dateOfBirth" type="text" id="dateOfBirth"  autocomplete="off" >
-                <label for="dateOfBirth">Data urodzin</label>
-            </div>
-       
-        </div>
-        
+
+  <ul class="collapsible">
+    <li class="active">
+      <div class="collapsible-header"><i class="material-icons">person_pin</i>Informacje kontaktowe</div>
+      <div class="collapsible-body">
+    
+          <div class="input-field col s6">
+              <i class="material-icons prefix">date_range</i>
+              <input class="datepicker" name="visitDate" type="text" id="visitDate"  autocomplete="off" >
+              <label for="visitDate">pierwsza wizyta</label>
+          </div>
+          <div class="col s6 l6 m6 input-field">
+              <i class="material-icons prefix">account_circle</i>
+              <input  class="validate " type="text" name ="name"  id="nameClient"  autocomplete="off" required>
+              <label  for="nameClient">Imie</label>
+          </div>
+          <div class="col s6 l6 m6 input-field">
+              <i class="material-icons prefix">account_circle</i>
+              <input  class="validate " type="text" name ="lastName" id="clientLastName"  autocomplete="off" required>
+              <label  for="clientLastName">Nazwisko</label>
+          </div>
+    
+
+          <div class="input-field col s6">
+              <i class="material-icons prefix">phone</i>
+              <input class="validate" name="phoneNumber" type="tel" id="phoneNumber"  autocomplete="off" minlength="9" required>
+              <label for="phoneNumber">Numer Telefonu</label>
+          </div>
+          
+          <div class="input-field col s6">
+              <i class="material-icons prefix">date_range</i>
+              <input class="datepicker" name="dateOfBirth" type="text" id="dateOfBirth"  autocomplete="off" >
+              <label for="dateOfBirth">Data urodzin</label>
+          </div>
+    
+      </div>
+      
     </li>
+    <%if(user.beautySalon){%>
+     
+      <li>
+        <div class="collapsible-header"><i class="material-icons">list</i>Diagnoza Skóry</div>
+        <div class="collapsible-body">
+          <label class="separate">
+              <input type="checkbox"  name="drySkin" >
+            <span>Suchość</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="wrinkless">
+            <span>Zmarszczki i drobne linie</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="lackfirmnes"  >
+            <span>Brak jędrności</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="nonuniformColor"  >
+            <span>Niejednolity koloryt</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="tiredness"  >
+            <span>Zmęczenie - stres</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="acne"  >
+            <span>Trądzik grudkowy</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="smokerSkin"  >
+            <span>Skóra palacza</span>
+          </label>
+          <!--sholud be broken-->
+          <label class="separate">
+              <input type="checkbox"  name="fatSkin" >
+            <span>Przetłuszczanie się</span>
+          </label >
+          <label class="separate">
+              <input type="checkbox"  name="discoloration"  >
+            <span>Przebarwienia</span>
+          </label>
+          <label class="separate"> 
+              <input type="checkbox"  name="blackheads"  >
+            <span>Zaskórniki</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="darkCirclesEyes"   >
+            <span>Cienie - opuchnięcia pod oczami</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="dilatedCapillaries"  >
+            <span>Rozszerzone naczynka</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="papularPustularAcne"  >
+            <span>Trądzik grudkowo - kostkowy</span>
+          </label>
+          <label class="separate">
+              <input type="checkbox"  name="externallyDrySkin"  >
+            <span>Zewnętrznie przesuszona</span>
+          </label>
+          
+          <div class="input-field col s6">
+            <i class="material-icons prefix">short_text</i>
+            <input class="text" name="other" type="text" id="other"  autocomplete="off" >
+            <label for="other">inne...</label>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="collapsible-header"><i class="material-icons">notification_important</i>Wywiad</div>
+        <div class="collapsible-body">
+          <div class="input-field col s6">
+              <i class="material-icons prefix">info_outline</i>
+              <textarea id="washingFace" name="washingFace" class="materialize-textarea" data-length="120"></textarea>
+              <label for="washingFace">Czym jest myta twarz?</label>
+          </div>
+          <div class="input-field col s6">
+              <i class="material-icons prefix">info_outline</i>
+              <textarea id="faceTension" name="faceTension" class="materialize-textarea" data-length="120"></textarea>
+              <label for="faceTension">Czy występuje uczucie napięcia twarzy?</label>
+          </div>
+          <div class="input-field col s6">
+              <i class="material-icons prefix">info_outline</i>
+              <textarea id="currentFaceCreams" name="currentFaceCreams" class="materialize-textarea" data-length="120"></textarea>
+              <label for="currentFaceCreams">Czy obecnie są stosowane jakieś kremy?</label>
+          </div>
+          
+      
+      </div>
+      </li>
+      <li>
+        <div class="collapsible-header"><i class="material-icons">whatshot</i>Diagnoza i Zakupy</div>
+        <div class="collapsible-body">
+          <div class="input-field col s6">
+            <i class="material-icons prefix">shopping_cart</i>
+            <textarea id="shopping" name="shopping" class="materialize-textarea" data-length="120"></textarea>
+            <label for="shopping">Produkty zakupione w gabinecie</label>
+        </div>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">mode_edit</i>
+            <textarea id="diagnose1" name="diagnose1" class="materialize-textarea" data-length="120"></textarea>
+            <label for="diagnose1">Diagnoza wstępna</label>
+        </div>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">mode_edit</i>
+            <textarea id="teraphyPlan" name="teraphyPlan" class="materialize-textarea" data-length="120" ></textarea>
+            <label for="teraphyPlan">Plan zabiegów</label>
+        </div>
+        <div class="input-field col s6">
+            <i class="material-icons prefix">mode_edit</i>
+            <textarea id="recommendedCare" name="recommendedCare" class="materialize-textarea" data-length="120"></textarea>
+            <label for="recommendedCare">Zalecana pielęgnacja</label>
+        </div>
+        </div>
+      </li>
+    <%}%>
+    <%if(user.hairdresser){%>
     <li>
-      <div class="collapsible-header"><i class="material-icons">list</i>Diagnoza Skóry</div>
+      <div class="collapsible-header"><i class="material-icons">list</i>Stan skóry głowy</div>
       <div class="collapsible-body">
         <label class="separate">
-            <input type="checkbox"  name="drySkin" >
-          <span>Suchość</span>
+            <input type="checkbox"  name="scalyScalp" >
+          <span>Skóra głowy sucha - łuszczy się</span>
         </label>
         <label class="separate">
-            <input type="checkbox"  name="wrinkless">
-          <span>Zmarszczki i drobne linie</span>
+            <input type="checkbox"  name="normalScalp">
+          <span>Skóra głowy normalna - bez problemów skórnych</span>
         </label>
         <label class="separate">
-            <input type="checkbox"  name="lackfirmnes"  >
-          <span>Brak jędrności</span>
+            <input type="checkbox"  name="oilyScalp"  >
+          <span>Skóra głowy tłusta - wydzielina gruczołów łojowych natłuszcza powierzchnę skóry i włosy</span>
+        </label>
+        
+        <label class="separate">
+            <input type="checkbox"  name="dandruff"  >
+          <span>Skóra głowy z łupieżem - włosy pokryte są biało-żółtymi płatkami</span>
         </label>
         <label class="separate">
-            <input type="checkbox"  name="nonuniformColor"  >
-          <span>Niejednolity koloryt</span>
+            <input type="checkbox"  name="psoriasis"  >
+          <span>Ośrodki łuszczycy widoczne na skórze </span>
         </label>
         <label class="separate">
-            <input type="checkbox"  name="tiredness"  >
-          <span>Zmęczenie - stres</span>
+            <input type="checkbox"  name="alopecia"  >
+          <span>Ośrodki łysienia plackowatego</span>
         </label>
         <label class="separate">
-            <input type="checkbox"  name="acne"  >
-          <span>Trądzik grudkowy</span>
+            <input type="checkbox"  name="parasites"  >
+          <span>Obecność pasożytó</span>
         </label>
         <label class="separate">
-            <input type="checkbox"  name="smokerSkin"  >
-          <span>Skóra palacza</span>
-        </label>
-        <!--sholud be broken-->
-        <label class="separate">
-            <input type="checkbox"  name="fatSkin" >
-          <span>Przetłuszczanie się</span>
+            <input type="checkbox"  name="reddedScalp" >
+          <span>Skóra głowy zaczerwieniona</span>
         </label >
         <label class="separate">
-            <input type="checkbox"  name="discoloration"  >
-          <span>Przebarwienia</span>
-        </label>
-        <label class="separate"> 
-            <input type="checkbox"  name="blackheads"  >
-          <span>Zaskórniki</span>
-        </label>
-        <label class="separate">
-            <input type="checkbox"  name="darkCirclesEyes"   >
-          <span>Cienie - opuchnięcia pod oczami</span>
-        </label>
-        <label class="separate">
-            <input type="checkbox"  name="dilatedCapillaries"  >
-          <span>Rozszerzone naczynka</span>
-        </label>
-        <label class="separate">
-            <input type="checkbox"  name="papularPustularAcne"  >
-          <span>Trądzik grudkowo - kostkowy</span>
-        </label>
-        <label class="separate">
-            <input type="checkbox"  name="externallyDrySkin"  >
-          <span>Zewnętrznie przesuszona</span>
-        </label>
-        
-        <div class="input-field col s6">
-          <i class="material-icons prefix">short_text</i>
-          <input class="text" name="other" type="text" id="other"  autocomplete="off" >
-          <label for="other">inne...</label>
-        </div>
+          <input type="checkbox"  name="scratchedWounds" >
+        <span>Rany draoabe na skórze gowy</span>
+       </label >
+       <label class="separate">
+        <input type="checkbox"  name="scarsOnTheScalp" >
+       <span>Blizny na skórze głowy</span>
+       </label >
+       
       </div>
     </li>
     <li>
-      <div class="collapsible-header"><i class="material-icons">notification_important</i>Wywiad</div>
+      <div class="collapsible-header"><i class="material-icons">list</i>Rodzaj i gatunek włosów</div>
       <div class="collapsible-body">
-        <div class="input-field col s6">
-            <i class="material-icons prefix">info_outline</i>
-            <textarea id="washingFace" name="washingFace" class="materialize-textarea" data-length="120"></textarea>
-            <label for="washingFace">Czym jest myta twarz?</label>
-        </div>
-        <div class="input-field col s6">
-            <i class="material-icons prefix">info_outline</i>
-            <textarea id="faceTension" name="faceTension" class="materialize-textarea" data-length="120"></textarea>
-            <label for="faceTension">Czy występuje uczucie napięcia twarzy?</label>
-        </div>
-        <div class="input-field col s6">
-            <i class="material-icons prefix">info_outline</i>
-            <textarea id="currentFaceCreams" name="currentFaceCreams" class="materialize-textarea" data-length="120"></textarea>
-            <label for="currentFaceCreams">Czy obecnie są stosowane jakieś kremy?</label>
-        </div>
-        
-     
-    </div>
+        <label class="separate">
+            <input type="checkbox"  name="straightHair" >
+          <span>Włosy proste</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="curlyHair">
+          <span>Włosy falujące</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="wavyHair"  >
+          <span>Włosy kręcone</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="woollyHair"  >
+          <span>Włosy kędzierzawe</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="fineHair"  >
+          <span>Włosy cienkie i delikatne </span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="proneHair"  >
+          <span>Włosy podatne, łatwe w ułóżeniu </span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="thickHair"  >
+          <span>Włosy grube i sztywne</span>
+        </label>
+       
+        <label class="separate">
+            <input type="checkbox"  name="glassyHair" >
+          <span>Włosy szkliste</span>
+        </label >
+       
+      </div>
     </li>
     <li>
-      <div class="collapsible-header"><i class="material-icons">whatshot</i>Diagnoza i Zakupy</div>
+      <div class="collapsible-header"><i class="material-icons">list</i>Stan i kondycja włosów</div>
       <div class="collapsible-body">
-        <div class="input-field col s6">
-          <i class="material-icons prefix">shopping_cart</i>
-          <textarea id="shopping" name="shopping" class="materialize-textarea" data-length="120"></textarea>
-          <label for="shopping">Produkty zakupione w gabinecie</label>
-      </div>
-      <div class="input-field col s6">
-          <i class="material-icons prefix">mode_edit</i>
-          <textarea id="diagnose1" name="diagnose1" class="materialize-textarea" data-length="120"></textarea>
-          <label for="diagnose1">Diagnoza wstępna</label>
-      </div>
-      <div class="input-field col s6">
-          <i class="material-icons prefix">mode_edit</i>
-          <textarea id="teraphyPlan" name="teraphyPlan" class="materialize-textarea" data-length="120" ></textarea>
-          <label for="teraphyPlan">Plan zabiegów</label>
-      </div>
-      <div class="input-field col s6">
-          <i class="material-icons prefix">mode_edit</i>
-          <textarea id="recommendedCare" name="recommendedCare" class="materialize-textarea" data-length="120"></textarea>
-          <label for="recommendedCare">Zalecana pielęgnacja</label>
-      </div>
+        <label class="separate">
+            <input type="checkbox"  name="dryHair" >
+          <span>Włosy suche</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="oilyHair">
+          <span>Włosy przetłuszczające się z powodu nadczynnośći łojotokowej </span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="normalHair"  >
+          <span>Włosy normalne</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="healthyHair"  >
+          <span>Włosy lśniąće, zdrowe, gładkie, spręzyste, gęste</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="overlyGlowingHair"  >
+          <span>Włosy nadmiernie świecące, tracą sztbko świeży wygląd </span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="dullHair"  >
+          <span>Włosy porowate, matowe, nieelastyczne, osłabione </span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="tangleHair"  >
+          <span>Włosy plączące się, końce włosów są zniszczone, łamliwe i kruche</span>
+        </label>
       </div>
     </li>
-  </ul>
+    <li>
+      <div class="collapsible-header"><i class="material-icons">list</i>Włosy po zabiegach chemicznych</div>
+      <div class="collapsible-body">
+        <label class="separate">
+            <input type="checkbox"  name="coloredHair" >
+          <span>Włosy po farbowaniu</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="lightenedHair">
+          <span>Włosy po rozjaśnianiu </span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="shadedHair"  >
+          <span>Włosy po tonowaniu</span>
+        </label>
+        <label class="separate">
+            <input type="checkbox"  name="permHair"  >
+          <span>Włosy po trwałej ondulacji</span>
+        </label>
+      </div>
+    </li>
+    <%}%>
+</ul>
 
 <div class="center-button button-padding">
     <button type="submit" class="btn waves-effect waves-light submit-button">Stwórz</button>

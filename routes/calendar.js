@@ -81,8 +81,6 @@ router.delete('/:id',ensureAuthenticated, async (req,res)=>{
  * Create new visit
 */
 router.post('/visit',ensureAuthenticated, async(req,res)=>{
-    const cssSheets =[];
-    cssSheets.push('../../public/css/user/front_page/index.css',"https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css");
     let futureVisit  = new FutureVisit({
         user:req.user.id,
         clientName:req.body.clients,
@@ -98,11 +96,13 @@ router.post('/visit',ensureAuthenticated, async(req,res)=>{
        
         req.flash('mess', 'Wizyta została dodana.');
         req.flash('type', 'info-success')
+      
         res.redirect('/calendar')
+      
     }catch(err){
         req.flash('mess', 'Nie udało się dodana wizyty!');
         req.flash('type', 'info-alert')
-        res.redirect('/clients')
+        res.redirect('/calendar')
     }
 })
 /*
@@ -131,17 +131,18 @@ router.put('/edit/:id', async(req,res)=>{
     }
 })
 /*
- * Handle request from js and send info about visit
+* Get calendar events 
 */
-router.get('/:id', async(req, res)=>{
-    let visitToFind;
+router.get('/calendar-events', async(req,res)=>{
+    let visits;
     try{
-
-        visitToFind = await FutureVisit.findById(req.params.id)
-        res.send(visitToFind)
-    }catch(err){
-        console.log(err)
-    }
+        visits = await FutureVisit.find({user:req.user.id})
+        res.send(visits)
+         
+     }catch(err){
+         console.log(err)
+     }
 })
+
 
 module.exports =router;

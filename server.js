@@ -13,7 +13,7 @@ const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session');
 const {ensureAuthenticated} = require('./config/auth')
-
+const path = require('path')
 //FILE UPLOADER
 
 const Grid = require('gridfs-stream');
@@ -29,8 +29,13 @@ const Document = require('./routes/document.js');
 const Admin = require('./routes/admin');
 
 
+
+
+
+
 //app.use( express.static('public'));
 app.use('/public', express.static(__dirname + '/public'))
+app.use('/modules',express.static(path.join(__dirname, '/node_modules')))
 app.set('view engine', 'ejs') 
 app.set('views',__dirname+'/views')
 app.set('layout', 'layouts/layout','layouts/layoutAdmin')
@@ -41,7 +46,7 @@ app.use(bodyParser.urlencoded({limit:'10mb',extended:false}))
 const mongoose =  require('mongoose')
 mongoose.connect(process.env.DATABASE_URL , {
     useNewUrlParser:true, 
-   useUnifiedTopology: true
+   //useUnifiedTopology: true
 })//url for connection with database
 
 
@@ -66,6 +71,8 @@ app.use(session({
 require('./config/passport')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 
 
 app.get('*', (req,res,next)=>{

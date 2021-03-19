@@ -30,14 +30,27 @@
                                 <label for="email">Email</label>
                             </div>
                             <div class="input-field  col s12  ">
-                                <input id="password" type="password" v name="password" class="validate">
+                                <input id="password" type="password" minlength="8" name="password" class="validate">
                                 <label for="password">Hasło</label>
                             </div>
                             <div class="input-field  col s12  ">
                                 <input id="ConfirmPassword" type="password" minlength="8" name="ConfirmPassword" class="validate">
                                 <label for="ConfirmPassword">Potwierdź hasło</label>
                             </div>
-                        
+                            <div class="col s12 margin-bottom ">
+                                <label class="separate check-box-right-margin ">
+                                    <input type="checkbox"   name="beautySalon" >
+                                    <span>Salon Kosmetyczny</span>
+                                </label>
+    
+                                <label class="separate">
+                                    <input type="checkbox"   name="hairdresser" >
+                                    <span>Salon Fryzjerski</span>
+                                </label>
+                            </div>
+                            
+                           
+                           
                             <div class="center-button top-separation-3">
                                 <button class="btn waves-effect submit-button red accent-1" type="submit" aria-label="create-visit-form">
                                     Zarejestruj

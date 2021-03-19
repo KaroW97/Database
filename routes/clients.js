@@ -16,21 +16,15 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
     let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
     todayDate.setDate(todayDate.getDate() - 1)
     weekDate.setDate(todayDate.getDate() + 8)
-
-   
     clientBirthday = Client.find({user:req.user.id})
-    
-  
     if(req.query.birthday != null &&  req.query.birthday !='')
         clientBirthday = clientBirthday.gte('dateOfBirth', req.query.birthday)  
-      
     try{
         const clients =  Client.find(clientBirthday); 
         let clientFind =await clients.find({user:req.user.id}).exec();
-
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
-        $gt:todayDate,
-        $lt:weekDate
+            $gt:todayDate,
+            $lt:weekDate
         }}).sort({transactionDate:'asc'})
         res.render('clients/index',{
             shoppingAll:shoppingList,
@@ -42,7 +36,6 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
         console.log(err)
         res.redirect('/calendar')
     }
-   
 })
 /*
 * Create Client Route
@@ -51,63 +44,59 @@ router.post('/new', ensureAuthenticated,async(req,res)=>{
     const clients = new Client({
      
         skinDiagnoseAll:{
-            drySkin:{
-                name:"Sucha",
-                value:Boolean(req.body.drySkin) ||false
-            },
-            wrinkless:{
-                name:"Zmarszczki i drobne linie",
-                value:Boolean(req.body.wrinkless)||false
-            },
-            lackfirmnes:{
-                name:"Brak jędrności",
-                value:Boolean(req.body.lackfirmnes)||false
-            },
-            nonuniformColor:{
-                name:"Niejednolity koloryt",
-                value:Boolean(req.body.nonuniformColor)||false
-            },
-            tiredness:{
-                name:" Zmęczenie - stres",
-                value:Boolean(req.body.tiredness)||false
-            },
-            acne:{
-                name:"Trądzik grudkowy",
-                value:Boolean(req.body.acne)||false
-            },
-            smokerSkin:{
-                name:"Skóra palacza",
-                value:Boolean(req.body.smokerSkin)||false
-            },
-            fatSkin:{
-                name:"Przetłuszczanie się",
-                value:Boolean(req.body.fatSkin)||false
-            },
-            discoloration:{
-                name:"Przebarwienia",
-                value:Boolean(req.body.discoloration)||false
-            },
-            blackheads:{
-                name:"Zaskórniki",
-                value: Boolean(req.body.blackheads)||false,
-            },
-            darkCirclesEyes:{
-                name:"Cienie - opuchnięcia pod oczami",
-                value:Boolean(req.body.darkCirclesEyes)||false
-            },
-            dilatedCapillaries:{
-                name:"Rozszerzone naczynka",
-                value:Boolean(req.body.dilatedCapillaries)||false
-            },
-            papularPustularAcne:{
-                name:"Trądzik grudkowo - kostkowy",
-                value:Boolean(req.body.papularPustularAcne)||false
-            },
-            externallyDrySkin:{
-                name:"Zewnętrznie przesuszona ",
-                value:Boolean(req.body.externallyDrySkin)||false
-            },
+            drySkin:Boolean(req.body.drySkin) ||false,
+            wrinkless:Boolean(req.body.wrinkless)||false,
+            lackfirmnes:Boolean(req.body.lackfirmnes)||false,
+            nonuniformColor:Boolean(req.body.nonuniformColor)||false,
+            tiredness:Boolean(req.body.tiredness)||false,
+            acne:Boolean(req.body.acne)||false,
+            smokerSkin:Boolean(req.body.smokerSkin)||false,
+            fatSkin:Boolean(req.body.fatSkin)||false,
+            discoloration:Boolean(req.body.discoloration)||false,
+            blackheads: Boolean(req.body.blackheads)||false,
+            darkCirclesEyes:Boolean(req.body.darkCirclesEyes)||false,
+            dilatedCapillaries:Boolean(req.body.dilatedCapillaries)||false,
+            papularPustularAcne:Boolean(req.body.papularPustularAcne)||false,
+            externallyDrySkin:Boolean(req.body.externallyDrySkin)||false,
             other:req.body.other,
+        },
+        scalpCondition:{
+            scalyScalp:Boolean(req.body.scalyScalp) ||false,
+            normalScalp:Boolean(req.body.normalScalp) ||false,
+            oilyScalp:Boolean(req.body.oilyScalp) ||false,
+            dandruff:Boolean(req.body.dandruff) ||false,
+            psoriasis:Boolean(req.body.psoriasis) ||false,
+            alopecia:Boolean(req.body.alopecia) ||false,
+            parasites:Boolean(req.body.parasites) ||false,
+            reddedScalp:Boolean(req.body.reddedScalp) ||false,
+            scratchedWounds:Boolean(req.body.scratchedWounds) ||false,
+            scarsOnTheScalp:Boolean(req.body.scarsOnTheScalp) ||false,
+        },
+        hairTypeAndTexture:{
+            straightHair:Boolean(req.body.straightHair) ||false,
+            curlyHair:Boolean(req.body.curlyHair) ||false,
+            wavyHair:Boolean(req.body.wavyHair) ||false,
+            woollyHair:Boolean(req.body.woollyHair) ||false,
+            fineHair:Boolean(req.body.fineHair) ||false,
+            proneHair:Boolean(req.body.proneHair) ||false,
+            thickHair:Boolean(req.body.thickHair) ||false,
+            glassyHair:Boolean(req.body.glassyHair) ||false,
+        },
+        hairCondition:{
+            dryHair:Boolean(req.body.dryHair) ||false,
+            oilyHair:Boolean(req.body.oilyHair) ||false,
+            normalHair:Boolean(req.body.normalHair) ||false,
+            healthyHair:Boolean(req.body.healthyHair) ||false,
+            overlyGlowingHair:Boolean(req.body.overlyGlowingHair) ||false,
+            dullHair:Boolean(req.body.dullHair) ||false,
+            tangleHair:Boolean(req.body.tangleHair) ||false,
+        },
+
+        hairAfterChemicalTreatments:{
+            coloredHair:Boolean(req.body.coloredHair) ||false,
+            lightenedHair:Boolean(req.body.lightenedHair) ||false,
+            shadedHair:Boolean(req.body.shadedHair) ||false,
+            permHair:Boolean(req.body.permHair) ||false,
         },
         visitDate:Date.parse(req.body.visitDate) || '',
         nextVisitDate:Date.parse(req.body.nextVisitDate)||'',
@@ -139,6 +128,7 @@ router.post('/new', ensureAuthenticated,async(req,res)=>{
   
        
     }catch(err){
+        console.log(err)
         req.flash('mess','Nie udało się dodać klienta do bazy.');
         req.flash('type','info-alert')
         res.redirect(`/calendar`)
@@ -173,32 +163,34 @@ router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
 router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
     let clientt, findTreatmentStat ;
     let date = req.body.clientVisitDate === '' ? new Date().toISOString().split('T')[0] : new Date(req.body.clientVisitDate).toISOString().split('T')[0]
-    const visit = new ClientVisits({
-        client:req.params.id,
-        comment: req.body.comment,
-        clientVisitDate: date ,
-        treatment: req.body.treatmentName,
-        user:req.user.id,
-        shopping:req.body.shopping,
-        price:req.body.price
-    })
+    console.log(date)
 
     try{   
-        findTreatmentStat = await ClientsShoppingsStats.find({user:req.user.id,treatment:req.body.treatmentName})
+        let treatment = await Treatment.find({user:req.user.id, treatmentName:req.body.treatment.trim()})
+        let treatmentPrice = treatment.length > 0 ? treatment[0].treatmentPrice : 0
+        findTreatmentStat = await ClientsShoppingsStats.find({user:req.user.id,treatment:req.body.treatment})
         clientt  = await Client.findById(req.params.id)
-        clientt.totalSumSpent =  Number(clientt.totalSumSpent) + Number(req.body.price)
-
+        clientt.totalSumSpent =  Number(clientt.totalSumSpent) + Number(treatmentPrice)
+        const visit = new ClientVisits({
+            client:req.params.id,
+            comment: req.body.comment,
+            clientVisitDate: date ,
+            treatment: req.body.treatment,
+            user:req.user.id,
+            shopping:req.body.shopping,
+            price:treatmentPrice
+        })
         clientt.clientVisits.push({
             visit:visit.id,
-            treatment: req.body.treatmentName,
-            clientVisitDate: req.body.clientVisitDate === '' ? new Date() : new Date(req.body.clientVisitDate),
-            price:req.body.price
+            treatment: req.body.treatment,
+            clientVisitDate: date,
+            price:treatmentPrice
         })
         if(findTreatmentStat.length === 0){
              const treatmentStats = new ClientsShoppingsStats({
                 user:req.user.id,
-                treatment: req.body.treatmentName.trim(),
-                totalPrice:req.body.price,
+                treatment: req.body.treatment.trim(),
+                totalPrice:treatmentPrice,
             })
             treatmentStats.transactionDate.push(date)
             await treatmentStats.save()
@@ -238,10 +230,9 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
             ]
             findTreatmentStat[0].transactionDate.length === 0 ?  findTreatmentStat[0].deleteOne() : await findTreatmentStat[0].save()
         }
-       
         let visitToDelte =  clientt.clientVisits.findIndex(v =>{
             return v.visit === visit.id && 
-                visit.clientVisitDate.toISOString().split('T')[0] === v.clientVisitDate.toISOString().split('T')[0]
+                visit.clientVisitDate.toISOString().split('T')[0] === v.clientVisitDate
         })
         clientt.clientVisits.length === 1 ?  
             clientt.clientVisits = [] :
@@ -249,7 +240,6 @@ router.delete('/client-view/:id',ensureAuthenticated, async(req,res)=>{
                 ...clientt.clientVisits.slice(0,visitToDelte),
                 ...clientt.clientVisits.slice(visitToDelte +1)
             ]
-        
         await clientt.save()
         await visit.deleteOne();
     
@@ -285,96 +275,82 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
     let date = req.body.clientVisitDate === '' ? new Date().toISOString().split('T')[0] : new Date(req.body.clientVisitDate).toISOString().split('T')[0]
 
     try{
-         visit = await ClientVisits.findById(req.params.id).populate('client').exec()
+         let treatment = await Treatment.find({user:req.user.id, treatmentName:req.body.treatment.trim()})
+         
+         let treatmentPrice = treatment.length > 0 ? Number(treatment[0].treatmentPrice) : 0
+         visit = await ClientVisits.findById(req.params.id).exec()
          findTreatmentStat = await ClientsShoppingsStats.find({user:req.user.id, treatment:visit.treatment})
+       
         
          let compare = visit.clientVisitDate.toISOString().split('T')[0]
          visit.client=visit.client
          visit.comment= req.body.comment
          visit.clientVisitDate= date 
-         visit.treatment= req.body.treatmentName.trim()
+         visit.treatment= req.body.treatment.trim()
          visit.shopping = req.body.shopping
-      
-         clientt  = await Client.findById(visit.client.id)
-         let updateClientVisits =  clientt.clientVisits.findIndex(v =>v.visit == visit._id)
 
+         clientt  = await Client.findById(visit.client)
+         let updateClientVisits =  clientt.clientVisits.findIndex(v =>v.visit == visit._id)
+        
          clientt.totalSumSpent -= Number(visit.price)
-         clientt.totalSumSpent =  Number(clientt.totalSumSpent) + Number(req.body.price)
-         visit.price = req.body.price
+         clientt.totalSumSpent =  Number(clientt.totalSumSpent) + treatmentPrice
+         visit.price = treatmentPrice
 
          clientt.clientVisits.set(updateClientVisits,{
             visit: visit.id,
-            treatment : req.body.treatmentName.trim(),
-            clientVisitDate : new Date( req.body.clientVisitDate),
-            price : req.body.price
+            treatment : req.body.treatment.trim(),
+            clientVisitDate : date,
+            price : treatmentPrice
          })
          findTreatmentStatAfter = await ClientsShoppingsStats.find({treatment:visit.treatment})
+        
          /*
          * If treatment is the same but data is not
          */
          if(findTreatmentStat.length !==0 && findTreatmentStat[0].treatment ===visit.treatment){
-            let updateTreatmentStats = findTreatmentStat[0].transactionDate.findIndex(data =>{
-                return data === compare
-            })
-            findTreatmentStat[0].transactionDate =[
-                ...findTreatmentStat[0].transactionDate.splice(0,updateTreatmentStats),
-                ...findTreatmentStat[0].transactionDate.splice(updateTreatmentStats + 1)
-            ]
+            findTreatmentStat[0].transactionDate = modify_array(findTreatmentStat, compare)
             findTreatmentStat[0].transactionDate.push(date)
-            findTreatmentStat[0].transactionDate.length === 1 ?  await findTreatmentStat[0].deleteOne() : await  findTreatmentStat[0].save()    
+            findTreatmentStat[0].transactionDate.length === 0 ?  await findTreatmentStat[0].deleteOne() : await  findTreatmentStat[0].save()    
          }
          /*
-         * If name of the treatment is diferent and lenght of the treatment after updating does exist
+         * If name of the treatment is diferent and lenght of the treatment after updating is 0
          */
         else if(findTreatmentStatAfter.length !== 0 && findTreatmentStat.length !==0 && findTreatmentStat[0].treatment !== visit.treatment){
-           let updateTreatmentStats = findTreatmentStat[0].transactionDate.findIndex(data => data === compare)
-
-           findTreatmentStat[0].transactionDate =[
-               ...findTreatmentStat[0].transactionDate.splice(0,updateTreatmentStats),
-               ...findTreatmentStat[0].transactionDate.splice(updateTreatmentStats + 1)
-           ]
+           findTreatmentStat[0].transactionDate = modify_array(findTreatmentStat, compare)
            findTreatmentStatAfter[0].transactionDate.push(date)
            findTreatmentStat[0].transactionDate.length === 0 ?   await findTreatmentStat[0].deleteOne() :  await  findTreatmentStat[0].save()
-       
            await findTreatmentStatAfter[0].save()
         }
         /*
-        * If after upadting name of the visit, the visit is not in database create new
+        * if after upadting visit, the name of treatment is not in database then create new 
         */
         else if(findTreatmentStatAfter.length === 0 ){
             const treatmentStats = new ClientsShoppingsStats({
                 user:req.user.id,
-                treatment: req.body.treatmentName.trim(),
-                totalPrice:req.body.price,
+                treatment: req.body.treatment.trim(),
+                totalPrice:treatmentPrice,
             })
             treatmentStats.transactionDate.push(date)
             if(findTreatmentStat[0].transactionDate.length > 1){
-                let updateTreatmentStats = findTreatmentStat[0].transactionDate.findIndex(data => data === compare)
-                findTreatmentStat[0].transactionDate = [
-                    ...findTreatmentStat[0].transactionDate.splice(0,updateTreatmentStats),
-                    ...findTreatmentStat[0].transactionDate.splice(updateTreatmentStats + 1)
-                ]
+                findTreatmentStat[0].transactionDate = modify_array(findTreatmentStat, compare)
                 await findTreatmentStat[0].save()
-            }
-            if(findTreatmentStat[0].transactionDate.length <= 1){
+            }else if(findTreatmentStat[0].transactionDate.length <= 1)
               await  findTreatmentStat[0].deleteOne()
-            }
+            
             await treatmentStats.save()
          }
 
- 
         await clientt.save();
         await visit.save();
         
          req.flash('mess','Wizyta została edytowana.');
          req.flash('type','info-success')
-         return res.redirect(`/clients/client-view/${visit.client.id}`)
+         return res.redirect(`/clients/client-view/${visit.client._id}`)
     }catch(err){
         console.log(err)
-        visit = await ClientVisits.findById(req.params.id).populate('client').exec()
         req.flash('mess','Nie udało się edytować wizyty.');
         req.flash('type','info-alert')
-        return res.redirect(`/clients/client-view/${visit.client.id}`)
+        return res.redirect(`/clients/client-view/${req.params.id}`)
     }
    
 })
@@ -387,64 +363,63 @@ router.put('/client-view/:id',ensureAuthenticated,async (req,res)=>{
     try{
         clients =  await Client.findById(req.params.id)
       
-        clients.skinDiagnoseAll.drySkin ={
-                name:"Sucha",
-                value:Boolean(req.body.drySkin)||false
-        }
-        clients.skinDiagnoseAll.wrinkless ={
-            name:"Zmarszczki i drobne linie",
-                value:Boolean(req.body.wrinkless)||false
-        }
-        clients.skinDiagnoseAll.lackfirmnes ={
-            name:"Brak jędrności",
-            value:Boolean(req.body.lackfirmnes)||false
-        }
-        clients.skinDiagnoseAll.nonuniformColor ={
-            name:"Niejednolity koloryt",
-            value:Boolean(req.body.nonuniformColor)||false
-        }
-        clients.skinDiagnoseAll.tiredness ={
-            name:" Zmęczenie - stres",
-            value:Boolean(req.body.tiredness)||false
-        }
-        clients.skinDiagnoseAll.acne ={
-            name:"Trądzik grudkowy",
-            value:Boolean(req.body.acne)||false
-        }
-        clients.skinDiagnoseAll.smokerSkin ={
-            name:"Skóra palacza",
-                value:Boolean(req.body.smokerSkin)||false
-        }
-        clients.skinDiagnoseAll.fatSkin ={
-            name:"Przetłuszczanie się",
-            value:Boolean(req.body.fatSkin)||false
-        }
-        clients.skinDiagnoseAll.discoloration ={
-            name:"Przebarwienia",
-            value:Boolean(req.body.discoloration)||false
-        }
-        clients.skinDiagnoseAll.blackheads ={
-            name:"Zaskórniki",
-            value: Boolean(req.body.blackheads)||false,
-        }
-        clients.skinDiagnoseAll.darkCirclesEyes ={
-            name:"Cienie - opuchnięcia pod oczami",
-            value:Boolean(req.body.darkCirclesEyes)||false
-        }
-        clients.skinDiagnoseAll.dilatedCapillaries ={
-            name:"Rozszerzone naczynka",
-            value:Boolean(req.body.dilatedCapillaries)||false
-        }
-        clients.skinDiagnoseAll.papularPustularAcne ={
-            name:"Trądzik grudkowo - kostkowy",
-            value:Boolean(req.body.papularPustularAcne)||false
-        }
-        clients.skinDiagnoseAll.externallyDrySkin ={
-            name:"Zewnętrznie przesuszona ",
-            value:Boolean(req.body.externallyDrySkin)||false
-        }
+        clients.skinDiagnoseAll.drySkin =Boolean(req.body.drySkin)||false
+        clients.skinDiagnoseAll.wrinkless =Boolean(req.body.wrinkless)||false
+        clients.skinDiagnoseAll.lackfirmnes =Boolean(req.body.lackfirmnes)||false
+        clients.skinDiagnoseAll.nonuniformColor =Boolean(req.body.nonuniformColor)||false
+        clients.skinDiagnoseAll.tiredness =Boolean(req.body.tiredness)||false
+        clients.skinDiagnoseAll.acne =Boolean(req.body.acne)||false
+        clients.skinDiagnoseAll.smokerSkin =Boolean(req.body.smokerSkin)||false
+        clients.skinDiagnoseAll.fatSkin =Boolean(req.body.fatSkin)||false
+        clients.skinDiagnoseAll.discoloration =Boolean(req.body.discoloration)||false
+        clients.skinDiagnoseAll.blackheads =Boolean(req.body.blackheads)||false,
+        clients.skinDiagnoseAll.darkCirclesEyes =Boolean(req.body.darkCirclesEyes)||false
+        clients.skinDiagnoseAll.dilatedCapillaries =Boolean(req.body.dilatedCapillaries)||false
+        clients.skinDiagnoseAll.papularPustularAcne =Boolean(req.body.papularPustularAcne)||false
+        clients.skinDiagnoseAll.externallyDrySkin =Boolean(req.body.externallyDrySkin)||false
 
         clients.skinDiagnoseAll.other =req.body.other
+
+    
+        clients.scalpCondition.scalyScalp=Boolean(req.body.scalyScalp) ||false,
+        clients.scalpCondition.normalScalp=Boolean(req.body.normalScalp) ||false,
+        clients.scalpCondition.oilyScalp=Boolean(req.body.oilyScalp) ||false,
+        clients.scalpCondition.dandruff=Boolean(req.body.dandruff) ||false,
+        clients.scalpCondition.psoriasis=Boolean(req.body.psoriasis) ||false,
+        clients.scalpCondition.alopecia=Boolean(req.body.alopecia) ||false,
+        clients.scalpCondition.parasites=Boolean(req.body.parasites) ||false,
+        clients.scalpCondition.reddedScalp=Boolean(req.body.reddedScalp) ||false,
+        clients.scalpCondition.scratchedWounds=Boolean(req.body.scratchedWounds) ||false,
+        clients.scalpCondition.scarsOnTheScalp=Boolean(req.body.scarsOnTheScalp) ||false,
+        
+        clients.hairTypeAndTexture.straightHair=Boolean(req.body.straightHair) ||false,
+        clients.hairTypeAndTexture.curlyHair=Boolean(req.body.curlyHair) ||false,
+        clients.hairTypeAndTexture.wavyHair=Boolean(req.body.wavyHair) ||false,
+        clients.hairTypeAndTexture.woollyHair=Boolean(req.body.woollyHair) ||false,
+        clients.hairTypeAndTexture.fineHair=Boolean(req.body.fineHair) ||false,
+        clients.hairTypeAndTexture.proneHair=Boolean(req.body.proneHair) ||false,
+        clients.hairTypeAndTexture.thickHair=Boolean(req.body.thickHair) ||false,
+        clients.hairTypeAndTexture.glassyHair=Boolean(req.body.glassyHair) ||false,
+
+        clients.hairCondition.dryHair=Boolean(req.body.dryHair) ||false,
+        clients.hairCondition.oilyHair=Boolean(req.body.oilyHair) ||false,
+        clients.hairCondition.normalHair=Boolean(req.body.normalHair) ||false,
+        clients.hairCondition.healthyHair=Boolean(req.body.healthyHair) ||false,
+        clients.hairCondition.overlyGlowingHair=Boolean(req.body.overlyGlowingHair) ||false,
+        clients.hairCondition.dullHair=Boolean(req.body.dullHair) ||false,
+        clients.hairCondition.tangleHair=Boolean(req.body.tangleHair) ||false,
+
+
+
+        clients.hairAfterChemicalTreatments.coloredHair=Boolean(req.body.coloredHair) ||false,
+        clients.hairAfterChemicalTreatments.lightenedHair=Boolean(req.body.lightenedHair) ||false,
+        clients.hairAfterChemicalTreatments.shadedHair=Boolean(req.body.shadedHair) ||false,
+        clients.hairAfterChemicalTreatments.permHair=Boolean(req.body.permHair) ||false,
+        
+
+
+
+
         clients.name=req.body.name.trim(),
         clients.lastName=req.body.lastName.trim(),
         clients.phoneNumber=req.body.phoneNumber,
@@ -493,4 +468,12 @@ router.delete('/:id', ensureAuthenticated,async(req,res)=>{
     }
   
 })
+
+const modify_array = (findTreatmentStat, compare) =>{
+    let updateTreatmentStats = findTreatmentStat[0].transactionDate.findIndex(data => data === compare)
+    return [
+        ...findTreatmentStat[0].transactionDate.splice(0,updateTreatmentStats),
+        ...findTreatmentStat[0].transactionDate.splice(updateTreatmentStats + 1)
+    ]
+}
 module.exports = router;

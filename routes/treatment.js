@@ -10,22 +10,18 @@ const ProductsForTreatment = require('../models/treatmentProducts')
 * All Treatments
 */
 router.get('/',ensureAuthenticated,async(req,res)=>{
-   
    let weekdays =["niedz.","pon.",'wt.','śr.','czw.','pt.','sob.']
    let todayDate = new Date(),weekDate=new Date();
    todayDate.setDate(todayDate.getDate() - 1)
    weekDate.setDate(todayDate.getDate() + 8)
-  
     try{
         const treatments = await Treatment.find({user:req.user.id});
         const treatmentsDist = await Treatment.find({user:req.user.id}).distinct('treatmentName');
         const productsAll = await ProductsForTreatment.find({user:req.user.id});
-       
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
         }}).sort({transactionDate:'asc'})
-      
         res.render('treatment/index',{
             shoppingAll:shoppingList,
             treatments:treatments,

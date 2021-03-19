@@ -157,33 +157,82 @@ router.put('/change-email',ensureAuthenticated, async(req,res)=>{
 router.put('/change-company-name',ensureAuthenticated, async(req,res)=>{
     let user
     try{
+       
+        var messageStatus, email, popMessage;
         user  = await User.findById(req.user.id);
-        user.companyName = req.body.newCompanyName.trim();
+        if(    
+            (user.beautySalon !==Boolean(req.body.beautySalon) || 
+            user.hairdresser !== Boolean(req.body.hairdresser))
+            &&(user.newCompanyName !== req.body.newCompanyName && req.body.newCompanyName !== "")
+        ){
+            user.beautySalon = Boolean(req.body.beautySalon)
+            user.hairdresser = Boolean(req.body.hairdresser)
+            user.companyName = req.body.newCompanyName.trim();
+            messageStatus = "Zmieniono nazwę i zakres działalności firmy"
+            popMessage =  "Zmieniono nazwę i zakres działalności firmy"
+            email = emailLook(``,
+            'Witaj!',
+            `Nazwa twojej firmy została zmieniona na "${user.companyName}"`,
+            ` Zakres działalności został zmieniony na "
+            ${user.beautySalon !== false && user.hairdresser !== false?'Salon Kosmetyczny i Salon Fryzjerski' : 
+            user.beautySalon !== false? 'Salon Kosmetyczny' : user.hairdresser !== false ? 'Salon Fryzjerski ': ''}   
+            "` 
+            ,  ``,
+            'Miłego dnia!'
+            )
+           
+            
+            callEmail(user.email, messageStatus, email)
+       }
+        else if(user.beautySalon !==Boolean(req.body.beautySalon ) ||  user.hairdresser !== Boolean(req.body.hairdresser)){
+            user.beautySalon = Boolean(req.body.beautySalon)
+            user.hairdresser = Boolean(req.body.hairdresser)
+            messageStatus = "Zmieniono zakres działalności firmy"
+            popMessage = "Zmieniono zakres działalności firmy"
+            email = emailLook(``,
+            'Witaj!',
+            `Zakres działalności został zmieniony na `,`" 
+            ${user.beautySalon !== false && user.hairdresser !== false?'Salon Kosmetyczny i Salon Fryzjerski' : 
+            user.beautySalon !== false? 'Salon Kosmetyczny' : user.hairdresser !== false ? 'Salon Fryzjerski ': ''} "` 
+            ,  ``,
+            'Miłego dnia!'
+            )
+            callEmail(user.email, messageStatus, email)   
+        }
         
-        let email= emailLook(``,
-        'Witaj!',
-        `Nazwa twojej firmy została zmieniona na`,`"${user.companyName}"` 
-        ,  ``,
-        'Miłego dnia!'
-        )
+        else if(user.newCompanyName !== req.body.newCompanyName && req.body.newCompanyName !== ''){
+            user.companyName = req.body.newCompanyName.trim();
+            messageStatus = 'Zmieniono nazwe firmy Beauty Base!'
+            popMessage = "Nazwa firmy została zmieniona."
+            email= emailLook(``,
+            'Witaj!',
+            `Nazwa twojej firmy została zmieniona na`,`"${user.companyName}"` 
+            ,  ``,
+            'Miłego dnia!'
+            )
+            callEmail(user.email, messageStatus, email)
+        }
+        
         await user.save();
-        await mailer.sendEmail('beautybasehelp@gmail.com',user.email,'Zmieniono nazwe firmy Beauty Base!',email,
-        {
-            file:'Beauty Base.png',
-            path: './public/Beauty Base.png',
-            cid:'logo'
-        })
-   
-        req.flash('mess','Nazwa firmy została zmieniona.')
+  
+        req.flash('mess',popMessage)
         req.flash('type','info-success')
         res.redirect('/settings')
     }catch(err){
         console.log(err)
-        req.flash('mess','Nie udało się edytować nazwy firmy.')
+        req.flash('mess','Nie udało się edytować nazwy lub zakresu działalności firmy.')
         req.flash('type','info-alert')
         res.redirect('/settings')
     }
 })
+const callEmail = async (userEmail, messageStatus, email) =>{
+    await mailer.sendEmail('beautybasehelp@gmail.com',userEmail,messageStatus,email,
+    {
+        file:'Beauty Base.png',
+        path: './public/Beauty Base.png',
+        cid:'logo'
+    })
+}
 /*
  * delete account request
 */

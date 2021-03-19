@@ -2,16 +2,12 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 module.exports = function (passport){
-  
-
   passport.use(new LocalStrategy({usernameField:'email'},(email, password, done)=>{
-    //Match User
     User.findOne({email:email})
       .then(user=>{
         //Check if user exists
         if(!user)
           return done(null, false, {message: 'Email nie jest zarejestrowany.'})
-        
         //Check if password is correct
         bcrypt.compare(password, user.password,(err, isMatch)=>{
           //Check if account has been verified

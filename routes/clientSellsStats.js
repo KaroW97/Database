@@ -208,13 +208,10 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
       
         const clientt  = await Client.findById(req.params.id)
         const clientVisit = await clientVisitDate.distinct('treatment').exec()
-       
-        const totalSum = clientt.clientVisits.reduce((a, b) =>{
-            return a + parseInt(b.price)
-        },0)
         const treatmentsMade = clientVisit.map(treatmentName=>{
             let sum = 0,treatmentSum=0;
             clientt.clientVisits.filter(clientVisits =>{
+                
                 if(clientVisits.treatment === treatmentName &&   
                     clientVisits.clientVisitDate.toISOString().split('T')[0] >= dateFrom &&
                     clientVisits.clientVisitDate.toISOString().split('T')[0] <= dateTo){
@@ -222,13 +219,17 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
                         treatmentSum+=1
                 }
             })
+            
             return{
                 name:treatmentName,
                 price: sum,
                 amount:treatmentSum
             }
         })
-    
+        let amount = [...treatmentsMade].reduce((sum,{amount})=>sum+=amount, 0)
+        let price = [...treatmentsMade].reduce((sum,{price})=>sum+=price, 0)
+        let top1 = [...treatmentsMade].sort((a, b)=>b.price - a.price).splice(0,2)
+        let top2 = [...treatmentsMade].sort((a, b)=>b.amount - a.amount).splice(0,2)
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
@@ -242,12 +243,14 @@ router.get('/:id', ensureAuthenticated,async(req,res)=>{
             searchOptions:req.query|| '',
             weekdays:weekdays,
             treatmentsMade:treatmentsMade,
-            totalSum:totalSum,
+            totalSum:price,
             showHiddenFloatingButtons:true,
             sectionNameChange:false,
-            amount:clientt.clientVisits.length,
+            amount:amount,
             treatments:treatments,
-            TopSection:false,
+            TopSection:true,
+            Top1:top1,
+            Top2:top2,
             TopSectionClient:false
 
         })
