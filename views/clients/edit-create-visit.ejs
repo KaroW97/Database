@@ -1,7 +1,18 @@
+<%if(user.beautySalon && user.hairdresser){ %>
+    <div class="input-field col s12 m6 l3 xl3 dropdown"  >
+        <i class="material-icons prefix">content_cut</i>
+        <select name="typeOfVisit"  >
+          <option value="" disabled selected>Wyberz rodzaj wizyty</option>
+          <option value="Salon kosmetyczny">Salon kosmetyczny</option>
+          <option value="Salon fryzjerski" >Salon fryzjerski</option>
+        </select>
+        <label>Rodzaj wizyty</label>
+    </div>
+<%}%>
 <div class="input-field col s6">
     <i class="material-icons prefix">date_range</i>
     <input id="clientVisitDate-<%=id_extention%>"  type="text"class="datepicker"name="clientVisitDate" 
-    value= "<%=newVisit.clientVisitDate == null ? '': newVisit.clientVisitDate.toISOString().split('T')[0] %>" autocomplete="off">
+    autocomplete="off">
     <label class="active" for="clientVisitDate-<%=id_extention%>">Data wizyty</label>
 </div>
 <div class="input-field col s6">
@@ -14,12 +25,12 @@
 
 <div class="input-field col s12 m12 l12 xl12">
     <i class="material-icons prefix">list</i>
-    <textarea id="diagnose-<%=id_extention%>" class="materialize-textarea"  name="comment" value="<%=newVisit.comment%>"></textarea>
+    <textarea id="diagnose-<%=id_extention%>" class="materialize-textarea"  name="comment"></textarea>
     <label for="diagnose-<%=id_extention%>">Diagnoza</label>
 </div>
 <div class="input-field col s12">
     <i class="material-icons prefix">add_shopping_cart</i>
-    <textarea id="shopping-<%=id_extention%>" class="materialize-textarea"  name="shopping" value="<%=newVisit.shopping%>"></textarea>
+    <textarea id="shopping-<%=id_extention%>" class="materialize-textarea"  name="shopping"></textarea>
     <label for="shopping-<%=id_extention%>">Zakupy</label>
 </div>            
 <div class="center-button button-padding">

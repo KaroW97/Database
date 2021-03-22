@@ -371,17 +371,29 @@ const edit_list = () =>{
 const fill_edit_form = (data, formId, action) =>{
     let form = document.querySelector(formId)
     Array.from(form.elements).forEach(input=>{
-        input.focus()
+        input.focus()     
         if(input.name ==='price')   input.setAttribute('value',data[input.name] )
-        else  input.value = input.name === 'clientVisitDate' ?data[input.name].split('T')[0] : data[input.name]
+        if(input.name !== 'typeOfVisit'){
+            input.value = input.name === 'clientVisitDate' ?data[input.name].split('T')[0] :  data[input.name] 
+        }
+        if(input.classList.contains('select-dropdown'))  input.value  = data['typeOfVisit'] 
+     
+
+       
     })
-    form.elements[0].select()
+    
+    form.elements[0].focus()
     form.action = action
 }
 const edit_list_item = (id, index) =>{
     fetch(`/shopping-list/list-view/${id}/${index}`)
     .then(res=>res.json())
-    .then(data =>   fill_edit_form(data, '#edit-item', `/shopping-list/list-view/${id}/${index}?_method=PUT`))
+    .then(data =>   {
+       
+        fill_edit_form(data, '#edit-item', `/shopping-list/list-view/${id}/${index}?_method=PUT`)
+     
+       
+    })
 }
 /* 
 * Dynamic Alert box

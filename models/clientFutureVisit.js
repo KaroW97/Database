@@ -32,6 +32,10 @@ const futureVisit = mongoose.Schema({
         type:Number,
         required:true
     },
+    typeOfVisit:{
+        type:String, 
+        required:false,
+    }
 
 
 })

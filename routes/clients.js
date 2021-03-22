@@ -20,8 +20,8 @@ router.get('/', ensureAuthenticated,async(req,res)=>{
     if(req.query.birthday != null &&  req.query.birthday !='')
         clientBirthday = clientBirthday.gte('dateOfBirth', req.query.birthday)  
     try{
-        const clients =  Client.find(clientBirthday); 
-        let clientFind =await clients.find({user:req.user.id}).exec();
+         
+        let clientFind =await Client.find(clientBirthday).exec();
         const shoppingList = await ShoppingList.find({user:req.user.id, transactionDate:{
             $gt:todayDate,
             $lt:weekDate
@@ -139,22 +139,38 @@ router.post('/new', ensureAuthenticated,async(req,res)=>{
 * Show Client
 */
 router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
+    let query = ClientVisits.find({client:req.params.id});
+    if(req.query.dateFrom != null &&  req.query.dateFrom !=''){
+        query = query.gte('clientVisitDate', req.query.dateFrom) //less then or equal
+    }
+    if(req.query.dateTo != null &&  req.query.dateTo !=''){
+        query = query.lte('clientVisitDate', req.query.dateTo) //greater then or equal
+    }
+
+   if(req.query.selectVisitByType != null && req.query.selectVisitByType !== ''){
+        query.typeOfVisit = req.query.selectVisitByType
+   }
     try{
+      
         const treatments = await Treatment.find({user:req.user.id});
         const clientt  = await Client.findById(req.params.id)
-        const visit = new ClientVisits()  
-        const addedVisit = await ClientVisits.find({client:req.params.id}).populate('product').exec()
-   
+        const addedVisit =( req.query.selectVisitByType != undefined && req.query.selectVisitByType != "Wszystko") ? 
+                await ClientVisits.find(query).find({typeOfVisit:req.query.selectVisitByType}).limit(100).exec():
+                await ClientVisits.find(query).limit(100).exec()
+
+       
+      
         res.render('clients/clientView',{
             addedVisit:addedVisit,
             treatments:treatments,
-            newVisit:visit,
             curentClient:req.params.id,
             oneClient:clientt,
+            searchOptions:req.query,
+           
         })
     }catch(err){
         console.log(err)
-        res.redirect('/clients')
+        res.redirect(`/clients/client-view/${req.params.id}`)
     }
 })
 /*
@@ -163,7 +179,7 @@ router.get('/client-view/:id',ensureAuthenticated,async(req,res)=>{
 router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
     let clientt, findTreatmentStat ;
     let date = req.body.clientVisitDate === '' ? new Date().toISOString().split('T')[0] : new Date(req.body.clientVisitDate).toISOString().split('T')[0]
-    console.log(date)
+    console.log(req.body.typeOfVisit)
 
     try{   
         let treatment = await Treatment.find({user:req.user.id, treatmentName:req.body.treatment.trim()})
@@ -178,7 +194,8 @@ router.post('/client-view/:id',ensureAuthenticated, async(req,res)=>{
             treatment: req.body.treatment,
             user:req.user.id,
             shopping:req.body.shopping,
-            price:treatmentPrice
+            price:treatmentPrice, 
+            typeOfVisit:req.body.typeOfVisit
         })
         clientt.clientVisits.push({
             visit:visit.id,
@@ -273,7 +290,7 @@ router.get('/edit-visit/:id',ensureAuthenticated, async(req,res)=>{
 router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
     let visit, findTreatmentStat, findTreatmentStatAfter
     let date = req.body.clientVisitDate === '' ? new Date().toISOString().split('T')[0] : new Date(req.body.clientVisitDate).toISOString().split('T')[0]
-
+  
     try{
          let treatment = await Treatment.find({user:req.user.id, treatmentName:req.body.treatment.trim()})
          
@@ -288,7 +305,7 @@ router.put('/client-view/:id/editPost',ensureAuthenticated, async(req,res)=>{
          visit.clientVisitDate= date 
          visit.treatment= req.body.treatment.trim()
          visit.shopping = req.body.shopping
-
+         visit.typeOfVisit=req.body.typeOfVisit
          clientt  = await Client.findById(visit.client)
          let updateClientVisits =  clientt.clientVisits.findIndex(v =>v.visit == visit._id)
         

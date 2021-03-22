@@ -32,6 +32,10 @@ const clientVisits = mongoose.Schema({
     shopping:{
         type:String,
         required:false,
+    },
+    typeOfVisit:{
+        type:String,
+        required:false,
     }
     
 })

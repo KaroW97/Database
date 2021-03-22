@@ -1,7 +1,5 @@
 
- <div class="margin-top margin-bottom-3" id='calendar'></div>
-
-
+<div class="margin-top margin-bottom-3" id='calendar'></div>
 <!--create new visit-->
 <div class="form-styling-small modal" id="createVisit">
     <form method="POST" action="/calendar/visit" class="modal-content content-styling" id="create-visit-form">
@@ -14,11 +12,11 @@
 <!--edit visit gdy tego nie ma to datalist działa-->
 <div class="form-styling-small modal "  id="visit">
     <form method="POST"  action="" class="modal-content content-styling"  id="visit-form">
-            <%-include('../calendar/create-visit.ejs',{id_extention:2})%>
-            <div class="center-button">
-                <button id="edit" class="btn waves-effect submit-button-small" type="submit" aria-label="create-visit-form">Edytuj</button>
-                <button id="delete" class="btn waves-effect submit-button-small" type="submit" aria-label="create-visit-form">Usuń</button>
-            </div>
+        <%-include('../calendar/create-visit.ejs',{id_extention:2})%>
+        <div class="center-button">
+            <button id="edit" class="btn waves-effect submit-button-small" type="submit" aria-label="create-visit-form">Edytuj</button>
+            <button id="delete" class="btn waves-effect submit-button-small" type="submit" aria-label="create-visit-form">Usuń</button>
+        </div>
     </form>
 
 </div>

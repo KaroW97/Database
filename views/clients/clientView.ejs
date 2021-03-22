@@ -1,5 +1,5 @@
 
-
+<%-include('./pdfVisitsTemplate')%>
 <div class="row top-separation-3">
     <div class="col s12 m12 l12 xl12 vertical-align">
         <div class="switch col s12 m12 l3 xl3">
@@ -11,7 +11,7 @@
             </label>
         </div>
         <div class="side-by-side col s12 m12 l9 xl9">
-            <button aria-label ="download" class="small-button-styling btn-small btn" onclick='pdff(); pdfVisits();'>
+            <button aria-label ="download" class="small-button-styling btn-small btn" onclick='invoke_pdf()'>
                 <i class="material-icons">file_download</i>
             </button>
             <button aria-label ="go-to-oneClient-visits " class="small-button-styling  btn-small btn modal-trigger" href="#create-new-visit">
@@ -127,6 +127,40 @@
         </div>
     </form>
    
+   
+    <div class="row">
+        <form action="/clients/client-view/<%=curentClient%>" method="get" class="col s12">
+            <div class= "<%=(user.beautySalon && user.hairdresser)? "input-field col s12 m6 l4 xl4" : "input-field col s12 m6 l5 xl5"%>">
+                
+                <input value="<%=searchOptions.dateFrom%>" class="datepicker"  name="dateFrom"  id="dateFrom" type="text"   autocomplete="off"  />
+                <label for="dateFrom">Data od</label>
+            </div>
+            <div class= "<%=(user.beautySalon && user.hairdresser)? "input-field col s12 m6 l4 xl4" : "input-field col s12 m6 l5 xl5"%>">
+                <input value="<%=searchOptions.dateTo%>" class="datepicker"  name="dateTo"  id="dateTo" type="text"   autocomplete="off"  />
+                <label for="dateTo">Data do</label>
+            </div>
+            <%if(user.beautySalon && user.hairdresser){ %>
+                <div class="input-field col s12 m6 l3 xl3">
+                    <select name="selectVisitByType">
+                      <option value="" disabled selected>Wyberz rodzaj wizyty</option>
+                      <option >Wszystko</option>
+                      <option >Salon kosmetyczny</option>
+                      <option >Salon fryzjerski</option>
+                    </select>
+                    <label>Rodzaj wizyty</label>
+                </div>
+            <%}%>
+           
+            <div  class= "<%=(user.beautySalon && user.hairdresser)? "col s12 m6 l1 xl1 center-button-full" : "col s12 m12 l2 xl2 center"%>">
+                <button aria-label ="go-to-oneClient-visits "
+                class= "waves-effect waves-light btn-small margin-1-rem  <%=(user.beautySalon && user.hairdresser)? "small-button-styling" : "full-button"%>"
+                >
+                    <i class="material-icons">search</i>
+                </button> 
+            </div>
+        </form>
+    </div>
+ 
     <%addedVisit.forEach(element => {%>
         <div class="border-bottom">
             <form method="post" action='/clients/client-view/<%=element.id%>?_method=DELETE'>
@@ -163,12 +197,12 @@
     <%});%>
 </div>
 
-<div class=" form-styling-smaller modal" id="create-new-visit">
+<div class="<%=(user.beautySalon && user.hairdresser)? "form-styling-small" : "form-styling-smaller"%> modal" id="create-new-visit">
     <form class="modal-content content-form-styling " action='/clients/client-view/<%=oneClient.id%>' method="POST">
        <%-include('./edit-create-visit.ejs',{id_extention:1}) %>
     </form>
 </div>   
-<div class="form-styling-smaller modal" id="edit_visit">
+<div  class="<%=(user.beautySalon && user.hairdresser)? "form-styling-small" : "form-styling-smaller"%> modal"  id="edit_visit">
     <form class="modal-content content-form-styling"id="edit_client_visit" action='' method="POST">
        <%-include('./edit-create-visit.ejs',{id_extention:2}) %>
 
